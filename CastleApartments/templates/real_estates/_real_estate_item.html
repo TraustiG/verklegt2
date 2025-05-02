@@ -1,16 +1,23 @@
-<div class="containter-item">
-    <a href="{% url "real-estate-by-id" id=5 %}">
-        <img src="" />
-        <div>
-            <h1>address</h1>
-            <h2>post code</h2>
-        </div>
-        <div>
-            <h1># rooms</h1>
-            <h1># sqm</h1>
-        </div>
-        <div>
-            <h1>cost</h1>
-        </div>
+{% load static %}
+<div class="card" style="width: 18rem;">
+    <a href="{% url 'real-estate-by-id' id=5 %}">
+        <img src="{% static 'images/testhome.png' %}" class="card-img-top" alt="A beautiful home">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <h5 class="card-title">
+                    {{ real_estate.address }}
+                </h5>
+                <h6>
+                    {{ real_estate.zip }} {{ real_estate.city }}
+                </h6>
+            </li>
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between">
+                    <span>{{ real_estate.beds }} herb.</span>
+                    <span>{{ real_estate.sqm }} m<sup>2</sup></span>
+                </div>
+            </li>
+            <li class="list-group-item">{{ listing.price }} kr.</li>
+        </ul>
     </a>
 </div>
