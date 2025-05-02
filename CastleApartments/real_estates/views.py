@@ -6,4 +6,7 @@ def index(request):
     return HttpResponse("real_estate index")
 
 def getRealEstateById(request, id):
-    return HttpResponse(f"real_estate with id {id}")
+    # get realestate from database - make object to send in render
+    if request.method == "GET":
+        # return HttpResponse("test")
+        return render(request, "real_estates/real_estate.html", {"id": id})
