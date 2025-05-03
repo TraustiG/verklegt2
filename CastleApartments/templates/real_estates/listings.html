@@ -3,5 +3,7 @@
 {% block content %}
     {% for item in listings %}
         {% include "real_estates/_real_estate_item.html" with real_estate=item.real_estate seller=item.seller listing=item.listing %}
+    {% empty %}
+        <h1>Engar eignir uppfylla valda síu.</h1>
     {% endfor %}
 {% endblock %}
