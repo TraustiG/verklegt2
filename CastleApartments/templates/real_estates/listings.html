@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% for item in listings %}
-        {% include "real_estates/_real_estate_item.html" with real_estate=item.real_estate seller=item.seller listing=item.listing %}
-    {% empty %}
-        <h1>Engar eignir uppfylla valda síu.</h1>
-    {% endfor %}
+    <div class="container">
+        <div class="row row-cols-4">
+            {% for item in listings %}
+                <div class="col">
+                    {% include "real_estates/_real_estate_item.html" with real_estate=item.real_estate seller=item.seller listing=item.listing %}
+                </div>
+            {% empty %}
+                <h1>Engar eignir uppfylla valda síu.</h1>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

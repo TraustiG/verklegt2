@@ -1,42 +1,58 @@
-<div>
-    <div class="row justify-content-evenly">
+{% load static %}
+<div style="background-color: #EFF1F5;">
+    <div class="row justify-content-evenly mb-4 pt-4">
         <div class="col-sm-2">
             <div class="form-floating">
-            <select class="form-select" id="floatingSelectGrid">
+            <select class="form-select" id="floatingSelectGrid1">
                 <option selected></option>
                 <option value="1">One</option>
                 <option value="2">Two</option>
                 <option value="3">Three</option>
             </select>
-            <label for="floatingSelectGrid">Svæði</label>
+            <label for="floatingSelectGrid1">Svæði</label>
             </div>
         </div>
         <div class="col-sm-1">
             <div class="form-floating">
-            <select class="form-select" id="floatingSelectGrid">
+            <select class="form-select" id="floatingSelectGrid2">
                 <option selected></option>
                 <option value="1">One</option>
                 <option value="2">Two</option>
                 <option value="3">Three</option>
             </select>
-            <label for="floatingSelectGrid">Tegund</label>
+            <label for="floatingSelectGrid2">Tegund</label>
             </div>
         </div>
         <div class="col-sm-2">
             <div class="form-floating">
-            <input class="form-control" id="floatingInputGrid" placeholder="">
-            <label for="floatingInputGrid">Verð</label>
+            <input class="form-control" id="floatingInputGrid1" placeholder="">
+            <label for="floatingInputGrid1">Verð</label>
             </div>
         </div>
     </div>
-    <div class="row justify-content-evenly">
-        <div class="col-sm-2">
+    <div class="row justify-content-evenly pb-4 mb-4">
+        <div class="col-sm-4">
             <div class="form-floating">
-            <input class="form-control" id="floatingInputGrid" placeholder="">
-            <label for="floatingInputGrid">Verð</label>
+            <input class="form-control" id="floatingInputGrid2" placeholder="">
+            <label for="floatingInputGrid2">Götuheiti eða textalýsing</label>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-1">
+            <div class="form-floating">
+            <select class="form-select" id="floatingSelectGrid3">
+                <option selected>Nýjast efst</option>
+                <option value="1">Dýrast efst</option>
+                <option value="2">Ódýrast efst</option>
+                <option value="3">Götuheiti A-Ö</option>
+                <option value="3">Götuheiti Ö-A</option>
+            </select>
+            <label for="floatingSelectGrid2">Raða eftir</label>
+            </div>
+        </div>
+        <div class="col-sm-1 btn-group" role="group" aria-label="Basic example">
+            <button type="submit" class="btn btn-primary">Leita</button>
+            <button id="saveFilter" type="button" onclick="saveFilter()" disabled class="btn btn-primary">Vista</button>
+            <button id="watchFilter" type="button" onclick="watchFilter()" disabled class="btn btn-primary">Vakta</button>
         </div>
     </div>
 </div>
