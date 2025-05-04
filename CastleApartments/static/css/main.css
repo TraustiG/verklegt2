@@ -4,6 +4,10 @@
     border-color: black;
 };
 
+.subtext {
+    color: #5C5F77;
+};
+
 :root {
     --bs-primary: #04A5E5; /* Custom purple for primary */
     --bs-secondary: #a0730e; /* Custom brown for secondary */

@@ -31,8 +31,7 @@
 </head>
 
 <body>
-    {% include "_nav.html" %}
-    {% include "_search_form.html" %}
+    {% include "_nav.html" with user=True %}
     {% block content %}
     {% endblock %}
 </body>
