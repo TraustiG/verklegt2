@@ -1,11 +1,11 @@
-<div id="carousel" class="carousel carousel-dark slide carousel-fade" style="max-width: 500px; max-height: 300px; overflow: hidden"> <!-- "max-width: {{ width }}; max-height: {{ height }}; overflow: hidden;"> -->
+<div id="carousel" class="carousel carousel-dark slide carousel-fade border border-black border-2" style="max-width: 500px; max-height: 300px; overflow: hidden"> <!-- "max-width: {{ width }}; max-height: {{ height }}; overflow: hidden;"> -->
     <div class="carousel-indicators">
         {% for image in images %}
-        <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="{{forloop.counter0}}" 
-        {% if forloop.first %}
-        class="active" 
-        {% endif %}
-        aria-current="true" aria-label="Slide {{forloop.counter0}}"></button>
+            <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="{{forloop.counter0}}" 
+            {% if forloop.first %}
+                class="active" 
+            {% endif %}
+            aria-current="true" aria-label="Slide {{forloop.counter0}}"></button>
         {% endfor %}
     </div>
     <div class="carousel-inner">
