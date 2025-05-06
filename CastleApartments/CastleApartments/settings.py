@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#to be able to use the Abstract User class & buyer/seller  
+AUTH_USER_MODEL = 'users.User'
 
 # Application definition
 
