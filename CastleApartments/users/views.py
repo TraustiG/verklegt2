@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-
+from .forms import RegistrationForm , SellerForm
+from .models import Seller
 listing = {
     "id": 1,
     "date": "30.april 2025", 
@@ -63,15 +64,53 @@ fakeUser = {
 
 
 def register(request):
+
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegistrationForm(request.POST)
+        seller_form = SellerForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            role = form.cleaned_data['role']
+            
+            if role == 'seller':
+                user.is_seller=True
+                if seller_form.is_valid():
+                    user.save()
+                    seller = Seller(user=user)
+                    seller.type=seller_form.cleaned_data['type']
+                    seller.street_name=seller_form.cleaned_data['street_name']
+                    seller.city=seller_form.cleaned_data['city']
+                    seller.postal_code=seller_form.cleaned_data['postal_code']
+                    seller.logo=seller_form.cleaned_data['logo']
+                    seller.bio=seller_form.cleaned_data['bio']
+                    seller.save()
+                
+                else:
+                    return render(request, 'users/register.html'),{
+                        'form':form,
+                        'seller_form':seller_form
+                    }
+                
+            else: 
+                user.is_buyer = True
+                user.save()
+        
             return redirect('login')
-        else:
-            return render(request, 'users/register.html', {'form': form})
-    else:
-        return render(request, 'users/register.html', {'form': UserCreationForm()})
+    
+        return render(request,'users/register.html', {
+            'form': form,
+            'seller_form': seller_form
+        })
+
+    else: 
+        return render(request,'users/register.html',{
+            'form': RegistrationForm(),
+            'seller_form': SellerForm()
+        })
+            
+            
+        
 
 #@login_required
 def profile(request, id):
