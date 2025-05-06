@@ -1,5 +1,5 @@
-<div class="card text-center border-dark mb-3" style="max-width: 18rem; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-    <img src="https://www.visir.is/i/7771CD8C03EADDC298466B1891000687FB455ED2EF25655D9F5CB2013D92D344_713x0.jpg" class="card-img-top border border-4 border-light" alt="Link to Seller">
-    <div class="card-footer"><h5>{{ item.seller.name }}</h5></div>
-    <a href="{% url 'real-estate-by-id' id=item.listing.id %}"class="stretched-link"></a>
+<div class="card seller-card newshade">
+    <img src="https://www.visir.is/i/7771CD8C03EADDC298466B1891000687FB455ED2EF25655D9F5CB2013D92D344_713x0.jpg" class="" alt="Link to Seller">
+    <div class="seller-title"><h4>{{ item.seller.name }}</h4></div>
+    <a href="{% url 'real-estate-by-id' id=item.listing.id %}" class="stretched-link"></a>
 </div>

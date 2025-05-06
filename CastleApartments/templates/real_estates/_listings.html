@@ -7,7 +7,10 @@
                     {% include "real_estates/_real_estate_item.html" with item=item %}
                 </div>
             {% empty %}
-                <h1>Engar eignir uppfylla valda síu.</h1>
+            </div>
+                <div class="py-5 my-5">
+                    <h1 class="text-center subtext">Engar eignir uppfylla valda síu...</h1>
+                </div>
             {% endfor %}
         </div>
     </div>

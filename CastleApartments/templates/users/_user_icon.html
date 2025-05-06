@@ -1,16 +1,16 @@
 {% if user.is_authenticated %}
 <div class="dropdown dropstart">
-    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <span style="min-width: 20px; min-height: 20px; border-radius: 25%; border-color: beige; border-width: 2px;">
-            {{user.username}}
-        </span>
-        <span class="position-absolute top-0 start-95 translate-middle badge rounded-pill bg-danger">
+    <button type="button" class="btn btn-secondary p-1 rounded-3" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="px-1 border border-beige border-2 rounded-3 m-0">
+                {{user.inits}}
+            </div>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
             4
             <span class="visually-hidden">unread messages</span>
         </span>
     </button>
     <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="{% url 'profile' %}">Prófíll</a></li>
+        <li><a class="dropdown-item" href="{% url 'profile' id=1 %}">Prófíll</a></li>
         <li>
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
@@ -21,7 +21,7 @@
 </div>
 {% else %}
 <div class="dropdown dropstart">
-    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    <button type="button" class="btn btn-secondary p-1 rounded-3" data-bs-toggle="dropdown" aria-expanded="false">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-fill"
         viewBox="0 0 16 16">
             <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
