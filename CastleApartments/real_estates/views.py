@@ -27,7 +27,7 @@ realEstate = {
 listing = {
     "id": 1,
     "date": "30.april 2025", 
-    "desc": "Íbúð 203: 102 fm 4ra herbergja íbúð á 1. hæð með sér  þvottahúsi. Eigninni fylgir sérafnotareitur. Íbúðin er 93,4 fm ásamt 5,3 fm geymslu.  Innréttingar og skápir: Hvítt\n AFHENDING VIÐ KAUPSAMNING\n\n Stofa/alrými með útgengt út á svalir\n Eldhús: Raftæki eru frá AEG, bakaraofn og helluborð\n Svefnherbergi með fataskáp\n Baðherbergi með sturtu, hvítri innréttingu, handlaug, upphengdu salerni og handklæðaofn. Aðstaða fyrir þvottavél og þurrkara.\n Geymsla á fyrstu hæð\n\n Húsbyggjandi: Breiðahvarf ehf\n Aðalhönnuður: Úti inni arkitektar: Baldur Svarvarsson\n Verkfræðihönnun: Víðsjá\n Raflagnahönnun: Lumex: Helgi Eiríksson", 
+    "desc": "Íbúð 203: 102 fm 4ra herbergja íbúð á 1. hæð með sér  þvottahúsi. Eigninni fylgir sérafnotareitur. Íbúðin er 93,4 fm ásamt 5,3 fm geymslu.  Innréttingar og skápir: Hvítt\n AFHENDING VIÐ KAUPSAMNING\n\n Stofa/alrými með útgengt út á svalir\n Eldhús: Raftæki eru frá AEG, bakaraofn og helluborð\n Svefnherbergi með fataskáp\n Baðherbergi með sturtu, hvítri innréttingu, handlaug, upphengdu salerni og handklæðaofn. Aðstaða fyrir þvottavél og þurrkara.\n Geymsla á fyrstu hæð\n\n Húsbyggjandi: Breiðahvarf ehf\n Aðalhönnuður: Úti inni arkitektar: Baldur Svavarsson\n Verkfræðihönnun: Víðsjá\n Raflagnahönnun: Lumex: Helgi Eiríksson", 
     "status": "Open", 
     "price": 96900000, 
 }

@@ -21,6 +21,23 @@ listing = {
             """, 
     "status": "Open", 
     "price": 96900000, 
+    "type": "Fjölbýlishús",
+    "address": "Maríugata 3, íbúð 203",
+    "city": "Garðabær",
+    "zip": 210,
+    "sqm": 102,
+    "baths": 1,
+    "beds": 4,
+    "images": [
+                {"url": "https://api-beta.fasteignir.is/pictures/811668/547d88356c7c77b207c1d2dcc1d65460-large.jpg",
+                "desc": "kitchen"},
+                {"url": "https://api-beta.fasteignir.is/pictures/811668/2002e4756c85dffff2794a97acb2f9d7-large.jpg",
+                "desc": "living room"},
+                {"url": "https://api-beta.fasteignir.is/pictures/811668/753f7a8a0b267f767ba18a3aa369d88a-large.jpg",
+                "desc": "bathroom"},
+                {"url": "https://api-beta.fasteignir.is/pictures/811668/068aeaf912fa617d3539adec6674ed9e-large.jpg",
+                "desc": "layout"},
+        ]
 }
 
 fakeUser = {

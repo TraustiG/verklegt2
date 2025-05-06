@@ -21,12 +21,12 @@
         {% endif %}
         >
             <th class="align-middle" scope="row"></th>
-            <th class="align-middle" scope="row"><h4>{{ offer.listing.address }}</h4></th>
+            <th class="align-middle text-center" scope="row"><h4>{{ offer.listing.address }} - {{ offer.listing.zip }} {{ offer.listing.city }}</h4></th>
             <td class="align-middle text-end" scope="row"><h4>{{ offer.listing.price }}</h4></td>
             <td class="align-middle text-end" scope="row"><h4>{{ offer.offer_amount }}</h4></td>
             <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><b>{{ offer.status }}</b>
                 {% if offer.status == "Accepted" %}
-                <button class="btn btn-primary">Ljúka!</button>
+                <button class="btn btn-primary">Afgreiða!</button>
                 {% elif offer.status == "Declined" %}
                 <button class="btn btn-primary">Skoða</button>
                 {% elif offer.status == "Contingent" %}
