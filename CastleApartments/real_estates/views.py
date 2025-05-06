@@ -69,7 +69,7 @@ def index(request, filterkeys=[]):
         for filter in filterkeys:
             value = request.GET.get(filter)
             listings = [x for x in listings if x["real_estate"][filter] == value]
-        return render(request, "real_estates/listings.html", {"listings": listings, "areas": areas, "types": types})
+        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types})
     if request.method == "POST":
         # posta search form?? 
         return HttpResponse("real_estate index")
@@ -78,3 +78,9 @@ def getRealEstateById(request, id):
     # get realestate from database - make object to send in render
     if request.method == "GET":
         return render(request, "real_estates/real_estate.html", {"item": item})
+
+
+def imageGallery(request, id):
+    # get realestate from database - make object to send in render
+    if request.method == "GET":
+        return render(request, "real_estates/gallery.html", {"images": realEstate['images']})

@@ -3,26 +3,34 @@
 {% block title %}{{item.real_estate.address}}{% endblock %}
 
 {% block content %}
-<div>
+<div class="m-3">
     <div class="container">
-        <div class="row w-75 row-cols-3">
-            <div class="col-sm-2">
-                {% include 'real_estates/_image_carousel.html' with width='500px' height='300px' images=item.real_estate.images %}
+        <div class="row">
+            <div class="col-9">
+                {% include 'real_estates/_image_carousel.html' with width='970px' height='620px' images=item.real_estate.images %}
             </div>
-            <div class="col-sm-1">
-                <div class="card" style="width: 10rem;">
-                    <img class="" src="https://www.visir.is/i/7771CD8C03EADDC298466B1891000687FB455ED2EF25655D9F5CB2013D92D344_713x0.jpg" class="card-img-top" alt="Link to Seller">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.seller.name }}</h5>
-                    </div>
-                    <a href="#" class="stretched-link"></a>
+            <div class="col-3 align-self-center">
+                <div class="row d-flex justify-content-center">
+                    {% include 'users/_seller_card.html' with seller=item.seller %}
                 </div>
-                <div>
-                    <button id="makeOffer" type="button" onclick="makeOffer()" class="btn btn-primary">Tilboð</button>
+                <div class="row d-flex justify-content-center">
+                    <div class="d-flex justify-content-center">
+                        <button id="makeOffer" type="button" onclick="makeOffer()" class="btn btn-primary">Tilboð</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <img src="{% static 'images/testhome.png' %}" class="" width="500" alt="A beautiful home">
+</div>
+<div>
+    BASIC INFO
+</div>
+<div>
+    {% include "_title_bar.html" with title='Lýsing' %}
+    DESCRIPTION
+</div>
+<div>
+    {% include "_title_bar.html" with title='Sambærilegar eignir' %}
+    {% include "real_estates/_listings.html" with cols=3 %}
 </div>
 {% endblock %}
