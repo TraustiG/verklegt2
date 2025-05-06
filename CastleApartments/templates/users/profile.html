@@ -25,21 +25,21 @@
             <div class="col-4 align-self-center">
                 <h1 class="mb-0">{{ user.full_name }}</h1>
                 {% if user.is_seller %}
-                <h6 class="px-3">{{ user.type }}</h6>
-                <h5>{{ user.address }}</h5>
-                <h5>{{ user.zip }} {{ user.city }}</h5>
+                <h6 class="px-3">{{ user.seller.type }}</h6>
+                <h5>{{ user.seller.street_name}}</h5>
+                <h5>{{ user.seller.postal_code }} {{ user.seller.city }}</h5>
                 {% endif %}
             </div>
             <div class="col-4">
                 {% if user.is_seller %}
-                    <img class="border border-black border-4 rounded rounded-5" src="{{ user.logo }}" style="height: auto; width:100%;" />
+                    <img class="border border-black border-4 rounded rounded-5" src="{{ user.seller.logo }}" style="height: auto; width:100%;" />
                 {% endif %}
             </div>
         </div>
     </div>
     {% if user.is_seller %}
         <div>
-            <p>{{ user.bio }}</p>
+            <p>{{ user.seller.bio }}</p>
         </div>
         {% include "_title_bar.html" with title="Fasteignir" %}
         <div class="d-flex justify-content-center align-items-center">
