@@ -3,31 +3,78 @@
 {% block title %}{{item.real_estate.address}}{% endblock %}
 
 {% block content %}
-<div class="m-3">
+<div class="pt-3 bg-mid">
     <div class="container">
         <div class="row">
-            <div class="col-9">
+            <div class="col-8">
                 {% include 'real_estates/_image_carousel.html' with width='970px' height='620px' images=item.real_estate.images %}
             </div>
-            <div class="col-3 align-self-center">
+            <div class="col-4 align-self-center">
                 <div class="row d-flex justify-content-center">
                     {% include 'users/_seller_card.html' with seller=item.seller %}
                 </div>
                 <div class="row d-flex justify-content-center">
                     <div class="d-flex justify-content-center">
-                        <button id="makeOffer" type="button" onclick="makeOffer()" class="btn btn-primary">Tilboð</button>
+                        <button id="makeOffer" type="button" onclick="makeOffer()" class="btn btn-primary" style="height:6rem; width:16rem"><h3 class="text-bg-primary">Gera tilboð</h3></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div>
-    BASIC INFO
+<div class="bg-mid">
+    <div class="container">
+        <div class="row px-5 d-flex align-items-center">
+            <div class="col-12 d-flex align-items-center gap-1 align-self-center">
+                <div class="bg-primary text-bg-primary rounded-3">
+                    <div class="p-1">
+                        {{ item.real_estate.type }}
+                    </div>
+                </div>
+                <span class="align-middle">
+                    <h1 class="mb-1">
+                        {{ item.real_estate.address }}
+                    </h1>
+                </span>
+                <div class="ms-auto">
+                    <h2>
+                        {{ item.listing.price }} kr.
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex px-5">
+            <div class="d-flex align-items-start col-6 flex-column">
+                <div>
+                    <h5 class="subtext">
+                        {{ item.real_estate.zip }} {{ item.real_estate.city }}
+                    </h5>
+                </div>
+            </div>
+            <div class="d-flex align-items-end col-6 flex-column">
+                <div>
+                    <h3 class="subtext">
+                        Skráð {{ item.listing.date }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div>
     {% include "_title_bar.html" with title='Lýsing' %}
-    DESCRIPTION
+</div>
+<div class="container py-4">
+    <div class="col-12">
+        {% for line in item.listing.desc %}
+        <h5 class="">
+            {{ line }}
+            {% if line == "" %}
+            <br/>
+            {% endif %}
+        </h5>
+        {% endfor %}
+    </div>
 </div>
 <div>
     {% include "_title_bar.html" with title='Sambærilegar eignir' %}

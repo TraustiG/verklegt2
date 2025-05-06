@@ -3,6 +3,7 @@ from django.shortcuts import render
 from babel.numbers import format_currency
 import copy
 
+
 realEstate = {
     "type": "Fjölbýlishús",
     "address": "Maríugata 3, íbúð 203",
@@ -26,20 +27,7 @@ realEstate = {
 listing = {
     "id": 1,
     "date": "30.april 2025", 
-    "desc": """
-            Íbúð 203: 102 fm 4ra herbergja íbúð á 1. hæð með sér  þvottahúsi. Eigninni fylgir sérafnotareitur. Íbúðin er 93,4 fm ásamt 5,3 fm geymslu. 
-            Innréttingar og skápir: Hvítt\n
-            AFHENDING VIÐ KAUPSAMNING\n\n
-            Stofa/alrými með útgengt út á svalir\n
-            Eldhús: Raftæki eru frá AEG, bakaraofn og helluborð\n
-            Svefnherbergi með fataskáp\n
-            Baðherbergi með sturtu, hvítri innréttingu, handlaug, upphengdu salerni og handklæðaofn. Aðstaða fyrir þvottavél og þurrkara.\n
-            Geymsla á fyrstu hæð\n\n
-            Húsbyggjandi: Breiðahvarf ehf\n
-            Aðalhönnuður: Úti inni arkitektar: Baldur Svarvarsson\n
-            Verkfræðihönnun: Víðsjá\n
-            Raflagnahönnun: Lumex: Helgi Eiríksson
-            """, 
+    "desc": "Íbúð 203: 102 fm 4ra herbergja íbúð á 1. hæð með sér  þvottahúsi. Eigninni fylgir sérafnotareitur. Íbúðin er 93,4 fm ásamt 5,3 fm geymslu.  Innréttingar og skápir: Hvítt\n AFHENDING VIÐ KAUPSAMNING\n\n Stofa/alrými með útgengt út á svalir\n Eldhús: Raftæki eru frá AEG, bakaraofn og helluborð\n Svefnherbergi með fataskáp\n Baðherbergi með sturtu, hvítri innréttingu, handlaug, upphengdu salerni og handklæðaofn. Aðstaða fyrir þvottavél og þurrkara.\n Geymsla á fyrstu hæð\n\n Húsbyggjandi: Breiðahvarf ehf\n Aðalhönnuður: Úti inni arkitektar: Baldur Svarvarsson\n Verkfræðihönnun: Víðsjá\n Raflagnahönnun: Lumex: Helgi Eiríksson", 
     "status": "Open", 
     "price": 96900000, 
 }
@@ -50,6 +38,8 @@ seller = {
     "image": "",
 }
 
+listing["desc"] = listing["desc"].splitlines()
+
 item = {"real_estate": realEstate, "listing": listing, "seller": seller}
 item["listing"]["price"] = 96900000
 item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
@@ -58,6 +48,20 @@ for i in range(60):
     fakelist[i] = copy.deepcopy(item)
 fakelist[2]["real_estate"]["city"] = "Akranes"
 fakelist[2]["real_estate"]["zip"] = "300"
+
+fakeUser = {
+    "name": "Pétur Hermannsson",
+    "is_authenticated": True,
+    "id": 1,
+    "photo": "https://media.istockphoto.com/id/1171169127/photo/headshot-of-cheerful-handsome-man-with-trendy-haircut-and-eyeglasses-isolated-on-gray.jpg?s=612x612&w=0&k=20&c=yqAKmCqnpP_T8M8I5VTKxecri1xutkXH7zfybnwVWPQ=",
+    "username": "PesiiHann",
+    "offers": [{
+        "expiry": "01.01.2026",
+        "offer_amount": 94000000,
+        "status": "Open",
+        "listing": listing}
+    ]
+}
 
 # Create your views here.
 def index(request, filterkeys=[]):
@@ -76,9 +80,10 @@ def index(request, filterkeys=[]):
 
 def getRealEstateById(request, id):
     # get realestate from database - make object to send in render
+    # get list of similar real estates - by zip, size, rooms... put in listings
+    listings = []
     if request.method == "GET":
-        return render(request, "real_estates/real_estate.html", {"item": item})
-
+        return render(request, "real_estates/real_estate.html", {"item": item, "listings": listings})
 
 def imageGallery(request, id):
     # get realestate from database - make object to send in render

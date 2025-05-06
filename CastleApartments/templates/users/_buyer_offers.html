@@ -1,0 +1,40 @@
+<table class="table table-bordered table-striped table-hover justify-content-center">
+    <thead>
+        <tr class="text-center">
+            <th style="width:10%;" scope="col"></th>
+            <th style="width:45%;" scope="col">Heimilisfang</th>
+            <th style="width:10%;" scope="col">Skráð verð</th>
+            <th style="width:10%;" scope="col">Tilboð</th>
+            <th class="w-25" scope="col">Staða</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider" style="border-top-color: black;">
+    {% for offer in user.offers %}
+        <tr 
+        {% if offer.status == "Accepted" %}
+        class="table-success"
+        {% elif offer.status == "Declined" %}
+        class="table-danger"
+        {% elif offer.status == "Contingent" %}
+        class="table-info"
+        {% endif %}
+        >
+            <th class="align-middle" scope="row"></th>
+            <th class="align-middle" scope="row"><h4>{{ offer.listing.address }}</h4></th>
+            <td class="align-middle text-end" scope="row"><h4>{{ offer.listing.price }}</h4></td>
+            <td class="align-middle text-end" scope="row"><h4>{{ offer.offer_amount }}</h4></td>
+            <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><b>{{ offer.status }}</b>
+                {% if offer.status == "Accepted" %}
+                <button class="btn btn-primary">Ljúka!</button>
+                {% elif offer.status == "Declined" %}
+                <button class="btn btn-primary">Skoða</button>
+                {% elif offer.status == "Contingent" %}
+                <button class="btn btn-primary">Skoða</button>
+                {% endif %}
+            </td>
+            <th scope="row"></th>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
