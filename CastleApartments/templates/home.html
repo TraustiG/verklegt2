@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Castle Apartments{% endblock %}
+
+{% block content %}
+    {% include "_search_form.html" with areas=areas types=types %}
+    {% include "real_estates/_listings.html" with cols=4 %}
+{% endblock %}

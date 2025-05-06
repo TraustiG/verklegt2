@@ -1,0 +1,51 @@
+.title-bar {
+    display: grid;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    justify-items: center;
+    align-items: center;
+}
+
+.seller-card {
+    height: 100px;
+    width: 100%;
+}
+
+:root .newshade {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.testerbtn {
+    background-color: #04A5E5;
+    border-width: 3px;
+    border-color: black;
+}
+
+.colors {
+    background-color:#04A5E5;
+    border-width: 3px;
+    border-color: black;
+}
+
+.subtext {
+    color: #5C5F77;
+}
+
+:root {
+    --bs-primary: #04a5e5;
+    --bs-secondary: #a0730e;
+    --bs-danger: #54b6aa;
+    --bs-btn-disabled-bg: #538CA3
+}
+
+:root .btn-primary {
+    --bs-btn-bg: var(--bs-primary);
+}
+
+:root .btn:disabled {
+    background-color: var(--bs-btn-disabled-bg);
+}
+
+:root .btn-secondary {
+    --bs-btn-bg: var(--bs-secondary);
+}

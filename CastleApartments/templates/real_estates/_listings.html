@@ -1,10 +1,7 @@
-{% extends "base.html" %}
-{% block title %}Castle Apartments{% endblock %}
-
+{% load static %}
 {% block content %}
-    {% include "_search_form.html" with areas=areas types=types %}
     <div class="container">
-        <div class="row gx-2 row-cols-4">
+        <div class="row gx-2 row-cols-{{cols}}">
             {% for item in listings %}
                 <div class="col pb-2">
                     {% include "real_estates/_real_estate_item.html" with item=item %}
