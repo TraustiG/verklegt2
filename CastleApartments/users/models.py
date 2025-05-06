@@ -5,6 +5,9 @@ class User(AbstractUser):
     
     is_seller = models.BooleanField(default = False)
     is_buyer = models.BooleanField(default = False)
+    image = models.URLField()
+    full_name = models.CharField(max_length = 100)
+
 
 class Buyer(models.Model):
     user = models.OneToOneField(

@@ -10,7 +10,7 @@ class RegistrationForm(UserCreationForm):
 
     class Meta : 
         model = User
-        fields = ("username", "password1","password2","role")
+        fields = ("username","full_name","image", "password1","password2","role")
 
 class SellerForm(forms.ModelForm):
     class Meta:

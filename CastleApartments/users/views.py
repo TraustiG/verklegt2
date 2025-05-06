@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm , SellerForm
 from .models import Seller
 listing = {
@@ -41,7 +40,7 @@ listing = {
         ]
 }
 
-fakeUser = {
+"""akeUser = {
     "name": "Pétur Hermannsson",
     "inits": "PH",
     "is_authenticated": True,
@@ -58,7 +57,7 @@ fakeUser = {
         "status": "Open",
         "listing": listing}
     ]
-}
+}"""
 
 # Create your views here.
 
@@ -114,4 +113,4 @@ def register(request):
 
 #@login_required
 def profile(request, id):
-    return render(request, 'users/profile.html', {'user': fakeUser})
+    return render(request, 'users/profile.html', {'user': request.user})

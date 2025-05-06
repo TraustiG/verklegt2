@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="col-4 align-self-center">
-                <h1 class="mb-0">{{ user.name }}</h1>
+                <h1 class="mb-0">{{ user.full_name }}</h1>
                 {% if user.is_seller %}
                 <h6 class="px-3">{{ user.type }}</h6>
                 <h5>{{ user.address }}</h5>
@@ -39,7 +39,7 @@
     </div>
     {% if user.is_seller %}
         <div>
-            <p>{{ user.desc }}</p>
+            <p>{{ user.bio }}</p>
         </div>
         {% include "_title_bar.html" with title="Fasteignir" %}
         <div class="d-flex justify-content-center align-items-center">
