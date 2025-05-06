@@ -5,6 +5,35 @@
   {% csrf_token %}
   {{ form.as_p }}
 
-  {{seller_form.as_p}}
+  <div id="seller-form" style="display: none;">
+    {{seller_form.as_p}}
+  </div>
   <button type="submit">Register</button>
 </form>
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded',function(){
+
+  const role = document.querySelectorAll('input[name="role"]');
+  const sellerform = document.getElementById('seller-form');
+
+  function toggleSellerForm(){
+
+    const selectedRole = document.querySelector('input[name="role"]:checked');
+
+    if(selectedRole.value === 'seller'){
+      sellerform.style.display = 'block';
+    } else{
+      sellerform.style.display = 'none';
+    }
+  }
+
+  role.forEach(radio=> { 
+    radio.addEventListener('change', toggleSellerForm);
+  })
+
+  toggleSellerForm(); 
+});
+</script>
