@@ -1,9 +1,12 @@
 
 from django.db import models
 
+
 class Property(models.Model):
+
+    seller = models.ForeignKey(
+        "users.Seller", on_delete=models.CASCADE, null=True, blank=True)
     
-    title = models.CharField(max_length=100)
     street_name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     postal_code = models.CharField(max_length=5)
@@ -18,18 +21,32 @@ class Property(models.Model):
     image = models.URLField()
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.street_name}"
     
+
+class OfferStatus(models.TextChoices):
+        OPEN = 'OPEN', 'Open'
+        REJECTED = 'REJECTED', 'Rejected'
+        ACCEPTED = 'ACCEPTED', 'Accepted'
+        CONTINGENT = 'CONTINGENT', 'Contingent'
 
 class Offer(models.Model):
 
     property = models.ForeignKey(
         "Property", on_delete=models.CASCADE)
     
+    buyer = models.ForeignKey(
+        "users.Buyer", on_delete=models.CASCADE, null=True, blank=True)
+    
     offer_amount = models.CharField(max_length=20)
+    offer_expiry = models.DateField()
+
+    offer_status = models.CharField(choices=OfferStatus.choices, default=OfferStatus.OPEN,)
     
     def __str__(self):
         return f"{self.offer_amount}"
+
+
     
 class PropertyImages(models.Model):
 
@@ -37,6 +54,40 @@ class PropertyImages(models.Model):
         "Property", on_delete=models.CASCADE)
     
     image_url = models.URLField()
+    image_description = models.TextField()
+
+
     
     def __str__(self):
         return f"{self.image_url}"
+
+
+class PaymentOption(models.TextChoices):
+        CREDIT_CARD = "CREDIT_CARD", "Credit Card"
+        BANK_ACCOUNT = "BANK_ACCOUNT", "Bank Account"
+        MORTGAGE = "MORTGAGE", "Mortgage"
+
+class Payment(models.Model):
+
+    offer = models.OneToOneField(
+         "Offer", on_delete=models.CASCADE)
+
+    payment_option = models.CharField(choices=PaymentOption.choices)
+
+    national_id = models.CharField(max_length=10)
+    street_name = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=5)
+    
+    #ætti að vera model fyrir hvert og eitt option maybe?
+    cardholder_name = models.CharField(max_length = 200)
+    credit_card_number = models.CharField(max_length = 16)
+    expiry_date = models.CharField(max_length = 10) # 12/26 right?
+    cvc = models.CharField(max_length = 5)
+
+    bank_account_number = models.CharField(max_length = 50)
+
+    mortgage_provider = models.CharField(max_length = 50)
+
+    def __str__(self):
+        return f"{self.payment_option}"

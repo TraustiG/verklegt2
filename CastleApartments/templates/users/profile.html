@@ -1,4 +1,59 @@
-<h1>Welcome, {{ user.username }}</h1>
+{% extends "base.html" %}
+{% block title %}{{ user.name }}{% endblock %}
 
-
-<p>Is Authenticated: {{ user.is_authenticated }}</p>
+{% block content %}
+<div class="bg-mid">
+    <div class="container py-3">
+        <div class="row d-flex justify-content-center" style="height:25rem;">
+            <div class="h-100 col-4">
+                <div class="h-100 row justify-content-center">
+                    <div class="position-relative h-100 col-9 rounded rounded-5 d-flex justify-content-center align-items-center bg-low profile-image" style="overflow:hidden">
+                        <img src="{{ user.image }}" class="h-100"
+                        {% if user.is_seller %}
+                        alt="Photo of realtor"
+                        {% else %}
+                        alt="Profile photo"
+                        {% endif %}
+                        />
+                        {% if not user.is_seller or user.id == seller_id %}
+                        <button class="position-absolute bottom-0 btn btn-primary mb-3">Breyta prófíl</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 align-self-center">
+                <h1 class="mb-0">{{ user.full_name }}</h1>
+                {% if user.is_seller %}
+                <h6 class="px-3 subtext">{{ user.seller.type }}</h6>
+                <h5>{{ user.seller.street_name}}</h5>
+                <h5>{{ user.seller.postal_code }} {{ user.seller.city }}</h5>
+                {% endif %}
+            </div>
+            <div class="col-4">
+                {% if user.is_seller %}
+                    <img class="border border-black border-4 rounded rounded-5" src="{{ user.seller.logo }}" style="height: auto; width:100%;" />
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+    {% if user.is_seller %}
+        <div>
+            {% for line in user.seller.bio %}
+            <h5 class="">
+                {{ line }}
+                {% if line == "" %}
+                <br/>
+                {% endif %}
+            </h5>
+            {% endfor %}
+        </div>
+        {% include "_title_bar.html" with title="Fasteignir" %}
+        <div class="d-flex justify-content-center align-items-center">
+            {% include "real_estates/_listings.html" with cols=5 %}
+        </div>
+    {% else %}
+        {% include "_title_bar.html" with title="Tilboð" %}
+        {% include "users/_buyer_offers.html" %}
+    {% endif %}
+{% endblock %}

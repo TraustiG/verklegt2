@@ -1,9 +1,86 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}{{property.street_name}}{% endblock %}
 
 {% block content %}
+<div class="pt-3 bg-mid">
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                {% include 'real_estates/_image_carousel.html' with width='856px' height='570px' images=images %}
+            </div>
+            <div class="col-4 align-self-center">
+                <div class="row d-flex justify-content-center">
+                    {% include 'users/_seller_card.html' with seller=seller %}
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <div class="d-flex justify-content-center">
+                        <button id="makeOffer" type="button" onclick="makeOffer()" class="btn btn-primary btn-big" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#offer-modal">
+                            Gera tilboð
+                        </button>
+                        {% include 'real_estates/_offer_modal.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="bg-mid">
+    <div class="container">
+        <div class="row px-5 d-flex align-items-center">
+            <div class="col-12 d-flex align-items-center gap-1 align-self-center">
+                <div class="bg-primary text-bg-primary rounded-3">
+                    <div class="p-1">
+                        {{ property.property_type }}
+                    </div>
+                </div>
+                <span class="align-middle">
+                    <h1 class="mb-1">
+                        {{ property.street_name }}
+                    </h1>
+                </span>
+                <div class="ms-auto">
+                    <h2>
+                        {{ property.listing_price}} kr.
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex px-5">
+            <div class="d-flex align-items-start col-6 flex-column">
+                <div>
+                    <h5 class="subtext">
+                        {{ property.postal_code }} {{ property.city }}
+                    </h5>
+                </div>
+            </div>
+            <div class="d-flex align-items-end col-6 flex-column">
+                <div>
+                    <h3 class="subtext">
+                        Skráð {{ property.listing_date }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div>
-    {% include 'real_estates/_image_carousel.html' with width='500px' height='300px' images=item.real_estate.images %}
-    <img src="{% static 'images/testhome.png' %}" class="" width="500" alt="A beautiful home">
+    {% include "_title_bar.html" with title='Lýsing' %}
+</div>
+<div class="container py-4">
+    <div class="col-12">
+        {% for line in item.listing.desc %}
+        <h5 class="">
+            {{ line }}
+            {% if line == "" %}
+            <br/>
+            {% endif %}
+        </h5>
+        {% endfor %}
+    </div>
+</div>
+<div>
+    {% include "_title_bar.html" with title='Sambærilegar eignir' %}
+    {% include "real_estates/_listings.html" with cols=3 %}
 </div>
 {% endblock %}

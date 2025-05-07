@@ -1,0 +1,7 @@
+<div class="card seller-card newshade">
+    <img src="{{seller.user.image}}" class="" alt="Link to Seller">
+    <div class="w-100 bg-low text-center">
+        <div class="seller-title"><h4>{{ seller.user.full_name }}</h4></div>
+    </div>
+    <a href="{% url 'real-estate-by-id' id=property.id %}" class="stretched-link"></a>
+</div>

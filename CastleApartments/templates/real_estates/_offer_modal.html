@@ -1,0 +1,27 @@
+<div class="modal fade" id="offer-modal" focus tabindex="-1" aria-labelledby="offer-modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-mid">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Gera Tilboð</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'create-offer' id=property.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="amount" class="form-label">Tilboðsupphæð</label>
+                        <input type="number" class="form-control" id="amount" name="amount">
+                    </div>
+                    <div class="mb-3">
+                        <label for="expiry" class="form-label">Gildistími</label>
+                        <input type="date" class="form-control" id="expiry" name="expiry">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,23 +1,27 @@
 {% load static %}
-<div class="card shadow" style="width: 100%">
-    <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-0-hover" href="{% url 'real-estate-by-id' id=item.listing.id %}">
-        <img src="{% static 'images/testhome.png' %}" class="card-img-top" alt="A beautiful home">
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <h5 class="card-title mb-0">
-                    {{ item.real_estate.address }}
-                </h5>
-                <h6 class="ms-3 subtext">
-                    {{ item.real_estate.zip }} {{ item.real_estate.city }}
-                </h6>
-            </li>
-            <li class="list-group-item gx-3">
-                <div class="d-flex justify-content-evenly">
-                    <span>{{ item.real_estate.beds }} herb.</span>
-                    <span>{{ item.real_estate.sqm }} m<sup>2</sup></span>
-                </div>
-            </li>
-            <li class="list-group-item"><b>{{ item.listing.price }} kr.</b></li>
-        </ul>
+<div class="position-relative card shadow w-100 overflow-hidden">
+    <a class="stretched-link" href="{% url 'real-estate-by-id' id=property.id %}">
     </a>
+    <img src="{{property.image}}" class="card-img-top" alt="A beautiful home">
+    {% if item.banner %}
+        {% include "real_estates/_card_banner.html" with text=item.banner %}
+    {% endif %}
+    </img>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <h5 class="card-title mb-0 address">
+                {{ property.street_name }}
+            </h5>
+            <h6 class="ms-3 subtext zip">
+                {{ property.postal_code }} {{ property.city }}
+            </h6>
+        </li>
+        <li class="list-group-item gx-3">
+            <div class="d-flex justify-content-evenly">
+                <span>{{ property.number_of_bedrooms }} herb.</span>
+                <span>{{ property.square_meters }} m<sup>2</sup></span>
+            </div>
+        </li>
+        <li class="list-group-item"><b class="price">{{ property.listing_price }} kr.</b></li>
+    </ul>
 </div>
