@@ -1,10 +1,12 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from babel.numbers import format_currency
 import copy
 from .forms import SearchForm
+from .models import Property, Offer, PropertyImages
+from users.models import Buyer
 
-
+""""
 realEstate = {
     "type": "Fjölbýlishús",
     "address": "Maríugata 3, íbúð 203",
@@ -67,12 +69,17 @@ fakeUser = {
         "listing": listing}
     ]
 }
+"""
 
 # Create your views here.
 def index(request):
     if request.method == "GET":
         # þarf að fa listings og tegundir og postnumer í boði
-        areas = list(set([f"{x['real_estate']['zip']} {x['real_estate']['city']}" for x in fakelist]))
+
+        listings = Property.objects.all()
+        return render(request, "home.html", {"listings":listings})
+
+    """ areas = list(set([f"{x['real_estate']['zip']} {x['real_estate']['city']}" for x in fakelist]))
         types = list(set([f"{x['real_estate']['type']}" for x in fakelist]))
         listings = copy.deepcopy(fakelist)
         for item in listings:
@@ -81,21 +88,29 @@ def index(request):
     if request.method == "POST":
         # posta search form?? 
         return HttpResponse("real_estate index")
-
+        """
 def getRealEstateById(request, id):
     # get realestate from database - make object to send in render
     # get list of similar real estates - by zip, size, rooms... put in listings
-    listings = []
+
+    try:
+        property_obj = Property.objects.get(id=id)
+    except Property.DoesNotExist:
+        return redirect('real-estates')
+    
+    images = PropertyImages.objects.filter(property=property_obj)
+    seller = property_obj.seller
+
+    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images,"seller":seller,})
+    
+
+""" listings = []
     item = copy.deepcopy({"real_estate": realEstate, "listing": listing, "seller": seller})
     item["listing"]["desc"] = item["listing"]["desc"].splitlines()
     item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
     if request.method == "GET":
         return render(request, "real_estates/real_estate.html", {"item": item, "listings": listings})
-
-def imageGallery(request, id):
-    # get realestate from database - make object to send in render
-    if request.method == "GET":
-        return render(request, "real_estates/gallery.html", {"images": realEstate['images']})
+    """
 
 def search(request):
     if request.method == "GET":
@@ -148,3 +163,26 @@ def checkDesc(search, listing):
         if word.lower() in listing["real_estate"]["address"].lower():
             return True
     return False
+
+
+def create_offer(request):
+
+    if request.method == 'POST':
+        property_id = request.POST.get('property_id')
+        amount = request.POST.get('amount')
+        expiry = request.POST.get('expiry')
+
+        property_obj = Property.objects.get(id=property_id)
+        buyer_obj = Buyer.objects.get(user=request.user)
+
+
+        Offer.objects.create(
+            property = property_obj,
+            buyer = buyer_obj,
+            offer_amount = amount,
+            offer_expiry = expiry
+        )
+        
+        return redirect('real-estate-by-id', id=property_id)
+    
+    return redirect('real-estates')

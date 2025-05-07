@@ -1,7 +1,7 @@
 <div class="card seller-card newshade">
-    <img src="https://www.visir.is/i/7771CD8C03EADDC298466B1891000687FB455ED2EF25655D9F5CB2013D92D344_713x0.jpg" class="" alt="Link to Seller">
+    <img src="{{seller.user.image}}" class="" alt="Link to Seller">
     <div class="w-100 bg-low text-center">
-        <div class="seller-title"><h4>{{ item.seller.name }}</h4></div>
+        <div class="seller-title"><h4>{{ seller.user.full_name }}</h4></div>
     </div>
-    <a href="{% url 'real-estate-by-id' id=item.listing.id %}" class="stretched-link"></a>
+    <a href="{% url 'real-estate-by-id' id=property.id %}" class="stretched-link"></a>
 </div>
