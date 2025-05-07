@@ -6,14 +6,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST">
+                <form method="POST" action="{% url 'create-offer' id=property.id %}">
+                    {% csrf_token %}
                     <div class="mb-3">
                         <label for="amount" class="form-label">Tilboðsupphæð</label>
-                        <input type="number" class="form-control" id="amount">
+                        <input type="number" class="form-control" id="amount" name="amount">
                     </div>
                     <div class="mb-3">
                         <label for="expiry" class="form-label">Gildistími</label>
-                        <input type="date" class="form-control" id="expiry">
+                        <input type="date" class="form-control" id="expiry" name="expiry">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
