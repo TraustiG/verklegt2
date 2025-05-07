@@ -1,7 +1,6 @@
 function cycleTheme() {
     const currentTheme = localStorage.getItem("theme") || "light";
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    console.log(window.matchMedia("(prefers-color-scheme: dark)"))
 
     if (prefersDark) {
         // Auto (dark) -> Light -> Dark
@@ -21,8 +20,13 @@ function cycleTheme() {
 }
 
 const init = (function initTheme() {
-    // set theme defined in localStorage if there is one, or fallback to auto mode
     const currentTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    if (prefersDark) {
+        const link = document.querySelector("link[rel*='icon']")
+        link.setAttribute("href", "/static/images/logo-darkmode.png")
+    }
     currentTheme ? setTheme(currentTheme) : setTheme("light");
 })()
 

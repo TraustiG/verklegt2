@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from babel.numbers import format_currency
 import copy
+from .forms import SearchForm
 
 
 realEstate = {
@@ -38,16 +39,20 @@ seller = {
     "image": "",
 }
 
-listing["desc"] = listing["desc"].splitlines()
 
 item = {"real_estate": realEstate, "listing": listing, "seller": seller}
 item["listing"]["price"] = 96900000
-item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
 fakelist = [None]*60
 for i in range(60):
     fakelist[i] = copy.deepcopy(item)
 fakelist[2]["real_estate"]["city"] = "Akranes"
-fakelist[2]["real_estate"]["zip"] = "300"
+fakelist[2]["real_estate"]["address"] = "Bjarkargata 17"
+fakelist[2]["real_estate"]["zip"] = 300
+fakelist[8]["real_estate"]["type"] = "Einbýlishús"
+fakelist[18]["real_estate"]["type"] = "Sundlaugagarður"
+fakelist[32]["listing"]["price"] = 56000000
+fakelist[4]["banner"] = "SELD"
+fakelist[13]["banner"] = "SELD"
 
 fakeUser = {
     "name": "Pétur Hermannsson",
@@ -64,15 +69,14 @@ fakeUser = {
 }
 
 # Create your views here.
-def index(request, filterkeys=[]):
+def index(request):
     if request.method == "GET":
         # þarf að fa listings og tegundir og postnumer í boði
         areas = list(set([f"{x['real_estate']['zip']} {x['real_estate']['city']}" for x in fakelist]))
         types = list(set([f"{x['real_estate']['type']}" for x in fakelist]))
         listings = copy.deepcopy(fakelist)
-        for filter in filterkeys:
-            value = request.GET.get(filter)
-            listings = [x for x in listings if x["real_estate"][filter] == value]
+        for item in listings:
+            item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
         return render(request, "home.html", {"listings": listings, "areas": areas, "types": types})
     if request.method == "POST":
         # posta search form?? 
@@ -82,6 +86,9 @@ def getRealEstateById(request, id):
     # get realestate from database - make object to send in render
     # get list of similar real estates - by zip, size, rooms... put in listings
     listings = []
+    item = copy.deepcopy({"real_estate": realEstate, "listing": listing, "seller": seller})
+    item["listing"]["desc"] = item["listing"]["desc"].splitlines()
+    item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
     if request.method == "GET":
         return render(request, "real_estates/real_estate.html", {"item": item, "listings": listings})
 
@@ -89,3 +96,55 @@ def imageGallery(request, id):
     # get realestate from database - make object to send in render
     if request.method == "GET":
         return render(request, "real_estates/gallery.html", {"images": realEstate['images']})
+
+def search(request):
+    if request.method == "GET":
+        
+        areas = list(set([f"{x['real_estate']['zip']} {x['real_estate']['city']}" for x in fakelist]))
+        types = list(set([f"{x['real_estate']['type']}" for x in fakelist]))
+
+        listings = copy.deepcopy(fakelist)
+        for key in request.GET.keys():
+            value = request.GET.get(key)
+            print(key, value)
+            if not value:
+                continue
+            listings = filterListings(key, value, listings)
+        for item in listings:
+            item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
+
+        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types})
+    
+
+#### Breyta object paths þegar model er komið ####
+def filterListings(key, value, listings):
+    filters = {"areaSelect": "zip",
+               "typeSelect": "type",
+               "priceInput": "price",
+               "descInput": "desc"}
+    if key in filters.keys():
+        key = filters[key]
+
+    if key == "zip":
+        zip = value.split()[0]
+        value = int(zip)
+    if key == "desc":
+        temp = [x for x in listings if checkDesc(value, x)]
+    elif key == "price":
+        values = value.split("-")
+        if len(values) == 2:
+            min, max = values
+            temp = [x for x in listings if x["listing"][key] >= int(min) and x["listing"][key] <= int(max)]
+    else:
+        temp = [x for x in listings if x["real_estate"][key] == value]
+    return temp
+
+
+def checkDesc(search, listing):
+    words = search.split()
+    for word in words:
+        if word.lower() in listing["listing"]["desc"].lower():
+            return True
+        if word.lower() in listing["real_estate"]["address"].lower():
+            return True
+    return False
