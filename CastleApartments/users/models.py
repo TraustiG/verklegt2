@@ -8,8 +8,17 @@ class User(AbstractUser):
     image = models.URLField()
     full_name = models.CharField(max_length = 100)
 
+    def makeInits(self):
+        print("makeInits")
+
+    def __str__(self):
+        #self.makeInits()
+        names = self.full_name.split()
+        inits = "".join([x[0] for x in names])
+        return inits
 
 class Buyer(models.Model):
+    
     user = models.OneToOneField(
         "User", on_delete=models.CASCADE, primary_key = True)
 
@@ -31,5 +40,5 @@ class Seller(models.Model):
     bio = models.TextField()
 
     def __str__(self):
-        return self.user.username
+        return "XX"
 

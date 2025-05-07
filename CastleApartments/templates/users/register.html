@@ -1,9 +1,12 @@
+{% extends "base.html" %}
 {% block title %}Signup{% endblock %}
+{% block content %}
 <h1>Create Account</h1>
 
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
+
 
   <div id="seller-form" style="display: none;">
     {{seller_form.as_p}}
@@ -45,4 +48,4 @@
   
     toggleSellerForm(); 
   });
-  </script>
+</script>
