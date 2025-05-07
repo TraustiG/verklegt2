@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{{item.real_estate.address}}{% endblock %}
+{% block title %}{{property.street_name}}{% endblock %}
 
 {% block content %}
 <div class="pt-3 bg-mid">
     <div class="container">
         <div class="row">
             <div class="col-8">
-                {% include 'real_estates/_image_carousel.html' with width='856px' height='570px' images=item.real_estate.images %}
+                {% include 'real_estates/_image_carousel.html' with width='856px' height='570px' images=images %}
             </div>
             <div class="col-4 align-self-center">
                 <div class="row d-flex justify-content-center">
-                    {% include 'users/_seller_card.html' with seller=item.seller %}
+                    {% include 'users/_seller_card.html' with seller=seller %}
                 </div>
                 <div class="row d-flex justify-content-center">
                     <div class="d-flex justify-content-center">
@@ -31,17 +31,17 @@
             <div class="col-12 d-flex align-items-center gap-1 align-self-center">
                 <div class="bg-primary text-bg-primary rounded-3">
                     <div class="p-1">
-                        {{ item.real_estate.type }}
+                        {{ property.property_type }}
                     </div>
                 </div>
                 <span class="align-middle">
                     <h1 class="mb-1">
-                        {{ item.real_estate.address }}
+                        {{ property.street_name }}
                     </h1>
                 </span>
                 <div class="ms-auto">
                     <h2>
-                        {{ item.listing.price }} kr.
+                        {{ property.listing_price}} kr.
                     </h2>
                 </div>
             </div>
@@ -50,14 +50,14 @@
             <div class="d-flex align-items-start col-6 flex-column">
                 <div>
                     <h5 class="subtext">
-                        {{ item.real_estate.zip }} {{ item.real_estate.city }}
+                        {{ property.postal_code }} {{ property.city }}
                     </h5>
                 </div>
             </div>
             <div class="d-flex align-items-end col-6 flex-column">
                 <div>
                     <h3 class="subtext">
-                        Skráð {{ item.listing.date }}
+                        Skráð {{ property.listing_date }}
                     </h3>
                 </div>
             </div>
