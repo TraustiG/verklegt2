@@ -111,7 +111,11 @@ def getRealEstateById(request, id):
     if request.method == "GET":
         return render(request, "real_estates/real_estate.html", {"item": item, "listings": listings})
     """
-
+def imageGallery(request, id):
+    # get realestate from database - make object to send in render
+    if request.method == "GET":
+        return render(request, "real_estates/gallery.html", {"images": realEstate['images']})
+    
 def search(request):
     if request.method == "GET":
         
@@ -129,7 +133,7 @@ def search(request):
             item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
 
         return render(request, "home.html", {"listings": listings, "areas": areas, "types": types})
-    
+
 
 #### Breyta object paths þegar model er komið ####
 def filterListings(key, value, listings):
@@ -165,7 +169,7 @@ def checkDesc(search, listing):
     return False
 
 
-def create_offer(request):
+def createOffer(request):
 
     if request.method == 'POST':
         property_id = request.POST.get('property_id')
