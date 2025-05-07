@@ -7,7 +7,7 @@
         <div class="row d-flex justify-content-center" style="height:25rem;">
             <div class="h-100 col-4">
                 <div class="h-100 row justify-content-center">
-                    <div class="position-relative h-100 col-9 object-fit-scale border border-black border-4 rounded rounded-5 d-flex justify-content-center align-items-center bg-low" style="overflow:hidden">
+                    <div class="position-relative h-100 col-9 rounded rounded-5 d-flex justify-content-center align-items-center bg-low profile-image" style="overflow:hidden">
                         <img src="{{ user.image }}" class="h-100"
                         {% if user.is_seller %}
                         alt="Photo of realtor"
@@ -39,7 +39,14 @@
 </div>
     {% if user.is_seller %}
         <div>
-            <p>{{ user.seller.bio }}</p>
+            {% for line in user.seller.bio %}
+            <h5 class="">
+                {{ line }}
+                {% if line == "" %}
+                <br/>
+                {% endif %}
+            </h5>
+            {% endfor %}
         </div>
         {% include "_title_bar.html" with title="Fasteignir" %}
         <div class="d-flex justify-content-center align-items-center">
@@ -47,8 +54,6 @@
         </div>
     {% else %}
         {% include "_title_bar.html" with title="Tilboð" %}
-        <div class="d-flex justify-content-center align-items-center">
-            {% include "users/_buyer_offers.html" %}
-        </div>
+        {% include "users/_buyer_offers.html" %}
     {% endif %}
 {% endblock %}
