@@ -1,57 +1,57 @@
 {% load static %}
-<div class="bg-mid border-bottom border-1 border-black pb-4">
-    <form action="/" method="GET">
+<div class="bg-mid border-bottom border-1 border-black pb-4 search-form">
+    <form action="/search" method="GET">
         <div class="row justify-content-evenly mb-4 pt-4">
             <div class="col-sm-2">
                 <div class="form-floating">
-                <select class="form-select" id="floatingSelectGrid1">
+                <select class="form-select" name="areaSelect" id="id_areaSelect">
                     <option selected></option>
                     {% for area in areas %}
-                    <option value="{loop.counter0}">
+                    <option value="{{ area }}">
                         {{area}}
                     </option>
                     {% endfor %}
                 </select>
-                <label for="floatingSelectGrid1">Svæði</label>
+                <label for="id_areaSelect">Svæði</label>
                 </div>
             </div>
             <div class="col-sm-1">
                 <div class="form-floating">
-                <select class="form-select" id="floatingSelectGrid2">
+                <select class="form-select" name="typeSelect" id="id_typeSelect">
                     <option selected></option>
                     {% for type in types %}
-                    <option value="{loop.counter0}">
+                    <option value="{{ type }}">
                         {{type}}
                     </option>
                     {% endfor %}
                 </select>
-                <label for="floatingSelectGrid2">Tegund</label>
+                <label for="id_typeSelect">Tegund</label>
                 </div>
             </div>
             <div class="col-sm-2">
                 <div class="form-floating">
-                <input class="form-control" id="floatingInputGrid1" placeholder="">
-                <label for="floatingInputGrid1">Verð</label>
+                <input type="text" class="form-control" name="priceInput" id="id_priceInput" placeholder="">
+                <label for="id_priceInput">Verð</label>
                 </div>
             </div>
         </div>
         <div class="row justify-content-evenly">
             <div class="col-sm-4">
                 <div class="form-floating">
-                <input class="form-control" id="floatingInputGrid2" placeholder="">
-                <label for="floatingInputGrid2">Götuheiti eða textalýsing</label>
+                <input class="form-control" name="descInput" id="id_descInput" placeholder="">
+                <label for="id_descInput">Götuheiti eða textalýsing</label>
                 </div>
             </div>
             <div class="col-sm-1">
                 <div class="form-floating">
-                <select class="form-select" id="floatingSelectGrid3">
-                    <option selected>Nýjast efst</option>
-                    <option value="1">Dýrast efst</option>
-                    <option value="2">Ódýrast efst</option>
+                <select class="form-select" id="orderBySelect">
+                    <option value="0" selected>Nýjast efst</option>
+                    <option value="1">Ódýrast efst</option>
+                    <option value="2">Dýrast efst</option>
                     <option value="3">Götuheiti A-Ö</option>
-                    <option value="3">Götuheiti Ö-A</option>
+                    <option value="4">Götuheiti Ö-A</option>
                 </select>
-                <label for="floatingSelectGrid2">Raða eftir</label>
+                <label for="orderBy">Raða eftir</label>
                 </div>
             </div>
             <div class="col-sm-1 btn-group" role="group" aria-label="Basic example">

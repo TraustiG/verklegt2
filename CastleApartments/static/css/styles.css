@@ -7,6 +7,27 @@
     color: var(--bs-card-title-color);
 }
 
+.SELD {
+    text-align: center;
+    background-color: var(--bs-danger);
+    color: white;
+    transform-origin: top left;
+    transform: rotate(-30deg);
+    width: 200%;
+    left: -25%;
+    top: 75%;
+    border: 2px solid #363636;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+/*
+    top: 100%;
+    left: -25%;
+*/
+
+.search-form {
+    border-bottom: 1px solid black
+}
+
 .profile-image {
     border: 1px solid black;
 }
@@ -155,11 +176,16 @@ html[data-theme="dark"] .profile-image {
 
 html[data-theme="light"] .bg-mid {
     background-color: #EFF1F5;
+    border-color: #000000;
 }
 
 html[data-theme="dark"] .bg-mid {
     background-color: #212529;
-    color: #ffffff;;
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .search-form {
+    border-color: #04A5E5;
 }
 
 html[data-theme="light"] .bg-low {
