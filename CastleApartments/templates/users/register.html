@@ -1,4 +1,6 @@
+{% extends "base.html" %}
 {% block title %}Signup{% endblock %}
+{% block content %}
 <h1>Create Account</h1>
 
 <form method="post">
@@ -6,5 +8,6 @@
   {{ form.as_p }}
 
   {{seller_form.as_p}}
-  <button type="submit">Register</button>
+  <button class="btn btn-primary" type="submit">Register</button>
 </form>
+{% endblock %}

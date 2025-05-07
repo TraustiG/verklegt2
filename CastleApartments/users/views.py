@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from .forms import RegistrationForm , SellerForm
 from .models import Seller
+
 listing = {
     "id": 1,
     "date": "30.april 2025", 
@@ -109,8 +110,11 @@ def register(request):
         })
             
             
-        
 
 #@login_required
-def profile(request, id):
+def profile(request):
     return render(request, 'users/profile.html', {'user': request.user})
+        
+def seller(request, id):
+    # get seller user
+    return render(request, 'users/profile.html', {'user': request.user, "seller_id": id})

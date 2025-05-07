@@ -2,30 +2,29 @@
 {% block title %}{{ user.name }}{% endblock %}
 
 {% block content %}
-    <div class="container my-3">
-        <div class="h-100 row d-flex justify-content-center">
-            <div class="col-4">
-                <div class="row justify-content-center">
-                    <div class="col-9 object-fit-scale border border-black border-4 rounded rounded-5 d-flex justify-content-center align-items-center" style="overflow:hidden">
-                        <img class="h-100" src="{{ user.image }}" 
+<div class="bg-mid">
+    <div class="container py-3">
+        <div class="row d-flex justify-content-center" style="height:25rem;">
+            <div class="h-100 col-4">
+                <div class="h-100 row justify-content-center">
+                    <div class="position-relative h-100 col-9 object-fit-scale border border-black border-4 rounded rounded-5 d-flex justify-content-center align-items-center bg-low" style="overflow:hidden">
+                        <img src="{{ user.image }}" class="h-100"
                         {% if user.is_seller %}
                         alt="Photo of realtor"
                         {% else %}
                         alt="Profile photo"
                         {% endif %}
                         />
-                    </div>
-                </div>
-                <div class="row justify-content-center mt-2">
-                    <div class="col-4">
-                        <button class="btn btn-primary">Breyta prófíl</button>
+                        {% if not user.is_seller or user.id == seller_id %}
+                        <button class="position-absolute bottom-0 btn btn-primary mb-3">Breyta prófíl</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             <div class="col-4 align-self-center">
                 <h1 class="mb-0">{{ user.full_name }}</h1>
                 {% if user.is_seller %}
-                <h6 class="px-3">{{ user.type }}</h6>
+                <h6 class="px-3 subtext">{{ user.type }}</h6>
                 <h5>{{ user.address }}</h5>
                 <h5>{{ user.zip }} {{ user.city }}</h5>
                 {% endif %}
@@ -37,6 +36,7 @@
             </div>
         </div>
     </div>
+</div>
     {% if user.is_seller %}
         <div>
             <p>{{ user.bio }}</p>
