@@ -1,102 +1,125 @@
 {% load static %}
-<div class="bg-mid border-bottom border-1 border-black pb-4 search-form">
-    <form action="/search" method="GET">
-        <div class="row justify-content-evenly mb-4 pt-4">
-            <div class="col-sm-2">
-                <div class="form-floating">
-                <select class="form-select" name="areaSelect" id="id_areaSelect">
-                    <option selected></option>
-                    {% for area in areas %}
-                    <option value="{{ area }}">
-                        {{area}}
-                    </option>
-                    {% endfor %}
-                </select>
-                <label for="id_areaSelect">Svæði</label>
-                </div>
-            </div>
-            <div class="col-sm-1">
-                <div class="form-floating">
-                <select class="form-select" name="typeSelect" id="id_typeSelect">
-                    <option selected></option>
-                    {% for type in types %}
-                    <option value="{{ type }}">
-                        {{type}}
-                    </option>
-                    {% endfor %}
-                </select>
-                <label for="id_typeSelect">Tegund</label>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="form-floating">
-                <input type="text" class="form-control" name="priceInput" id="id_priceInput" placeholder="">
-                <label for="id_priceInput">Verð</label>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-evenly">
-            <div class="col-sm-4">
-                <div class="form-floating">
-                <input class="form-control" name="descInput" id="id_descInput" placeholder="">
-                <label for="id_descInput">Götuheiti eða textalýsing</label>
-                </div>
-            </div>
-            <div class="col-sm-1">
-                <div class="form-floating">
-                <select class="form-select" id="orderBySelect">
-                    <option value="0" selected>Nýjast efst</option>
-                    <option value="1">Ódýrast efst</option>
-                    <option value="2">Dýrast efst</option>
-                    <option value="3">Götuheiti A-Ö</option>
-                    <option value="4">Götuheiti Ö-A</option>
-                </select>
-                <label for="orderBy">Raða eftir</label>
-                </div>
-            </div>
-            <div class="col-sm-1 btn-group" role="group" aria-label="Basic example">
-                <row class="align-self-center">
-                    <div class="col-sm-1 btn-group" role="group" aria-label="Basic example">
-                        <button type="submit" class="btn btn-primary">
-                            <div class="d-flex justify-content-center gap-1">
-                                <span class="d-flex align-items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                                    </svg>
-                                </span>
-                                <span>
-                                    Leita
-                                </span>
-                            </div>
-                        </button>
-                        <button id="saveFilter" type="button" onclick="saveFilter()" disabled class="btn">
-                            <div class="d-flex justify-content-center gap-1">
-                                <span class="d-flex align-items-center">
-                                    <svg class="align-self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-plus" viewBox="0 0 16 16">
-                                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
-                                        <path d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4"/>
-                                    </svg>
-                                </span>
-                                <span>
-                                    Vista
-                                </span>
-                            </div>
-                        </button>
-                        <button id="watchFilter" type="button" onclick="watchFilter()" disabled class="btn">
-                            <div class="d-flex justify-content-center gap-1">
-                                <span class="d-flex align-items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-binoculars" viewBox="0 0 16 16">
-                                        <path d="M3 2.5A1.5 1.5 0 0 1 4.5 1h1A1.5 1.5 0 0 1 7 2.5V5h2V2.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5v2.382a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V14.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 14.5v-3a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5v3A1.5 1.5 0 0 1 5.5 16h-3A1.5 1.5 0 0 1 1 14.5V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882zM4.5 2a.5.5 0 0 0-.5.5V3h2v-.5a.5.5 0 0 0-.5-.5zM6 4H4v.882a1.5 1.5 0 0 1-.83 1.342l-.894.447A.5.5 0 0 0 2 7.118V13h4v-1.293l-.854-.853A.5.5 0 0 1 5 10.5v-1A1.5 1.5 0 0 1 6.5 8h3A1.5 1.5 0 0 1 11 9.5v1a.5.5 0 0 1-.146.354l-.854.853V13h4V7.118a.5.5 0 0 0-.276-.447l-.895-.447A1.5 1.5 0 0 1 12 4.882V4h-2v1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5zm4-1h2v-.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5zm4 11h-4v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5zm-8 0H2v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5z"/>
-                                    </svg>
-                                </span>
-                                <span>
-                                    Vakta
-                                </span>
-                            </div>
-                        </button>
+<div class="bg-mid d-flex justify-content-center search-form">
+    <div class="bg-mid container pb-4">
+        <form action="/search" method="GET">
+            <div class="row justify-content-evenly mb-4 pt-4">
+                <div class="col-3">
+                    <div class="form-floating">
+                        <select class="form-select" name="areaSelect" id="id_areaSelect">
+                            <option selected></option>
+                            {% for area in areas %}
+                            <option value="{{ area }}">
+                                {{area}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <label for="id_areaSelect">Svæði</label>
                     </div>
-                </row>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-floating">
+                        <select class="form-select" name="typeSelect" id="id_typeSelect">
+                            <option selected></option>
+                            {% for type in types %}
+                            <option value="{{ type }}">
+                                {{ type }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <label for="id_typeSelect">Tegund</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="priceInput" id="id_priceInput" placeholder="">
+                        <label for="id_priceInput">Verð</label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </form>
+            <div class="row justify-content-evenly">
+                <div class="col-sm-6">
+                    <div class="form-floating">
+                        <input class="form-control" name="descInput" id="id_descInput" placeholder="">
+                        <label for="id_descInput">Götuheiti eða textalýsing</label>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-floating">
+                        <select class="form-select" id="orderBySelect">
+                            <option value="0" selected>Nýjast efst</option>
+                            <option value="1">Ódýrast efst</option>
+                            <option value="2">Dýrast efst</option>
+                            <option value="3">Götuheiti A-Ö</option>
+                            <option value="4">Götuheiti Ö-A</option>
+                        </select>
+                        <label for="orderBy">Raða eftir</label>
+                    </div>
+                </div>
+                <div class="col-sm-3 btn-group justify-content-center" role="group" aria-label="Basic example">
+                    <row class="align-self-center">
+                        <div class="col-12 btn-group" role="group" aria-label="Basic example">
+                            <button type="submit" class="btn btn-primary">
+                                <div class="d-flex justify-content-center gap-1">
+                                    <span class="d-flex align-items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        Leita
+                                    </span>
+                                </div>
+                            </button>
+                            <button id="saveFilter" type="button" 
+                            class="btn 
+                            {% if not user.full_name %}
+                            " disabled
+                            {% else %}
+                            btn-primary"
+                            {% endif %}
+                            >
+                                <div class="d-flex justify-content-center gap-1">
+                                    <span class="d-flex align-items-center">
+                                        <svg class="align-self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-plus" viewBox="0 0 16 16">
+                                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                                            <path d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4"/>
+                                        </svg>
+                                    </span>
+                                    <span>
+                                        Vista
+                                    </span>
+                                </div>
+                            </button>
+                            <div class="dropdown-center">
+                                <button id="watchFilter" role="button" 
+                                class="btn 
+                                {% if not user.full_name %}
+                                " disabled
+                                {% else %}
+                                btn-primary"
+                                {% endif %}
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <span class="d-flex align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-binoculars" viewBox="0 0 16 16">
+                                                <path d="M3 2.5A1.5 1.5 0 0 1 4.5 1h1A1.5 1.5 0 0 1 7 2.5V5h2V2.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5v2.382a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V14.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 14.5v-3a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5v3A1.5 1.5 0 0 1 5.5 16h-3A1.5 1.5 0 0 1 1 14.5V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882zM4.5 2a.5.5 0 0 0-.5.5V3h2v-.5a.5.5 0 0 0-.5-.5zM6 4H4v.882a1.5 1.5 0 0 1-.83 1.342l-.894.447A.5.5 0 0 0 2 7.118V13h4v-1.293l-.854-.853A.5.5 0 0 1 5 10.5v-1A1.5 1.5 0 0 1 6.5 8h3A1.5 1.5 0 0 1 11 9.5v1a.5.5 0 0 1-.146.354l-.854.853V13h4V7.118a.5.5 0 0 0-.276-.447l-.895-.447A1.5 1.5 0 0 1 12 4.882V4h-2v1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5zm4-1h2v-.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5zm4 11h-4v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5zm-8 0H2v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5z"/>
+                                            </svg>
+                                        </span>
+                                        <span>
+                                            Mínar síur
+                                        </span>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    {% for filter in filters %}
+                                    <li><a class="saved-filter dropdown-item" filter="{{ filter.filters }}">{{ filter.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </row>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>

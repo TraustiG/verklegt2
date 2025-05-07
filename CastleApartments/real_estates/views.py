@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from babel.numbers import format_currency
 import copy
+import json
 from .forms import SearchForm
 from .models import Property, Offer, PropertyImages
 from users.models import Buyer
@@ -119,8 +120,13 @@ def imageGallery(request, id):
 def search(request):
     if request.method == "GET":
         
-        areas = list(set([f"{x['real_estate']['zip']} {x['real_estate']['city']}" for x in fakelist]))
-        types = list(set([f"{x['real_estate']['type']}" for x in fakelist]))
+        areas = sorted(list(set([f"{x['real_estate']['zip']} {x['real_estate']['city']}" for x in fakelist])))
+        types = sorted(list(set([f"{x['real_estate']['type']}" for x in fakelist])))
+        filter = {"areaSelect": 300,
+                "typeSelect": "Fjölbýlishús",
+                "priceInput": "80000000-110000000",
+                "descInput": "bjark"}
+        filters = [{"name": "Bjarkissssssss", "filters": json.dumps(filter)}]
 
         listings = copy.deepcopy(fakelist)
         for key in request.GET.keys():
@@ -132,9 +138,8 @@ def search(request):
         for item in listings:
             item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
 
-        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types})
-
-
+        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "filters": filters})
+      
 #### Breyta object paths þegar model er komið ####
 def filterListings(key, value, listings):
     filters = {"areaSelect": "zip",

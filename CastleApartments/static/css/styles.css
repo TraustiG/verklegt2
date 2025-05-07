@@ -19,10 +19,6 @@
     border: 2px solid #363636;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-/*
-    top: 100%;
-    left: -25%;
-*/
 
 .search-form {
     border-bottom: 1px solid black
@@ -84,11 +80,10 @@
     font-weight: bold;
 }
 
-/* ----- ACTUAL DARK MODE ----- */
-.theme-icon-when-dark {
-    display: none;
-}
-
+/* ----- ACTUAL DARK MODE ----- 
+.asc-caret, .desc-caret,*/
+.theme-icon-when-dark,
+.theme-toggle .visually-hidden,
 .theme-icon-when-light {
     display: none;
 }
@@ -108,10 +103,6 @@
     vertical-align: middle;
     height: 1.5rem;
     width: 1.5rem;
-}
-
-.theme-toggle .visually-hidden {
-    display: none;
 }
 
 html[data-theme="dark"] .theme-toggle svg.theme-icon-when-dark,
@@ -142,9 +133,14 @@ html[data-theme="light"] .theme-toggle .theme-label-when-light {
 
 html[data-theme="dark"] {
     --bs-body-bg: #1D1D1D;
+    --bg-mid: #04A5E5;
     --bs-card-title-color: #FFFFFF;
     --bs-body-color-rgb: #5C5F77;
     --bs-body-color: #ABB2BF;
+}
+
+html[data-theme="light"] {
+    --bg-mid: #000000;
 }
 
 html[data-theme="dark"] .title-bar {
