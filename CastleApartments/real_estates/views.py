@@ -174,14 +174,14 @@ def checkDesc(search, listing):
     return False
 
 
-def createOffer(request):
+def createOffer(request, id):
 
     if request.method == 'POST':
-        property_id = request.POST.get('property_id')
-        amount = request.POST.get('amount')
-        expiry = request.POST.get('expiry')
+        
+        amount = request.POST.get("amount")
+        expiry = request.POST.get("expiry")
 
-        property_obj = Property.objects.get(id=property_id)
+        property_obj = Property.objects.get(id=id)
         buyer_obj = Buyer.objects.get(user=request.user)
 
 
@@ -192,6 +192,6 @@ def createOffer(request):
             offer_expiry = expiry
         )
         
-        return redirect('real-estate-by-id', id=property_id)
+        return redirect('real-estate-by-id', id=id)
     
     return redirect('real-estates')
