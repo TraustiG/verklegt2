@@ -34,3 +34,45 @@ const sortItems = (event) => {
         return collator.compare(firstValue, secondValue)
     }).forEach(element => parentElement.appendChild(element))
 }
+
+document.getElementById("saveFilter")
+    .addEventListener("click", (event) => {
+        saveFilter(event)
+})
+
+const saveFilter = (event) => {
+    console.log(event.target.innerHTML)
+    getInputvalues()
+}
+
+const getInputvalues = () => {
+    const area = document.getElementById("id_areaSelect").value
+    const type = document.getElementById("id_typeSelect").value
+    const price = document.getElementById("id_priceInput").value
+    const desc = document.getElementById("id_descInput").value
+    console.log(area, type, price, desc)
+    return
+}
+
+const elements = [...document.querySelectorAll(".saved-filter")]
+elements.forEach((element) => {
+    element.addEventListener("click", (event) => {
+        useFilter(event)
+    })
+})
+
+const useFilter = (event) => {
+    const element = event.target
+    const filter = JSON.parse(element.getAttribute("filter"))
+    console.log(typeof(filter))
+    let query = "/search/?"
+    for (let [key, value] of Object.entries(filter)) {
+        if (value) {
+            query = query.concat(`${key}=${value}&`)
+        }
+    }
+    element.setAttribute("href", query)
+    element.click()
+    document.getElementById("id_descInput").innerHTML = "123123123"
+
+}
