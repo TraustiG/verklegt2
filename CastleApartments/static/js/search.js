@@ -35,7 +35,7 @@ const sortItems = (event) => {
     }).forEach(element => parentElement.appendChild(element))
 }
 
-document.getElementById("saveFilter")
+document.getElementById("saveFilterButton")
     .addEventListener("click", (event) => {
         saveFilter(event)
 })
@@ -50,7 +50,6 @@ const getInputvalues = () => {
     const type = document.getElementById("id_typeSelect").value
     const price = document.getElementById("id_priceInput").value
     const desc = document.getElementById("id_descInput").value
-    console.log(area, type, price, desc)
     return
 }
 
@@ -73,6 +72,4 @@ const useFilter = (event) => {
     }
     element.setAttribute("href", query)
     element.click()
-    document.getElementById("id_descInput").innerHTML = "123123123"
-
 }
