@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from .forms import RegistrationForm , SellerForm
 from .models import Seller, Buyer
-from real_estates.models import Offer
+from real_estates.models import Offer,Property
 
 listing = {
     "id": 1,
@@ -125,3 +125,8 @@ def profile(request):
 def seller(request, id):
     # get seller user
     return render(request, 'users/profile.html', {'user': request.user, "seller_id": id})
+
+def my_properties(request):
+    seller = Seller.objects.get(user=request.user)
+    properties = Property.objects.filter(seller=seller)
+    return render(request, 'users/my_properties.html', {"properties": properties})
