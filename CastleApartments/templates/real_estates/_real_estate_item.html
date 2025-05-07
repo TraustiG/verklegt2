@@ -1,8 +1,8 @@
 {% load static %}
 <div class="position-relative card shadow w-100 overflow-hidden">
-    <a class="stretched-link" href="{% url 'real-estate-by-id' id=item.listing.id %}">
+    <a class="stretched-link" href="{% url 'real-estate-by-id' id=property.id %}">
     </a>
-    <img src="{% static 'images/testhome.png' %}" class="card-img-top" alt="A beautiful home">
+    <img src="{{property.image}}" class="card-img-top" alt="A beautiful home">
     {% if item.banner %}
         {% include "real_estates/_card_banner.html" with text=item.banner %}
     {% endif %}
@@ -10,18 +10,18 @@
     <ul class="list-group list-group-flush">
         <li class="list-group-item">
             <h5 class="card-title mb-0 address">
-                {{ item.real_estate.address }}
+                {{ property.street_name }}
             </h5>
             <h6 class="ms-3 subtext zip">
-                {{ item.real_estate.zip }} {{ item.real_estate.city }}
+                {{ property.postal_code }} {{ property.city }}
             </h6>
         </li>
         <li class="list-group-item gx-3">
             <div class="d-flex justify-content-evenly">
-                <span>{{ item.real_estate.beds }} herb.</span>
-                <span>{{ item.real_estate.sqm }} m<sup>2</sup></span>
+                <span>{{ property.number_of_bedrooms }} herb.</span>
+                <span>{{ property.square_meters }} m<sup>2</sup></span>
             </div>
         </li>
-        <li class="list-group-item"><b class="price">{{ item.listing.price }} kr.</b></li>
+        <li class="list-group-item"><b class="price">{{ property.listing_price }} kr.</b></li>
     </ul>
 </div>
