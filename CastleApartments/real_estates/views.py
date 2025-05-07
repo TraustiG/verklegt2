@@ -3,9 +3,10 @@ from django.shortcuts import render,redirect
 from babel.numbers import format_currency
 import copy
 import json
+import datetime
 from .forms import SearchForm
 from .models import Property, Offer, PropertyImages
-from users.models import Buyer
+from users.models import Buyer, Seller
 
 """"
 realEstate = {
@@ -78,7 +79,12 @@ def index(request):
         # þarf að fa listings og tegundir og postnumer í boði
 
         listings = Property.objects.all()
-        return render(request, "home.html", {"listings":listings})
+        areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
+        types = sorted(list(set([f"{x.property_type}" for x in listings])))
+        filters = []
+        for item in listings:
+            item.listing_price = format_currency(item.listing_price, "", locale="is_is")
+        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "filters": filters})
 
     """ areas = list(set([f"{x['real_estate']['zip']} {x['real_estate']['city']}" for x in fakelist]))
         types = list(set([f"{x['real_estate']['type']}" for x in fakelist]))
@@ -98,81 +104,82 @@ def getRealEstateById(request, id):
         property_obj = Property.objects.get(id=id)
     except Property.DoesNotExist:
         return redirect('real-estates')
-    
+    similars = getSimilars(property_obj)
     images = PropertyImages.objects.filter(property=property_obj)
     seller = property_obj.seller
 
-    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images,"seller":seller,})
+    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images,"seller":seller })
     
 
-""" listings = []
-    item = copy.deepcopy({"real_estate": realEstate, "listing": listing, "seller": seller})
-    item["listing"]["desc"] = item["listing"]["desc"].splitlines()
-    item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
-    if request.method == "GET":
-        return render(request, "real_estates/real_estate.html", {"item": item, "listings": listings})
-    """
 def imageGallery(request, id):
     # get realestate from database - make object to send in render
+    try:
+        property_obj = Property.objects.get(id=id)
+    except Property.DoesNotExist:
+        return redirect('real-estates')
+    
+    images = PropertyImages.objects.filter(property=property_obj)
     if request.method == "GET":
-        return render(request, "real_estates/gallery.html", {"images": realEstate['images']})
+        return render(request, "real_estates/gallery.html", {"images": images})
     
 def search(request):
     if request.method == "GET":
         
-        areas = sorted(list(set([f"{x['real_estate']['zip']} {x['real_estate']['city']}" for x in fakelist])))
-        types = sorted(list(set([f"{x['real_estate']['type']}" for x in fakelist])))
+        listings = Property.objects.all()
+        areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
+        types = sorted(list(set([f"{x.property_type}" for x in listings])))
         filter = {"areaSelect": 300,
                 "typeSelect": "Fjölbýlishús",
                 "priceInput": "80000000-110000000",
                 "descInput": "bjark"}
         filters = [{"name": "Bjarkissssssss", "filters": json.dumps(filter)}]
 
-        listings = copy.deepcopy(fakelist)
         for key in request.GET.keys():
             value = request.GET.get(key)
-            print(key, value)
             if not value:
                 continue
             listings = filterListings(key, value, listings)
+
         for item in listings:
-            item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
+            item.listing_price = format_currency(item.listing_price, "", locale="is_is")
 
         return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "filters": filters})
       
 #### Breyta object paths þegar model er komið ####
-def filterListings(key, value, listings):
-    filters = {"areaSelect": "zip",
-               "typeSelect": "type",
-               "priceInput": "price",
-               "descInput": "desc"}
+def filterListings(key: str, value: str, listings: list[Property]):
+    filters = {"areaSelect": "postal_code",
+               "typeSelect": "property_type",
+               "priceInput": "listing_price",
+               "descInput": "description"}
     if key in filters.keys():
         key = filters[key]
 
-    if key == "zip":
-        zip = value.split()[0]
-        value = int(zip)
-    if key == "desc":
+    if key == "postal_code":
+        postalCode = value.split()[0]
+        value = int(postalCode)
+    if key == "description":
         temp = [x for x in listings if checkDesc(value, x)]
-    elif key == "price":
+    elif key == "listing_price":
         values = value.split("-")
         if len(values) == 2:
             min, max = values
-            temp = [x for x in listings if x["listing"][key] >= int(min) and x["listing"][key] <= int(max)]
+            temp = [x for x in listings if getattr(x, key) >= int(min) and getattr(x, key) <= int(max)]
     else:
-        temp = [x for x in listings if x["real_estate"][key] == value]
+        temp = [x for x in listings if getattr(x, key) == value]
     return temp
 
 
-def checkDesc(search, listing):
+def checkDesc(search: str, listing: Property):
     words = search.split()
     for word in words:
-        if word.lower() in listing["listing"]["desc"].lower():
+        if word.lower() in listing.description.lower():
             return True
-        if word.lower() in listing["real_estate"]["address"].lower():
+        if word.lower() in listing.street_name.lower():
             return True
     return False
 
+def getSimilars(prop):
+    ...
 
 def createOffer(request, id):
 
@@ -195,3 +202,47 @@ def createOffer(request, id):
         return redirect('real-estate-by-id', id=id)
     
     return redirect('real-estates')
+
+
+def createProperty(request):
+
+    if request.method == 'POST':
+        
+        streetname = request.POST.get("streetname")
+        city_input = request.POST.get("city_input")
+        zip = request.POST.get("zip")
+        desc = request.POST.get("desc")
+        bedrooms = request.POST.get("bedrooms")
+        bathrooms = request.POST.get("bathrooms")
+        sqm = request.POST.get("sqm")
+        status_input = request.POST.get("status_input")
+        imageURL = request.POST.get("imageURL")
+        type = request.POST.get("type")
+        price = request.POST.get("price")
+
+
+        seller_obj = Seller.objects.get(user=request.user)
+        
+
+
+        Property.objects.create(
+            seller = seller_obj,
+            street_name = streetname,
+            city= city_input,
+            postal_code = zip,
+            description = desc,
+            property_type = type,
+            listing_price = price,
+            number_of_bedrooms = bedrooms,
+            number_of_bathrooms = bathrooms,
+            square_meters = sqm,
+            status = status_input,
+            image = imageURL,
+            listing_date = datetime.date.today()
+
+            
+        )
+        
+        return redirect('my-properties')
+    
+    return redirect('my-properties')

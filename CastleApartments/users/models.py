@@ -42,3 +42,17 @@ class Seller(models.Model):
     def __str__(self):
         return "XX"
 
+class Filter(models.Model):
+
+    user = models.ForeignKey(
+        "User", on_delete=models.CASCADE, null=True, blank=True)
+    
+    monitor = models.BooleanField(default=False)
+    name = models.CharField(max_length=50, null=True, blank=True)
+    area = models.CharField(max_length=50, null=True, blank=True)
+    price = models.CharField(max_length=50, null=True, blank=True)
+    desc = models.CharField(max_length=50, null=True, blank=True)
+    re_type = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return self.name

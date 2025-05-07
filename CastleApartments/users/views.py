@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from .forms import RegistrationForm , SellerForm
-from .models import Seller, Buyer
-from real_estates.models import Offer
+from django.contrib.auth.decorators import login_required
+from .forms import RegistrationForm , SellerForm, SearchForm
+from .models import Seller, Buyer, Filter
+from real_estates.models import Offer,Property
 
 listing = {
     "id": 1,
@@ -50,7 +51,7 @@ listing = {
     "image": "https://media.istockphoto.com/id/1171169127/photo/headshot-of-cheerful-handsome-man-with-trendy-haircut-and-eyeglasses-isolated-on-gray.jpg?s=612x612&w=0&k=20&c=yqAKmCqnpP_T8M8I5VTKxecri1xutkXH7zfybnwVWPQ=",
     "username": "PesiiHann",
     "offers": [{
-        "expiry": "01.01.2026",
+        "expiry": "01.01.2026", w
         "offer_amount": 94000000,
         "status": "Accepted",
         "listing": listing},
@@ -112,9 +113,29 @@ def register(request):
             'seller_form': SellerForm()
         })
         
-            
+    # area = forms.CharField(label="areaSelect", max_length=100, required=False)
+    # re_type = forms.CharField(label="typeSelect", max_length=100, required=False)
+    # price = forms.CharField(label="priceInput", max_length=100, required=False)
+    # desc = forms.CharField(label="descInput", max_length=100, required=False)
 
-#@login_required
+
+def saveFilter(request):
+    if request.method == "POST":
+        form = SearchForm()
+        search = Filter()
+        print(search.__dict__)
+        search.area = form.area
+        search.monitor = form.monitor
+        search.name = form.name
+        search.re_type = form.re_type
+        search.desc = form.desc
+        search.price = form.price
+        search.user = request.user
+        search.save()
+
+    return redirect('search')
+
+@login_required
 def profile(request):
 
     buyer = Buyer.objects.get(user=request.user)
@@ -125,3 +146,8 @@ def profile(request):
 def seller(request, id):
     # get seller user
     return render(request, 'users/profile.html', {'user': request.user, "seller_id": id})
+
+def my_properties(request):
+    seller = Seller.objects.get(user=request.user)
+    properties = Property.objects.filter(seller=seller)
+    return render(request, 'users/my_properties.html', {"properties": properties})

@@ -1,6 +1,19 @@
 
 from django.db import models
 
+class PropertyImages(models.Model):
+
+    property = models.ForeignKey(
+        "Property", on_delete=models.CASCADE)
+    
+    image_url = models.URLField()
+    image_description = models.TextField()
+
+
+    
+    def __str__(self):
+        return f"{self.image_url}"
+
 
 class Property(models.Model):
 
@@ -48,19 +61,6 @@ class Offer(models.Model):
 
 
     
-class PropertyImages(models.Model):
-
-    property = models.ForeignKey(
-        "Property", on_delete=models.CASCADE)
-    
-    image_url = models.URLField()
-    image_description = models.TextField()
-
-
-    
-    def __str__(self):
-        return f"{self.image_url}"
-
 
 class PaymentOption(models.TextChoices):
         CREDIT_CARD = "CREDIT_CARD", "Credit Card"

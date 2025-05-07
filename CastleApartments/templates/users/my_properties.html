@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Fasteignirnar Mínar{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center">
+    <button id="makeOffer" type="button" onclick="createProperty()" class="btn btn-primary btn-big" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+        Skrá nýja eign
+    </button>
+    {% include 'real_estates/_property_modal.html' %}
+    <table class="table table-bordered table-striped table-hover justify-content-center mt-1">
+        <thead>
+            <tr class="text-center">
+                <th scope="col"></th>
+                <th style="width:45%;" scope="col">Heimilisfang</th>
+                <th style="width:10%;" scope="col">Skráð verð</th>
+                <th style="width:10%;" scope="col">Herbergi</th>
+                <th class="w-25" scope="col">Staða</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider" style="border-top-color: black;">
+        {% for property in properties %}
+            <tr>
+                <th class="align-middle" scope="row"></th>
+                <th class="align-middle text-center" scope="row"><h4>{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}</h4></th>
+                <td class="align-middle text-end" scope="row"><h4>{{ property.listing_price }}</h4></td>
+                <td class="align-middle text-end" scope="row"><h4>{{ property.number_of_bedrooms }}</h4></td>
+                <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><b>{{ property.status}}</b>
+                </td>
+                <th scope="row"></th>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+        {% empty %}
+        </tbody>
+    </table>
+    </div>
+    <div class="py-5">
+        <h1 class="text-center subtext">Engar Fasteignir</h1>
+    </div>
+        {% endfor %}
+
+{% endblock %}
