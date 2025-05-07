@@ -18,6 +18,11 @@
                         Vaktin mín
                     </a>
                 </li>
+            {% if user.is_seller %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'my-properties' %}">Fasteignirnar mínar</a>
+                </li>
+            {% endif %}
             </ul>
         </div>
         {% endif %}

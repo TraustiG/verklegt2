@@ -1,0 +1,64 @@
+<div class="modal fade" id="property-modal" focus tabindex="-1" aria-labelledby="property-modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-mid">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Skrá Eign</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'create-property' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="streetname" class="form-label">Heimilisfang</label>
+                        <input type="text" class="form-control" id="streetname" name="streetname">
+                    </div>
+                    <div class="mb-3">
+                        <label for="city_input" class="form-label">Borg</label>
+                        <input type="text" class="form-control" id="city_input" name="city_input">
+                    </div>
+                    <div class="mb-3">
+                        <label for="zip" class="form-label">Póstnúmer</label>
+                        <input type="text" class="form-control" id="zip" name="zip">
+                    </div>
+                    <div class="mb-3">
+                        <label for="desc" class="form-label">Lýsing</label>
+                        <input type="text" class="form-control" id="desc" name="desc">
+                    </div>
+                    <div class="mb-3">
+                        <label for="bedrooms" class="form-label">Fjöldi Svefnherbergja</label>
+                        <input type="number" class="form-control" id="bedrooms" name="bedrooms">
+                    </div>
+                    <div class="mb-3">
+                        <label for="bathrooms" class="form-label">Fjöldi Baðherbergja</label>
+                        <input type="text" class="form-control" id="bathrooms" name="bathrooms">
+                    </div>
+                    <div class="mb-3">
+                        <label for="sqm" class="form-label">Fermetrafjöldi</label>
+                        <input type="text" class="form-control" id="sqm" name="sqm">
+                    </div>
+                    <div class="mb-3">
+                        <label for="status_input" class="form-label">Staða</label>
+                        <input type="text" class="form-control" id="status_input" name="status_input">
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageURL" class="form-label">Mynd</label>
+                        <input type="text" class="form-control" id="imageURL" name="imageURL">
+                    </div>
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Týpa</label>
+                        <input type="text" class="form-control" id="type" name="type">
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Skráð Verð</label>
+                        <input type="text" class="form-control" id="price" name="price">
+                    </div>
+            
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

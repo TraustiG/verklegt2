@@ -11,7 +11,7 @@
         </tr>
     </thead>
     <tbody class="table-group-divider" style="border-top-color: black;">
-    {% for offer in user.offers %}
+    {% for offer in offers %}
         <tr 
         {% if offer.status == "Accepted" %}
         class="table-success"
@@ -22,15 +22,15 @@
         {% endif %}
         >
             <th class="align-middle" scope="row"></th>
-            <th class="align-middle text-center" scope="row"><h4>{{ offer.listing.address }} - {{ offer.listing.zip }} {{ offer.listing.city }}</h4></th>
-            <td class="align-middle text-end" scope="row"><h4>{{ offer.listing.price }}</h4></td>
+            <th class="align-middle text-center" scope="row"><h4>{{ offer.property.street_name }} - {{ offer.property.postal_code }} {{ offer.property.city }}</h4></th>
+            <td class="align-middle text-end" scope="row"><h4>{{ offer.property.listing_price }}</h4></td>
             <td class="align-middle text-end" scope="row"><h4>{{ offer.offer_amount }}</h4></td>
-            <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><b>{{ offer.status }}</b>
-                {% if offer.status == "Accepted" %}
+            <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><b>{{ offer.offer_status }}</b>
+                {% if offer.offer_status == "Accepted" %}
                 <button class="btn btn-primary">Afgreiða!</button>
-                {% elif offer.status == "Declined" %}
+                {% elif offer.offer_status == "Declined" %}
                 <button class="btn btn-primary">Skoða</button>
-                {% elif offer.status == "Contingent" %}
+                {% elif offer.offer_status == "Contingent" %}
                 <button class="btn btn-primary">Skoða</button>
                 {% endif %}
             </td>

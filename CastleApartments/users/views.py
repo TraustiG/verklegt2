@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm , SellerForm, SearchForm
 from .models import Seller, Buyer, Filter
+from real_estates.models import Offer,Property
 
 listing = {
     "id": 1,
@@ -136,8 +137,17 @@ def saveFilter(request):
 
 @login_required
 def profile(request):
-    return render(request, 'users/profile.html', {'user': request.user})
+
+    buyer = Buyer.objects.get(user=request.user)
+    offers = Offer.objects.filter(buyer=buyer)
+
+    return render(request, 'users/profile.html', {'user': request.user, 'offers':offers, 'buyer':buyer})
         
 def seller(request, id):
     # get seller user
     return render(request, 'users/profile.html', {'user': request.user, "seller_id": id})
+
+def my_properties(request):
+    seller = Seller.objects.get(user=request.user)
+    properties = Property.objects.filter(seller=seller)
+    return render(request, 'users/my_properties.html', {"properties": properties})

@@ -3,8 +3,10 @@ from django.shortcuts import render,redirect
 from babel.numbers import format_currency
 import copy
 import json
+import datetime
+from .forms import SearchForm
 from .models import Property, Offer, PropertyImages
-from users.models import Buyer
+from users.models import Buyer, Seller
 
 """"
 realEstate = {
@@ -179,14 +181,14 @@ def checkDesc(search: str, listing: Property):
 def getSimilars(prop):
     ...
 
-def createOffer(request):
+def createOffer(request, id):
 
     if request.method == 'POST':
-        property_id = request.POST.get('property_id')
-        amount = request.POST.get('amount')
-        expiry = request.POST.get('expiry')
+        
+        amount = request.POST.get("amount")
+        expiry = request.POST.get("expiry")
 
-        property_obj = Property.objects.get(id=property_id)
+        property_obj = Property.objects.get(id=id)
         buyer_obj = Buyer.objects.get(user=request.user)
 
 
@@ -197,6 +199,50 @@ def createOffer(request):
             offer_expiry = expiry
         )
         
-        return redirect('real-estate-by-id', id=property_id)
+        return redirect('real-estate-by-id', id=id)
     
     return redirect('real-estates')
+
+
+def createProperty(request):
+
+    if request.method == 'POST':
+        
+        streetname = request.POST.get("streetname")
+        city_input = request.POST.get("city_input")
+        zip = request.POST.get("zip")
+        desc = request.POST.get("desc")
+        bedrooms = request.POST.get("bedrooms")
+        bathrooms = request.POST.get("bathrooms")
+        sqm = request.POST.get("sqm")
+        status_input = request.POST.get("status_input")
+        imageURL = request.POST.get("imageURL")
+        type = request.POST.get("type")
+        price = request.POST.get("price")
+
+
+        seller_obj = Seller.objects.get(user=request.user)
+        
+
+
+        Property.objects.create(
+            seller = seller_obj,
+            street_name = streetname,
+            city= city_input,
+            postal_code = zip,
+            description = desc,
+            property_type = type,
+            listing_price = price,
+            number_of_bedrooms = bedrooms,
+            number_of_bathrooms = bathrooms,
+            square_meters = sqm,
+            status = status_input,
+            image = imageURL,
+            listing_date = datetime.date.today()
+
+            
+        )
+        
+        return redirect('my-properties')
+    
+    return redirect('my-properties')
