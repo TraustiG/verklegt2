@@ -4,7 +4,6 @@ from babel.numbers import format_currency
 import copy
 import json
 import datetime
-from .forms import SearchForm
 from .models import Property, Offer, PropertyImages
 from users.models import Buyer, Seller
 
