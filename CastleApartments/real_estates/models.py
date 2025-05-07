@@ -21,7 +21,7 @@ class Property(models.Model):
     image = models.URLField()
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.street_name}"
     
 
 class OfferStatus(models.TextChoices):

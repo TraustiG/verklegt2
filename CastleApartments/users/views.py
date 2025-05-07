@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from .forms import RegistrationForm , SellerForm
-from .models import Seller
+from .models import Seller, Buyer
 
 listing = {
     "id": 1,
@@ -66,14 +66,20 @@ listing = {
 def register(request):
 
     if request.method == 'POST':
+        role = request.POST.get('role')
         form = RegistrationForm(request.POST)
-        seller_form = SellerForm(request.POST)
+        
+        seller_form = SellerForm(request.POST, request.FILES) if role == 'seller' else SellerForm()
 
         if form.is_valid():
             user = form.save(commit=False)
-            role = form.cleaned_data['role']
             
-            if role == 'seller':
+            if role == 'buyer':
+                user.is_buyer = True
+                user.save()
+                Buyer.objects.create(user=user)
+
+            elif role == 'seller':
                 user.is_seller=True
                 if seller_form.is_valid():
                     user.save()
@@ -87,14 +93,10 @@ def register(request):
                     seller.save()
                 
                 else:
-                    return render(request, 'users/register.html'),{
+                    return render(request, 'users/register.html',{
                         'form':form,
                         'seller_form':seller_form
-                    }
-                
-            else: 
-                user.is_buyer = True
-                user.save()
+                    })
         
             return redirect('login')
     
@@ -108,7 +110,7 @@ def register(request):
             'form': RegistrationForm(),
             'seller_form': SellerForm()
         })
-            
+        
             
 
 #@login_required

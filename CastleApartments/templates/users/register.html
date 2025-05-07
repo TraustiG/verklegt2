@@ -7,7 +7,45 @@
   {% csrf_token %}
   {{ form.as_p }}
 
-  {{seller_form.as_p}}
-  <button class="btn btn-primary" type="submit">Register</button>
+
+  <div id="seller-form" style="display: none;">
+    {{seller_form.as_p}}
+  </div>
+  <button type="submit">Register</button>
 </form>
-{% endblock %}
+
+
+<script>
+
+  document.addEventListener('DOMContentLoaded',function(){
+  
+    const role = document.querySelectorAll('input[name="role"]');
+    const sellerform = document.getElementById('seller-form');
+  
+    function toggleSellerForm(){
+  
+      const selectedRole = document.querySelector('input[name="role"]:checked');
+  
+      if(selectedRole && selectedRole.value === 'seller'){
+        sellerform.style.display = 'block';
+        sellerform.querySelectorAll('input, textarea, select').forEach(el => {
+        el.disabled = false;
+    });
+        
+      } else{
+        sellerform.style.display = 'none';
+        sellerform.querySelectorAll('input, textarea, select').forEach(el => {
+        el.disabled = true;
+    });
+      }
+    }
+  
+    role.forEach(radio=> { 
+      radio.addEventListener('change', toggleSellerForm);
+    })
+  
+    
+  
+    toggleSellerForm(); 
+  });
+</script>
