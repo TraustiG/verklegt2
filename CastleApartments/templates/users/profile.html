@@ -15,8 +15,10 @@
                         alt="Profile photo"
                         {% endif %}
                         />
-                        {% if not user.is_seller or user.id == seller_id %}
-                        <button class="position-absolute bottom-0 btn btn-primary mb-3">Breyta prófíl</button>
+                        {% if request.path == '/profile/' %}
+                            {% if not user.is_seller or user.id == seller_id %}
+                                <button class="position-absolute bottom-0 btn btn-primary mb-3">Breyta prófíl</button>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -52,7 +54,9 @@
         </div>
         {% include "_title_bar.html" with title="Fasteignir" %}
         <div class="d-flex justify-content-center align-items-center">
+            <div class="flex-grow-1">
             {% include "real_estates/_listings.html" with cols=5 %}
+            </div>
         </div>
     {% else %}
         {% include "_title_bar.html" with title="Tilboð" %}
