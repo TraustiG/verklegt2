@@ -17,13 +17,12 @@
                 {% if field.label == 'Role' %}
                 {% else %}
                 <div class="form-floating mb-3">
-                    <input required name={{field.name}} type=
+                    <input required name={{field.name}} 
+                    type=
                     "{% if field.label == 'Image' %}
                     Text
-                    {% elif 'Password' in field.label %}Password{% else %}
-                    {{ field.label }}
-                    {% endif %}"
-                    class="form-control" id="id_{{ field.name }}" placeholder="name@example.com">
+                    {% elif 'Password' in field.label %}Password{% else %}{{ field.label }}{% endif %}"
+                    class="form-control" id="id_{{ field.name }}">
                     <label for="id_{{ field.name }}">{{ field.label }}</label>
                     {% if field.help_text %}
                     <div id="{{ field.name }}HelpBlock" class="form-sub-text">
@@ -49,11 +48,11 @@
                 <div id="seller-form" style="visibility: hidden;">
                     <!-- {{ seller_form }} -->
                     <div class="form-check form-check-inline pb-2">
-                        <input class="form-check-input" required type="radio" name="type" id="id_type_0" value="individual">
+                        <input class="form-check-input" required type="radio" name="type" id="id_type_0" value="Individual">
                         <label class="form-check-label" for="id_type_0">Individual</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" required type="radio" name="type" id="id_type_1" value="agency">
+                        <input class="form-check-input" required type="radio" name="type" id="id_type_1" value="Real estate agency">
                         <label class="form-check-label" for="id_type_1">Real estate agency</label>
                     </div>
                     {% for field in seller_form %}
@@ -66,7 +65,7 @@
                         {% else %}
                         {{field.label}}
                         {% endif %}
-                        " class="form-control" id="id_{{field.name}}" placeholder="name@example.com">
+                        " class="form-control" id="id_{{field.name}}">
                         <label for="id_{{field.name}}">{{ field.label }}</label>
                         {% if field.help_text %}
                         <div id="{{ field.label }}HelpBlock" class="form-sub-text">

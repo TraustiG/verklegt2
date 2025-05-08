@@ -10,11 +10,11 @@
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="amount" class="form-label">Tilboðsupphæð</label>
-                        <input type="number" class="form-control" id="amount" name="amount">
+                        <input required type="number" class="form-control" id="amount" name="amount">
                     </div>
                     <div class="mb-3">
                         <label for="expiry" class="form-label">Gildistími</label>
-                        <input type="date" class="form-control" id="expiry" name="expiry">
+                        <input required type="date" class="form-control" id="expiry" name="expiry">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
