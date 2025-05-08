@@ -2,11 +2,37 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
-<h1>Login</h1>
-
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button class="btn btn-primary" type="submit">Login</button>
-</form>
+<div class="container justify-content-center w-25 align-content-center" style="min-height: 75vh;">
+  <div class="row align-items-center">
+    <div class="col align-content-center">
+      <div class="row justify-content-center">
+        <div class="col-6 text-center">
+          <h1>Login</h1>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <form method="post">
+          <div class="row mb-2">
+            <div class="col">
+              {% csrf_token %}
+              {% for field in form %}
+              <div class="form-floating mb-3 justify-sel-center">
+                <input required name="{{ field.name }}" type="{{ field.label }}" class="form-control"
+                  id="id_{{ field.name }}" placeholder="name@example.com" style="min-width: 5rem;">
+                <label for="id_{{ field.name }}">{{ field.label }}</label>
+                {% if field.help_text %}
+                <div id="{{ field.label }}HelpBlock" class="form-sub-text">
+                  {{ field.help_text }}
+                </div>
+                {% endif %}
+              </div>
+              {% endfor %}
+              <button class="btn btn-primary" type="submit">Login</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

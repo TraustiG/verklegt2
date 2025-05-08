@@ -1,4 +1,9 @@
 {% load static %}
+{% if user.is_authenticated %}
+    {% block scripts %}
+    <script defer src="{% static 'js/search.js' %}"></script>
+    {% endblock %}
+{% endif %}
 <div class="bg-mid d-flex justify-content-center search-form">
     <div class="bg-mid container pb-4">
         <form action="/search" method="GET">
