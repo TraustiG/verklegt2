@@ -1,0 +1,35 @@
+<!-- Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form method="POST" action="google.com">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title" id="paymentModalLabel">Greiðsluupplýsingar</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Loka"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="cardName" class="form-label">Nafn á korti</label>
+              <input type="text" class="form-control" name="card_name" required>
+            </div>
+            <div class="mb-3">
+              <label for="cardNumber" class="form-label">Kortanúmer</label>
+              <input type="text" class="form-control" name="card_number" required>
+            </div>
+            <div class="mb-3">
+              <label for="expiry" class="form-label">Gildistími</label>
+              <input type="text" class="form-control" name="expiry" placeholder="MM/YY" required>
+            </div>
+            <div class="mb-3">
+              <label for="cvc" class="form-label">CVC</label>
+              <input type="text" class="form-control" name="cvc" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Staðfesta greiðslu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
