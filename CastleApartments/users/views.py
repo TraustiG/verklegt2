@@ -136,17 +136,29 @@ def saveFilter(request):
 
     return redirect('search')
 
-#@login_required
+
 def profile(request):
 
+    user = request.user
 
-    buyer = Buyer.objects.get(user=request.user)
-    offers = Offer.objects.filter(buyer=buyer)
-    for offer in offers:
-        offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
-        offer.property.listing_price = format_currency(offer.property.listing_price, "", locale="is_is")[:-4]
+    if user.is_seller:
+        seller = Seller.objects.get(user=user)
+        properties = Property.objects.filter(seller=seller)
+        bio_lines = seller.bio.splitlines()
 
-    return render(request, 'users/profile.html', {'user': request.user, 'offers':offers, 'buyer':buyer})
+
+
+
+        return render(request, 'users/profile.html', {'user': request.user, 'properties':properties, 'seller':seller, 'bio_lines':bio_lines})
+
+    elif user.is_buyer:
+        buyer = Buyer.objects.get(user=user)
+        offers = Offer.objects.filter(buyer=buyer)
+        for offer in offers:
+            offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
+            offer.property.listing_price = format_currency(offer.property.listing_price, "", locale="is_is")[:-4]
+
+        return render(request, 'users/profile.html', {'user': request.user, 'offers':offers, 'buyer':buyer})
         
 def seller(request, id):
     # get seller user

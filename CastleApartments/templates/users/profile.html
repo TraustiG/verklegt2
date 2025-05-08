@@ -41,7 +41,7 @@
 </div>
     {% if user.is_seller %}
         <div>
-            {% for line in user.seller.bio %}
+            {% for line in bio_lines %}
             <h5 class="">
                 {{ line }}
                 {% if line == "" %}
