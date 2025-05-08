@@ -2,7 +2,7 @@
 <div class="position-relative card shadow w-100 overflow-hidden">
     <a class="stretched-link" href="{% url 'real-estate-by-id' id=property.id %}">
     </a>
-    <img src="{{property.image}}" class="card-img-top" alt="A beautiful home">
+    <img height="180rem" src="{{property.image}}" class="card-img-top" alt="A beautiful home">
     {% if item.banner %}
         {% include "real_estates/_card_banner.html" with text=item.banner %}
     {% endif %}

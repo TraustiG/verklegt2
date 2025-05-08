@@ -1,76 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from babel.numbers import format_currency
+from math import inf
 import copy
 import json
 import datetime
 from .models import Property, Offer, PropertyImages
 from users.models import Buyer, Seller
-
-""""
-realEstate = {
-    "type": "Fjölbýlishús",
-    "address": "Maríugata 3, íbúð 203",
-    "city": "Garðabær",
-    "zip": 210,
-    "sqm": 102,
-    "baths": 1,
-    "beds": 4,
-    "images": [
-                {"url": "https://api-beta.fasteignir.is/pictures/811668/547d88356c7c77b207c1d2dcc1d65460-large.jpg",
-                "desc": "kitchen"},
-                {"url": "https://api-beta.fasteignir.is/pictures/811668/2002e4756c85dffff2794a97acb2f9d7-large.jpg",
-                "desc": "living room"},
-                {"url": "https://api-beta.fasteignir.is/pictures/811668/753f7a8a0b267f767ba18a3aa369d88a-large.jpg",
-                "desc": "bathroom"},
-                {"url": "https://api-beta.fasteignir.is/pictures/811668/068aeaf912fa617d3539adec6674ed9e-large.jpg",
-                "desc": "layout"},
-        ]
-    }
-
-listing = {
-    "id": 1,
-    "date": "30.april 2025", 
-    "desc": "Íbúð 203: 102 fm 4ra herbergja íbúð á 1. hæð með sér  þvottahúsi. Eigninni fylgir sérafnotareitur. Íbúðin er 93,4 fm ásamt 5,3 fm geymslu.  Innréttingar og skápir: Hvítt\n AFHENDING VIÐ KAUPSAMNING\n\n Stofa/alrými með útgengt út á svalir\n Eldhús: Raftæki eru frá AEG, bakaraofn og helluborð\n Svefnherbergi með fataskáp\n Baðherbergi með sturtu, hvítri innréttingu, handlaug, upphengdu salerni og handklæðaofn. Aðstaða fyrir þvottavél og þurrkara.\n Geymsla á fyrstu hæð\n\n Húsbyggjandi: Breiðahvarf ehf\n Aðalhönnuður: Úti inni arkitektar: Baldur Svavarsson\n Verkfræðihönnun: Víðsjá\n Raflagnahönnun: Lumex: Helgi Eiríksson", 
-    "status": "Open", 
-    "price": 96900000, 
-}
-
-seller = {
-    "id": 1,
-    "name": "Kalli Bjarni",
-    "image": "",
-}
-
-
-item = {"real_estate": realEstate, "listing": listing, "seller": seller}
-item["listing"]["price"] = 96900000
-fakelist = [None]*60
-for i in range(60):
-    fakelist[i] = copy.deepcopy(item)
-fakelist[2]["real_estate"]["city"] = "Akranes"
-fakelist[2]["real_estate"]["address"] = "Bjarkargata 17"
-fakelist[2]["real_estate"]["zip"] = 300
-fakelist[8]["real_estate"]["type"] = "Einbýlishús"
-fakelist[18]["real_estate"]["type"] = "Sundlaugagarður"
-fakelist[32]["listing"]["price"] = 56000000
-fakelist[4]["banner"] = "SELD"
-fakelist[13]["banner"] = "SELD"
-
-fakeUser = {
-    "name": "Pétur Hermannsson",
-    "is_authenticated": True,
-    "id": 1,
-    "photo": "https://media.istockphoto.com/id/1171169127/photo/headshot-of-cheerful-handsome-man-with-trendy-haircut-and-eyeglasses-isolated-on-gray.jpg?s=612x612&w=0&k=20&c=yqAKmCqnpP_T8M8I5VTKxecri1xutkXH7zfybnwVWPQ=",
-    "username": "PesiiHann",
-    "offers": [{
-        "expiry": "01.01.2026",
-        "offer_amount": 94000000,
-        "status": "Open",
-        "listing": listing}
-    ]
-}
-"""
 
 # Create your views here.
 def index(request):
@@ -82,19 +18,9 @@ def index(request):
         types = sorted(list(set([f"{x.property_type}" for x in listings])))
         filters = []
         for item in listings:
-            item.listing_price = format_currency(item.listing_price, "", locale="is_is")
+            item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
         return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "filters": filters})
 
-    """ areas = list(set([f"{x['real_estate']['zip']} {x['real_estate']['city']}" for x in fakelist]))
-        types = list(set([f"{x['real_estate']['type']}" for x in fakelist]))
-        listings = copy.deepcopy(fakelist)
-        for item in listings:
-            item["listing"]["price"] = format_currency(item["listing"]["price"], "", locale="is_is")[:-4]
-        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types})
-    if request.method == "POST":
-        # posta search form?? 
-        return HttpResponse("real_estate index")
-        """
 def getRealEstateById(request, id):
     # get realestate from database - make object to send in render
     # get list of similar real estates - by zip, size, rooms... put in listings
@@ -106,8 +32,9 @@ def getRealEstateById(request, id):
     similars = getSimilars(property_obj)
     images = PropertyImages.objects.filter(property=property_obj)
     seller = property_obj.seller
+    property_obj.listing_price = format_currency(property_obj.listing_price, "", locale="is_is")[:-4]
 
-    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images,"seller":seller })
+    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "seller":seller })
     
 
 def imageGallery(request, id):
@@ -136,11 +63,12 @@ def search(request):
         for key in request.GET.keys():
             value = request.GET.get(key)
             if not value:
+                print(key)
                 continue
             listings = filterListings(key, value, listings)
 
         for item in listings:
-            item.listing_price = format_currency(item.listing_price, "", locale="is_is")
+            item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
 
         return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "filters": filters})
       
@@ -153,16 +81,21 @@ def filterListings(key: str, value: str, listings: list[Property]):
     if key in filters.keys():
         key = filters[key]
 
+    print(key, value, )
     if key == "postal_code":
-        postalCode = value.split()[0]
-        value = int(postalCode)
+        value = value.split()[0]
     if key == "description":
         temp = [x for x in listings if checkDesc(value, x)]
     elif key == "listing_price":
         values = value.split("-")
         if len(values) == 2:
             min, max = values
-            temp = [x for x in listings if getattr(x, key) >= int(min) and getattr(x, key) <= int(max)]
+            if not min.isnumeric():
+                min = 0
+            if not max.isnumeric():
+                max = 999999999999999
+            temp = [x for x in listings if int(getattr(x, key)) >= int(min) and int(getattr(x, key)) <= int(max)]
+        
     else:
         temp = [x for x in listings if getattr(x, key) == value]
     return temp
