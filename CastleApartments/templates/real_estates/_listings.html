@@ -3,7 +3,7 @@
 <div class="h-100 bg-low pt-3 pb-5">
     <div class="container">
         <div class="row gx-2 row-cols-{{cols}}">
-            {% for property in properties %}
+            {% for property in listings %}
                 <div id="{{forloop.counter0}}" class="col pb-2 real-estate-card">
                     {% include "real_estates/_real_estate_item.html" with property=property %}
                 </div>
