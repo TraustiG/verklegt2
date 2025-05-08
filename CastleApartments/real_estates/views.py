@@ -5,7 +5,7 @@ from math import inf
 import copy
 import json
 import datetime
-from .models import Property, Offer, PropertyImages
+from .models import Property, Offer, PropertyImages, Payment
 from users.models import Buyer, Seller
 
 # Create your views here.
@@ -180,3 +180,16 @@ def createProperty(request):
         return redirect('my-properties')
     
     return redirect('my-properties')
+
+def selectPayment(request, offer_id):
+    if request.method == 'POST':
+        offer = Offer.objects.get(id=offer_id)
+        
+        payment_option = request.POST.get("payment_option")
+
+        Payment.objects.create(
+            offer = offer,
+            payment_option = payment_option
+        )
+        return redirect('profile')
+    return redirect('profile')
