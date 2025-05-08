@@ -17,29 +17,29 @@
                 {% if field.label == 'Role' %}
                 {% else %}
                 <div class="form-floating mb-3">
-                    <input type="
-                    {% if field.label == 'Image' %}
+                    <input required name={{field.name}} type=
+                    "{% if field.label == 'Image' %}
                     Text
-                    {% else %}
-                    {{field.label}}
-                    {% endif %}
-                    " class="form-control" id="floatingInput" placeholder="name@example.com">
-                    <label for="floatingInput">{{ field.label }}</label>
+                    {% elif 'Password' in field.label %}Password{% else %}
+                    {{ field.label }}
+                    {% endif %}"
+                    class="form-control" id="id_{{ field.name }}" placeholder="name@example.com">
+                    <label for="id_{{ field.name }}">{{ field.label }}</label>
                     {% if field.help_text %}
-                    <div id="{{ field.label }}HelpBlock" class="form-sub-text">
+                    <div id="{{ field.name }}HelpBlock" class="form-sub-text">
                         {{ field.help_text }}
                     </div>
                     {% endif %}
                 </div>
                 {% endif %}
                 {% endfor %}
-                <div class="form-floating" id="id_role">
-                    <select class="form-select" id="id_role_0">
-                        <option value="" selected></option>
-                        <option value="buyer">Buyer</option>
-                        <option value="seller">Seller</option>
-                    </select>
-                    <label for="id_role_0">Role </label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" required type="radio" name="role" id="id_role_0" value="buyer">
+                    <label class="form-check-label" for="id_role_0">Buyer</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" required type="radio" name="role" id="id_role_1" value="seller">
+                    <label class="form-check-label" for="id_role_1">Seller</label>
                 </div>
                 <div class="col-12 text-center pt-3">
                     <button class="btn btn-primary" type="submit">Register</button>
@@ -48,26 +48,26 @@
             <div class="h-50 col overflow-clip">
                 <div id="seller-form" style="visibility: hidden;">
                     <!-- {{ seller_form }} -->
-                    <div class="form-floating mb-3" id="id_type">
-                        <select class="form-select" id="id_type_0">
-                            <option value="" selected></option>
-                            <option value="Individual">Individual</option>
-                            <option value="Real Estate Agency">Real Estate Agency</option>
-                        </select>
-                        <label for="id_role_0">Type</label>
+                    <div class="form-check form-check-inline pb-2">
+                        <input class="form-check-input" required type="radio" name="type" id="id_type_0" value="individual">
+                        <label class="form-check-label" for="id_type_0">Individual</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" required type="radio" name="type" id="id_type_1" value="agency">
+                        <label class="form-check-label" for="id_type_1">Real estate agency</label>
                     </div>
                     {% for field in seller_form %}
                     {% if field.label == 'Bio' or field.label == "Type" %}
                     {% else %}
                     <div class="form-floating mb-3">
-                        <input type="
+                        <input required name="{{ field.name }}" type="
                         {% if field.label == 'Image' %}
                         Text
                         {% else %}
                         {{field.label}}
                         {% endif %}
-                        " class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput">{{ field.label }}</label>
+                        " class="form-control" id="id_{{field.name}}" placeholder="name@example.com">
+                        <label for="id_{{field.name}}">{{ field.label }}</label>
                         {% if field.help_text %}
                         <div id="{{ field.label }}HelpBlock" class="form-sub-text">
                             {{ field.help_text }}
@@ -76,9 +76,9 @@
                     </div>
                     {% endif %}
                     {% endfor %}
-                    <div class="mb-3">
-                        <label for="id_bio" class="form-label">Bio</label>
-                        <textarea class="form-control" name="bio" id="id_bio" rows="3"></textarea>
+                    <div class="form-floating">
+                        <textarea id="id_bio" name="bio" class="form-control" placeholder="Description of seller" style="height: 13rem"></textarea>
+                        <label for="id_bio">Bio</label>
                     </div>
                 </div>
             </div>

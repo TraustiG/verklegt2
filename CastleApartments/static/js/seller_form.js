@@ -1,14 +1,16 @@
-document.getElementById("id_role_0")
-    .addEventListener("change", (event) => {
-        toggleSellerForm(event)
+document.getElementsByName("role").forEach((element) => {
+    console.log(element.id)
+    console.log("setup")
+    element.addEventListener("change", () => {
+        toggleSellerForm()
+    })
 })
 
 
-
-const toggleSellerForm = (event) => {
+const toggleSellerForm = () => {
     
     const sellerform = document.getElementById('seller-form')
-    const selectedRole = event.target
+    const selectedRole = document.querySelector('input[name="role"]:checked');
 
     if (selectedRole && selectedRole.value === 'seller') {
         sellerform.style.visibility = 'visible';
