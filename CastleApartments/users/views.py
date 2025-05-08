@@ -143,13 +143,13 @@ def profile(request):
 
     if user.is_seller:
         seller = Seller.objects.get(user=user)
-        properties = Property.objects.filter(seller=seller)
+        listings = Property.objects.filter(seller=seller)
         bio_lines = seller.bio.splitlines()
 
 
 
 
-        return render(request, 'users/profile.html', {'user': request.user, 'properties':properties, 'seller':seller, 'bio_lines':bio_lines})
+        return render(request, 'users/profile.html', {'user': request.user, 'listings':listings, 'seller':seller, 'bio_lines':bio_lines})
 
     elif user.is_buyer:
         buyer = Buyer.objects.get(user=user)

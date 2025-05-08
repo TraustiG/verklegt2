@@ -54,11 +54,14 @@ const getInputvalues = () => {
 }
 
 const elements = [...document.querySelectorAll(".saved-filter")]
-elements.forEach((element) => {
-    element.addEventListener("click", (event) => {
-        useFilter(event)
+
+if (elements) {
+    elements.forEach((element) => {
+        element.addEventListener("click", (event) => {
+            useFilter(event)
+        })
     })
-})
+}
 
 const useFilter = (event) => {
     const element = event.target
