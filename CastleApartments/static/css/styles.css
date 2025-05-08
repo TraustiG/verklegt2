@@ -176,6 +176,7 @@ html[data-theme="dark"] .list-group-item {
     color: #ABB2BF;
 }
 
+.form-check-input:checked,
 html[data-theme="dark"] .card {
     color: #ABB2BF;
     background-color: #04A5E5;
