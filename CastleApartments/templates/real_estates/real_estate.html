@@ -62,15 +62,25 @@
                     <h5 class="subtext">
                         {{ property.postal_code }} {{ property.city }}
                     </h5>
+                    <h5 class="subtext">
+                        Svefnherbergi: {{ property.number_of_bedrooms }} , Baðherbergi: {{ property.number_of_bathrooms }}
+                    </h5>
+                    <h5 class="subtext"> 
+                        {{property.square_meters}} m<sup>2</sup>
+                    </h5>
                 </div>
             </div>
             <div class="d-flex align-items-end col-6 flex-column">
                 <div>
                     <h3 class="subtext">
-                        Skráð {{ property.listing_date }}
+                        Skráð: {{ property.listing_date }}
+                    </h3>
+                    <h3 class="subtext mt-1">
+                        Staða eignar: {{ property.status }}
                     </h3>
                 </div>
             </div>
+            
         </div>
     </div>
 </div>

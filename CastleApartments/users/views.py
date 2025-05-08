@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from babel.numbers import format_currency
 from .forms import RegistrationForm , SellerForm, SearchForm
-from .models import Seller, Buyer, Filter
+from .models import Seller, Buyer, Filter, User
 from real_estates.models import Offer,Property
 
 listing = {
@@ -162,7 +162,14 @@ def profile(request):
         
 def seller(request, id):
     # get seller user
-    return render(request, 'users/profile.html', {'user': request.user, "seller_id": id})
+    user = User.objects.get(id=id)
+    seller = Seller.objects.get(user=user)
+    user = seller.user
+    listings = Property.objects.filter(seller=seller)
+    bio_lines = seller.bio.splitlines()
+
+
+    return render(request, 'users/profile.html', {'user':user, 'listings':listings, 'seller':seller, 'bio_lines':bio_lines, 'seller_id': id})
 
 def my_properties(request):
     seller = Seller.objects.get(user=request.user)
