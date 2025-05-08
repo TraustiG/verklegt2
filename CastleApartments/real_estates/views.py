@@ -34,7 +34,9 @@ def getRealEstateById(request, id):
     seller = property_obj.seller
     property_obj.listing_price = format_currency(property_obj.listing_price, "", locale="is_is")[:-4]
 
-    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "seller":seller })
+    desc_lines = property_obj.description.splitlines()
+
+    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "seller":seller, "desc_lines":desc_lines })
     
 
 def imageGallery(request, id):

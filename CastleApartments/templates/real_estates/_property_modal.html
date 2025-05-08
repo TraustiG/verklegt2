@@ -10,47 +10,47 @@
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="streetname" class="form-label">Heimilisfang</label>
-                        <input type="text" class="form-control" id="streetname" name="streetname">
+                        <input type="text" class="form-control" id="streetname" name="streetname" required>
                     </div>
                     <div class="mb-3">
                         <label for="city_input" class="form-label">Borg</label>
-                        <input type="text" class="form-control" id="city_input" name="city_input">
+                        <input type="text" class="form-control" id="city_input" name="city_input" required>
                     </div>
                     <div class="mb-3">
                         <label for="zip" class="form-label">Póstnúmer</label>
-                        <input type="text" class="form-control" id="zip" name="zip">
+                        <input type="text" class="form-control" id="zip" name="zip" required>
                     </div>
                     <div class="mb-3">
                         <label for="desc" class="form-label">Lýsing</label>
-                        <input type="text" class="form-control" id="desc" name="desc">
+                        <textarea type="text" class="form-control" id="desc" name="desc" required> </textarea>
                     </div>
                     <div class="mb-3">
                         <label for="bedrooms" class="form-label">Fjöldi Svefnherbergja</label>
-                        <input type="number" class="form-control" id="bedrooms" name="bedrooms">
+                        <input type="number" class="form-control" id="bedrooms" name="bedrooms" required>
                     </div>
                     <div class="mb-3">
                         <label for="bathrooms" class="form-label">Fjöldi Baðherbergja</label>
-                        <input type="text" class="form-control" id="bathrooms" name="bathrooms">
+                        <input type="text" class="form-control" id="bathrooms" name="bathrooms" required>
                     </div>
                     <div class="mb-3">
                         <label for="sqm" class="form-label">Fermetrafjöldi</label>
-                        <input type="text" class="form-control" id="sqm" name="sqm">
+                        <input type="text" class="form-control" id="sqm" name="sqm" required>
                     </div>
                     <div class="mb-3">
                         <label for="status_input" class="form-label">Staða</label>
-                        <input type="text" class="form-control" id="status_input" name="status_input">
+                        <input type="text" class="form-control" id="status_input" name="status_input" required>
                     </div>
                     <div class="mb-3">
                         <label for="imageURL" class="form-label">Mynd</label>
-                        <input type="text" class="form-control" id="imageURL" name="imageURL">
+                        <input type="text" class="form-control" id="imageURL" name="imageURL" required>
                     </div>
                     <div class="mb-3">
                         <label for="type" class="form-label">Týpa</label>
-                        <input type="text" class="form-control" id="type" name="type">
+                        <input type="text" class="form-control" id="type" name="type" required>
                     </div>
                     <div class="mb-3">
                         <label for="price" class="form-label">Skráð Verð</label>
-                        <input type="text" class="form-control" id="price" name="price">
+                        <input type="text" class="form-control" id="price" name="price" required>
                     </div>
             
                     <div class="modal-footer">
