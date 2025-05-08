@@ -12,6 +12,9 @@
     color: var(--bs-card-title-color);
 }
 
+.form-check-input:checked + .form-check-label {
+    color: var(--bs-card-title-color);
+}
 
 .SELD {
     text-align: center;
@@ -34,6 +37,7 @@
     border: 1px solid black;
 }
 
+.form-check-input:not(:checked) + .form-check-label,
 .subtext {
     color: #5C5F77;
 }
