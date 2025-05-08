@@ -1,50 +1,92 @@
 {% extends "base.html" %}
 {% block title %}Signup{% endblock %}
 {% block content %}
-<h1>Create Account</h1>
-
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-
-
-  <div id="seller-form" style="display: none;">
-    {{seller_form.as_p}}
-  </div>
-  <button type="submit">Register</button>
-</form>
-<script>
-
-  document.addEventListener('DOMContentLoaded',function(){
-  
-    const role = document.querySelectorAll('input[name="role"]');
-    const sellerform = document.getElementById('seller-form');
-  
-    function toggleSellerForm(){
-  
-      const selectedRole = document.querySelector('input[name="role"]:checked');
-  
-      if(selectedRole && selectedRole.value === 'seller'){
-        sellerform.style.display = 'block';
-        sellerform.querySelectorAll('input, textarea, select').forEach(el => {
-        el.disabled = false;
-    });
-        
-      } else{
-        sellerform.style.display = 'none';
-        sellerform.querySelectorAll('input, textarea, select').forEach(el => {
-        el.disabled = true;
-    });
-      }
-    }
-  
-    role.forEach(radio=> { 
-      radio.addEventListener('change', toggleSellerForm);
-    })
-  
-    
-  
-    toggleSellerForm(); 
-  });
-</script>
+<div class="container justify-content-center">
+    <div class="row justify-content-center">
+        <div class="col-6 text-center">
+            <h1>Create Account</h1>
+        </div>
+        <div class="col-6 text-center">
+        </div>
+    </div>
+    <form method="post">
+        <div class="row mb-2">
+            <div class="col">
+                {% csrf_token %}
+                {% for field in form %}
+                {% if field.label == 'Role' %}
+                {% else %}
+                <div class="form-floating mb-3">
+                    <input type="
+                    {% if field.label == 'Image' %}
+                    Text
+                    {% else %}
+                    {{field.label}}
+                    {% endif %}
+                    " class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">{{ field.label }}</label>
+                    {% if field.help_text %}
+                    <div id="{{ field.label }}HelpBlock" class="form-sub-text">
+                        {{ field.help_text }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% endfor %}
+                <div class="form-floating" id="id_role">
+                    <select class="form-select" id="id_role_0">
+                        <option value="" selected></option>
+                        <option value="buyer">Buyer</option>
+                        <option value="seller">Seller</option>
+                    </select>
+                    <label for="id_role_0">Role </label>
+                </div>
+                <div class="col-12 text-center pt-3">
+                    <button class="btn btn-primary" type="submit">Register</button>
+                </div>
+            </div>
+            <div class="h-50 col overflow-clip">
+                <div id="seller-form" style="visibility: hidden;">
+                    <!-- {{ seller_form }} -->
+                    <div class="form-floating mb-3" id="id_type">
+                        <select class="form-select" id="id_type_0">
+                            <option value="" selected></option>
+                            <option value="Individual">Individual</option>
+                            <option value="Real Estate Agency">Real Estate Agency</option>
+                        </select>
+                        <label for="id_role_0">Type</label>
+                    </div>
+                    {% for field in seller_form %}
+                    {% if field.label == 'Bio' or field.label == "Type" %}
+                    {% else %}
+                    <div class="form-floating mb-3">
+                        <input type="
+                        {% if field.label == 'Image' %}
+                        Text
+                        {% else %}
+                        {{field.label}}
+                        {% endif %}
+                        " class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">{{ field.label }}</label>
+                        {% if field.help_text %}
+                        <div id="{{ field.label }}HelpBlock" class="form-sub-text">
+                            {{ field.help_text }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    <div class="mb-3">
+                        <label for="id_bio" class="form-label">Bio</label>
+                        <textarea class="form-control" name="bio" id="id_bio" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex row justify-content-center">
+            <div class="col-6">
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}

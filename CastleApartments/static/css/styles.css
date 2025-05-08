@@ -7,6 +7,12 @@
     color: var(--bs-card-title-color);
 }
 
+.form-sub-text {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-card-title-color);
+}
+
+
 .SELD {
     text-align: center;
     background-color: var(--bs-danger);
@@ -80,8 +86,13 @@
     font-weight: bold;
 }
 
+.hover-display-none:hover + div {
+    display: block;
+}
+
 /* ----- ACTUAL DARK MODE ----- 
 .asc-caret, .desc-caret,*/
+.hover-display-none:hover,
 .theme-icon-when-dark,
 .theme-toggle .visually-hidden,
 .theme-icon-when-light {

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from babel.numbers import format_currency
 from .forms import RegistrationForm , SellerForm, SearchForm
 from .models import Seller, Buyer, Filter
 from real_estates.models import Offer,Property
@@ -135,11 +136,15 @@ def saveFilter(request):
 
     return redirect('search')
 
-@login_required
+#@login_required
 def profile(request):
+
 
     buyer = Buyer.objects.get(user=request.user)
     offers = Offer.objects.filter(buyer=buyer)
+    for offer in offers:
+        offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
+        offer.property.listing_price = format_currency(offer.property.listing_price, "", locale="is_is")[:-4]
 
     return render(request, 'users/profile.html', {'user': request.user, 'offers':offers, 'buyer':buyer})
         
