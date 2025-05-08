@@ -42,6 +42,7 @@ class OfferStatus(models.TextChoices):
         REJECTED = 'REJECTED', 'Rejected'
         ACCEPTED = 'ACCEPTED', 'Accepted'
         CONTINGENT = 'CONTINGENT', 'Contingent'
+        PROCESSED = 'PROCESSED', 'Processed'
 
 class Offer(models.Model):
 
@@ -72,22 +73,9 @@ class Payment(models.Model):
     offer = models.OneToOneField(
          "Offer", on_delete=models.CASCADE)
 
-    payment_option = models.CharField(choices=PaymentOption.choices)
+    payment_option = models.CharField(max_length=16, choices=PaymentOption.choices)
 
-    national_id = models.CharField(max_length=10)
-    street_name = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    postal_code = models.CharField(max_length=5)
-    
-    #ætti að vera model fyrir hvert og eitt option maybe?
-    cardholder_name = models.CharField(max_length = 200)
-    credit_card_number = models.CharField(max_length = 16)
-    expiry_date = models.CharField(max_length = 10) # 12/26 right?
-    cvc = models.CharField(max_length = 5)
-
-    bank_account_number = models.CharField(max_length = 50)
-
-    mortgage_provider = models.CharField(max_length = 50)
+    payment_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.payment_option}"
+        return f"{self.offer} - {self.payment_option}"

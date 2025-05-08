@@ -1,0 +1,25 @@
+<div class="modal fade" id="paymentOptionModal" tabindex="-1" aria-labelledby="paymentOptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'selectPayment' offer.id %}">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title" id="paymentOptionModalLabel">Veldu greiðslumáta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Loka"></button>
+          </div>
+          <div class="modal-body">
+            <label for="payment_option">Greiðslumáti:</label>
+            <select name="payment_option" class="form-select" required>
+              <option value="CREDIT_CARD">Credit Card</option>
+              <option value="BANK_ACCOUNT">Bank Account</option>
+              <option value="MORTGAGE">Mortgage</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Staðfesta</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
