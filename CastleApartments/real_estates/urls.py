@@ -10,6 +10,7 @@ urlpatterns  = [
     path("real-estates/<int:id>/create-offer/", views.createOffer, name="create-offer"),
     path("create-property", views.createProperty, name="create-property"),
     path("edit-property/<int:id>/", views.editProperty, name="edit-property"),
+    path("delete-property/<int:id>", views.deleteProperty, name="delete-property"),
     #path('profile/', views.profile_view, name='profile'),
     path('select-payment/<int:offer_id>/', views.selectPayment, name='selectPayment'),
 ]

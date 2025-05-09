@@ -194,43 +194,44 @@ def createProperty(request):
     
     return redirect('my-properties')
 
-def editProperty(request, property_id):
-    
-    if request.method == 'PATCH':
-        property_obj = Property.objects.get(id=property_id)
+def editProperty(request, id):
+    property_obj = Property.objects.get(id=id)
 
-        streetname = request.PATCH.get("streetname")
-        city_input = request.PATCH.get("city_input")
-        zip = request.PATCH.get("zip")
-        desc = request.PATCH.get("desc")
-        bedrooms = request.PATCH.get("bedrooms")
-        bathrooms = request.PATCH.get("bathrooms")
-        sqm = request.PATCH.get("sqm")
-        imageURL = request.PATCH.get("imageURL")
-        type = request.PATCH.get("type")
-        price = request.PATCH.get("price")
+    if request.method == 'POST':
+        
+        streetname = request.POST.get("streetname")
+        city_input = request.POST.get("city_input")
+        zip = request.POST.get("zip")
+        desc = request.POST.get("desc")
+        bedrooms = request.POST.get("bedrooms")
+        bathrooms = request.POST.get("bathrooms")
+        sqm = request.POST.get("sqm")
+        imageURL = request.POST.get("imageURL")
+        type = request.POST.get("type")
+        price = request.POST.get("price")
 
 
-        property_obj.street_name = streetname,
-        property_obj.city= city_input,
-        property_obj.postal_code = zip,
-        property_obj.description = desc,
-        property_obj.property_type = type,
-        property_obj.listing_price = price,
-        property_obj. number_of_bedrooms = bedrooms,
-        property_obj.number_of_bathrooms = bathrooms,
-        property_obj.square_meters = sqm,
-        property_obj.image = imageURL,
+        property_obj.street_name = streetname
+        property_obj.city= city_input
+        property_obj.postal_code = zip
+        property_obj.description = desc
+        property_obj.property_type = type
+        property_obj.listing_price = price
+        property_obj. number_of_bedrooms = bedrooms
+        property_obj.number_of_bathrooms = bathrooms
+        property_obj.square_meters = sqm
+        property_obj.image = imageURL
 
         property_obj.save()
 
+    return redirect('my-properties')
 
+def deleteProperty(request, id): 
 
-        return redirect('my-properties')
+    if request.method == 'POST':
 
-def deleteProperty(request, property_id): 
-
-    if request.method == 'DELETE':
+        property_obj = Property.objects.get(id=id)
+        property_obj.delete()
 
         return redirect('my-properties')
 

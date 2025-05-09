@@ -110,10 +110,14 @@ def seller(request, id):
     listings = Property.objects.filter(seller=seller)
     return render(request, 'users/profile.html', {'profile': seller.user, 'listings': listings})
 
+
 def my_properties(request):
+
+
     seller = Seller.objects.get(user=request.user)
     properties = Property.objects.filter(seller=seller)
     for property in properties:
+        property.raw_price = property.listing_price  #this is for edit property, cant have it on decimal format there
         property.listing_price = format_currency(property.listing_price, "", locale="is_is")[:-4]
     property_offers = {prop: [] for prop in properties}
     offers = Offer.objects.filter(property__seller = seller)

@@ -33,9 +33,26 @@
                 <td class="align-middle text-center" scope="row"><h4>{{ offers|length }}</h4></td>
                 <td class="d-flex justify-content-center align-items-center" scope="row"><h4><b>{{ property.status}}</b></h4></td>
                 <th scope="row">
-                    <button id="editProperty" type="button" onclick="editProperty()" class="btn btn-primary btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+                    <button id="editProperty" type="button" onclick="editProperty()" class="btn btn-primary btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#edit-property-modal-{{ property.id }}" 
+                    data-id="{{ property.id }}"
+                    data-street="{{ property.street_name }}"
+                    data-city="{{ property.city }}"
+                    data-zip="{{ property.postal_code }}"
+                    data-desc="{{ property.description }}"
+                    data-bedrooms="{{ property.number_of_bedrooms }}"
+                    data-bathrooms="{{ property.number_of_bathrooms }}"
+                    data-sqm="{{ property.square_meters }}"
+                    data-status="{{ property.status }}"
+                    data-image="{{ property.image }}"
+                    data-type="{{ property.property_type }}"
+                    data-price="{{  property.raw_price }}">
                         Breyta Eign
                     </button>
+                    <button id="deleteProperty" type="button" onclick="deleteProperty()" class="btn btn-danger btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#delete-property-modal-{{property.id}}">
+                       Eyða Eign
+                    </button>
+                    {% include 'real_estates/_edit_property_modal.html' %}
+                    {% include 'real_estates/_delete_property_modal.html' %}
                 </th>
             </tr>
             {% empty %}
@@ -78,4 +95,5 @@
     </tbody>
 </table>
 
+<script src="{% static 'js/property_offers.js' %}" defer></script>
 {% endblock %}
