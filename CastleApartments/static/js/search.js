@@ -7,6 +7,7 @@ const sortItems = (event) => {
     const elements = [...document.querySelectorAll(".real-estate-card")]
     const parentElement = elements[0].parentNode
     const option = parseInt(event.target.value)
+    console.log(option)
 
     const asc = !(option%2 === 0) // && option !== 0  ??
     const isNumeric = (option < 3)
@@ -19,6 +20,7 @@ const sortItems = (event) => {
             case 2:
                 let price = element.querySelector("b.price").innerText 
                 price = parseInt(price.split(" ")[0].replace(".",""))
+                console.log(price)
                 return price
             case 3:
             case 4:

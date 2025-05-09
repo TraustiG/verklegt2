@@ -7,6 +7,13 @@
     color: var(--bs-card-title-color);
 }
 
+.real-estate-extra-info {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-top: 2px solid black;
+    color: var(--bs-card-title-color);
+}
+
 .form-sub-text {
     background-color: var(--bs-body-bg);
     color: var(--bs-card-title-color);
@@ -152,19 +159,33 @@ html[data-theme="dark"] {
     --bs-card-title-color: #FFFFFF;
     --bs-body-color-rgb: #5C5F77;
     --bs-body-color: #ABB2BF;
+    --bs-table-bg-state: #CCCCCC;
 }
 
 html[data-theme="light"] {
     --bg-mid: #000000;
 }
 
-html[data-theme="dark"] .title-bar {
+
+html[data-theme="dark"] .real-estate-extra-info, .title-bar {
     border-top: 1px solid #04A5E5;
+}
+
+html[data-theme="dark"] .title-bar {
     border-bottom: 1px solid #04A5E5;
 }
 
+.table * {
+    --bs-table-hover-bg: #04A5E552;
+}
+
 html[data-theme="dark"] .table * {
+    --bs-table-striped-bg: #313131;
     color: var(--bs-card-title-color);
+}
+
+.table-active * {
+    --bs-table-bg-state: #04A5E591;
 }
 
 html[data-theme="dark"] .subtext {

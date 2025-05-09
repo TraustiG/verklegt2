@@ -3,8 +3,8 @@
     <a class="stretched-link" href="{% url 'real-estate-by-id' id=property.id %}">
     </a>
     <img height="180rem" src="{{property.image}}" class="card-img-top" alt="A beautiful home">
-    {% if item.banner %}
-        {% include "real_estates/_card_banner.html" with text=item.banner %}
+    {% if property.status == "Sold" %}
+        {% include "real_estates/_card_banner.html" with text="SELD" %}
     {% endif %}
     </img>
     <ul class="list-group list-group-flush">
