@@ -40,7 +40,11 @@
                 <td class="align-middle text-end" scope="row">{{ property.listing_date }}</td>
                 <td class="align-middle text-center" scope="row"><h4>{{ offers|length }}</h4></td>
                 <td class="d-flex justify-content-center align-items-center" scope="row"><h4><b>{{ property.status}}</b></h4></td>
-                <th scope="row"></th>
+                <th scope="row">
+                    <button id="editProperty" type="button" onclick="editProperty()" class="btn btn-primary btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+                        Breyta Eign
+                    </button>
+                </th>
             </tr>
             {% endfor %}
         </tbody>
