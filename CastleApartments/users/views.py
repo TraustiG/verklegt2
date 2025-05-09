@@ -43,6 +43,7 @@ def register(request):
                     seller.save()
                 
                 else:
+                    print(seller_form.errors)
                     return render(request, 'users/register.html',{
                         'form':form,
                         'seller_form':seller_form
