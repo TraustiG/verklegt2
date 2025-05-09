@@ -23,7 +23,7 @@
                 <th scope="col"></th>
             </tr>
         </thead>
-        <tbody class="table-group-divider" style="border-top-color: black;">
+        <tbody id="seller-property-table-body" class="table-group-divider" style="border-top-color: black;">
         {% for property, offers in properties.items %}
             <tr name="property-table-row" id="{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}">
                 <th class="align-middle" scope="row"></th>

@@ -33,10 +33,11 @@ window.addEventListener("keydown", (event) => {
         let newRow;
         if (activeRow) {
             if (event.key == "ArrowUp") {
-                newRow = activeRow.previousElementSibling
+                newRow = activeRow.previousElementSibling ? activeRow.previousElementSibling : lastSibling()
                 console.log(newRow)
+                
             } else if (event.key == "ArrowDown") {
-                newRow = activeRow.nextElementSibling
+                newRow = activeRow.nextElementSibling ? activeRow.nextElementSibling : firstSibling()
                 console.log(newRow)
             }
         } else {
@@ -46,8 +47,12 @@ window.addEventListener("keydown", (event) => {
     }
 })
 
-document.addEventListener("DOMContentLoaded", () => {
-    // key presses act as onclicks
-    document.onkeydown = function (event) {
-    }
-})
+const firstSibling = () => {
+    const f = document.getElementById("seller-property-table-body").firstElementChild
+    return f
+}
+
+const lastSibling = () => {
+    const f = document.getElementById("seller-property-table-body").lastElementChild
+    return f
+}
