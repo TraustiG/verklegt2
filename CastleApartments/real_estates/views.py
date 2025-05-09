@@ -129,7 +129,8 @@ def createOffer(request, id):
             property = property_obj,
             buyer = buyer_obj,
             offer_amount = amount,
-            offer_expiry = expiry
+            offer_expiry = expiry,
+            offer_date = datetime.date.today()
         )
         
         return redirect('real-estate-by-id', id=id)
