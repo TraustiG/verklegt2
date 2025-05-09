@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from babel.numbers import format_currency
 from .forms import RegistrationForm , SellerForm, SearchForm
-from .models import Seller, Buyer, Filter
+from .models import Seller, Buyer, Filter, User
 from real_estates.models import Offer,Property
 from real_estates.views import index
 
