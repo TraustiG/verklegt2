@@ -90,9 +90,7 @@ def profile(request):
         seller.bio = seller.bio.splitlines()
 
 
-
-
-        return render(request, 'users/profile.html', {'user': request.user, 'listings': listings, 'seller':seller, })
+        return render(request, 'users/profile.html', {'profile': seller.user, 'listings': listings })
 
     elif user.is_buyer:
         buyer = Buyer.objects.get(user=user)
@@ -101,11 +99,16 @@ def profile(request):
             offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
             offer.property.listing_price = format_currency(offer.property.listing_price, "", locale="is_is")[:-4]
 
-        return render(request, 'users/profile.html', {'user': request.user, 'offers':offers, 'buyer':buyer})
+        return render(request, 'users/profile.html', {'profile': request.user, 'offers':offers })
         
 def seller(request, id):
     # get seller user
-    return render(request, 'users/profile.html', {'user': request.user, "seller_id": id})
+    if request.user.id == id:
+        return redirect('profile')
+    seller = Seller.objects.get(user_id=id)
+    seller.bio = seller.bio.splitlines()
+    listings = Property.objects.filter(seller=seller)
+    return render(request, 'users/profile.html', {'profile': seller.user, 'listings': listings})
 
 def my_properties(request):
     seller = Seller.objects.get(user=request.user)
