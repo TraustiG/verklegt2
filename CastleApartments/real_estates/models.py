@@ -55,6 +55,7 @@ class Offer(models.Model):
     
     offer_amount = models.CharField(max_length=20)
     offer_expiry = models.DateField()
+    offer_date = models.DateField(auto_now_add=True)
 
     offer_status = models.CharField(choices=OfferStatus.choices, default=OfferStatus.OPEN,)
     
