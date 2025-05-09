@@ -13,7 +13,7 @@ class RegistrationForm(UserCreationForm):
         fields = ("username","full_name","image", "password1","password2","role")
 
 class SellerForm(forms.ModelForm):
-    ROLE_CHOICES =(('individual','Individual'),('agency','Real estate agency'))
+    ROLE_CHOICES =(('Individual','Individual'),('Real estate agency','Real estate agency'))
     type = forms.ChoiceField(choices=ROLE_CHOICES, widget=forms.RadioSelect) #svo annaðhvort sé valið
     class Meta:
         model = Seller

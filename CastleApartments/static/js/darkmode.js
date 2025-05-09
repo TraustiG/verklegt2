@@ -5,16 +5,21 @@ function cycleTheme() {
     if (prefersDark) {
         // Auto (dark) -> Light -> Dark
         if (currentTheme === "dark") {
+
             setTheme("light");
+            //document.getElementById("footer-img").setAttribute("src", "/static/images/logo.png")
         } else {
             setTheme("dark");
+            //document.getElementById("footer-img").setAttribute("src", "/static/images/logo-darkmode.png")
         }
     } else {
         // Auto (light) -> Dark -> Light
         if (currentTheme === "light") {
             setTheme("dark");
+            //document.getElementById("footer-img").setAttribute("src", "/static/images/logo-darkmode.png")
         } else {
             setTheme("light");
+            //document.getElementById("footer-img").setAttribute("src", "/static/images/logo.png")
         }
     }
 }

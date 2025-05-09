@@ -6,11 +6,19 @@
 {% endblock %}
 {% block content %}
 
-<div class="d-flex justify-content-center align-items-center" style="height:50vh">
-    <button id="createProperty" type="button" onclick="createProperty()" class="btn btn-primary btn-big" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
-        Skrá nýja eign
-    </button>
+<div class="d-flex align-items-center overflow-hidden" style="height:50vh">
     {% include 'real_estates/_property_modal.html' %}
+    {% if properties|length == 0 %}
+    <button id="makeOffer" type="button" onclick="createProperty()" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+        Skrá eign
+    </button>
+    <div class="py-5">
+        <h1 class="text-center subtext">Engar fasteignir</h1>
+    </div>
+    {% else %}
+    <button id="makeOffer" type="button" onclick="createProperty()" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+        Skrá eign
+    </button>
     <table class="table table-bordered table-striped table-hover justify-content-center mt-1">
         <thead>
             <tr class="text-center">
@@ -38,13 +46,10 @@
                     </button>
                 </th>
             </tr>
-            {% empty %}
-            <div class="py-5">
-                <h1 class="text-center subtext">Engar fasteignir</h1>
-            </div>
             {% endfor %}
         </tbody>
     </table>
+    {% endif %}
 </div>
 {% include "_title_bar.html" with title="" id="address-table-caller" %}
 <table id="offer-table" class="table table-bordered table-striped table-hover justify-content-center mt-1" style="display: none">

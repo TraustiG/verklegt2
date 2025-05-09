@@ -17,7 +17,7 @@
                     Staða eignar: {{ property.status }}
                 </h3>
                 <div class="row d-flex justify-content-center">
-                    {% include 'users/_seller_card.html' with seller=seller %}
+                    {% include 'users/_seller_card.html' with seller=property.seller %}
                 </div>
                 <div class="row d-flex justify-content-center">
                     <div class="d-flex justify-content-center">
@@ -26,7 +26,7 @@
                                 class="btn btn-big btn-primary">
                                 Gera tilboð
                             </button>
-                            {% include 'real_estates/_offer_modal.html' %}
+                            {% include 'users/_payment_modal.html' %}
                         {% else %}
                             <button id="makeOffer-unavailable" type="button" style="height:6rem; width:16rem" class="btn btn-big btn-primary">
                                 Gera tilboð
