@@ -1,10 +1,12 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}Fasteignirnar Mínar{% endblock %}
-
+{% block scripts %}
+<script defer src="{% static 'js/property_offers.js' %}"></script>
+{% endblock %}
 {% block content %}
 
-<div class="d-flex justify-content-center align-items-center">
+<div class="d-flex justify-content-center align-items-center" style="height:50vh">
     <button id="makeOffer" type="button" onclick="createProperty()" class="btn btn-primary btn-big" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
         Skrá nýja eign
     </button>
@@ -13,34 +15,63 @@
         <thead>
             <tr class="text-center">
                 <th scope="col"></th>
-                <th style="width:45%;" scope="col">Heimilisfang</th>
+                <th style="width:35%;" scope="col">Heimilisfang</th>
                 <th style="width:10%;" scope="col">Skráð verð</th>
-                <th style="width:10%;" scope="col">Herbergi</th>
-                <th class="w-25" scope="col">Staða</th>
+                <th style="width:10%;" scope="col">Skráð dags.</th>
+                <th style="width:10%;" scope="col">Fjöldi tilboða</th>
+                <th style="width:10%;" scope="col">Staða</th>
                 <th scope="col"></th>
             </tr>
         </thead>
-        <tbody class="table-group-divider" style="border-top-color: black;">
-        {% for property in properties %}
-            <tr>
+        <tbody id="seller-property-table-body" class="table-group-divider" style="border-top-color: black;">
+        {% for property, offers in properties.items %}
+            <tr name="property-table-row" id="{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}">
                 <th class="align-middle" scope="row"></th>
                 <th class="align-middle text-center" scope="row"><h4>{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}</h4></th>
-                <td class="align-middle text-end" scope="row"><h4>{{ property.listing_price }}</h4></td>
-                <td class="align-middle text-end" scope="row"><h4>{{ property.number_of_bedrooms }}</h4></td>
-                <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><b>{{ property.status}}</b>
-                </td>
+                <td class="align-middle text-end px-3" scope="row"><h4>{{ property.listing_price }}</h4></td>
+                <td class="align-middle text-end" scope="row">{{ property.listing_date }}</td>
+                <td class="align-middle text-center" scope="row"><h4>{{ offers|length }}</h4></td>
+                <td class="d-flex justify-content-center align-items-center" scope="row"><h4><b>{{ property.status}}</b></h4></td>
                 <th scope="row"></th>
             </tr>
+            {% empty %}
+            <div class="py-5">
+                <h1 class="text-center subtext">Engar fasteignir</h1>
+            </div>
+            {% endfor %}
         </tbody>
     </table>
-    </div>
-        {% empty %}
-        </tbody>
-    </table>
-    </div>
-    <div class="py-5">
-        <h1 class="text-center subtext">Engar Fasteignir</h1>
-    </div>
+</div>
+{% include "_title_bar.html" with title="" id="address-table-caller" %}
+<table id="offer-table" class="table table-bordered table-striped table-hover justify-content-center mt-1" style="display: none">
+    <thead>
+        <tr class="text-center">
+            <th scope="col"></th>
+            <th style="width:20%;" scope="col">Kaupandi</th>
+            <th style="width:20%;" scope="col">Upphæð</th>
+            <th style="width:10%;" scope="col">Gildistími</th>
+            <th style="width:15%;" scope="col">Aðgerðir</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prop, offers in properties.items %}
+        {% for offer in offers %}
+        <tr name="offer-table-row" class="{{ prop.street_name }} - {{ prop.postal_code }} {{ prop.city }}" style="display: none;">
+            <th scope="col"></th>
+            <th class="px-3" scope="col"><h3>{{ offer.buyer.user.full_name }}</h3></th>
+            <th class="text-end px-5" scope="col"><h3>{{ offer.offer_amount }}</h3></th>
+            <th class="text-center" scope="col"><h3>{{ offer.offer_expiry }}</h3></th>
+            <th class="d-flex justify-content-center align-items-center gap-1" scope="col">
+                <button class="btn btn-success">Accept</button>
+                <button class="btn btn-primary">Contingent</button>
+                <button class="btn btn-danger">Reject</button>
+            </th>
+            <th scope="col"></th>
+        </tr>
         {% endfor %}
+            {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}

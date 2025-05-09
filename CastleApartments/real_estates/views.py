@@ -1,7 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from babel.numbers import format_currency
-from math import inf
 import copy
 import json
 import datetime
@@ -31,12 +30,12 @@ def getRealEstateById(request, id):
         return redirect('real-estates')
     similars = getSimilars(property_obj)
     images = PropertyImages.objects.filter(property=property_obj)
-    seller = property_obj.seller
+    listings = Property.objects.all()
+
     property_obj.listing_price = format_currency(property_obj.listing_price, "", locale="is_is")[:-4]
+    property_obj.description = property_obj.description.splitlines()
 
-    desc_lines = property_obj.description.splitlines()
-
-    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "seller":seller, "desc_lines":desc_lines })
+    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "seller": property_obj.seller, "listings": listings})
     
 
 def imageGallery(request, id):
@@ -139,7 +138,6 @@ def createOffer(request, id):
 
 
 def createProperty(request):
-
     if request.method == 'POST':
         
         streetname = request.POST.get("streetname")
@@ -153,13 +151,12 @@ def createProperty(request):
         imageURL = request.POST.get("imageURL")
         type = request.POST.get("type")
         price = request.POST.get("price")
+        images = request.POST.get("images").replace(" ","").split(",")
 
 
         seller_obj = Seller.objects.get(user=request.user)
-        
 
-
-        Property.objects.create(
+        newProperty = Property.objects.create(
             seller = seller_obj,
             street_name = streetname,
             city= city_input,
@@ -170,14 +167,29 @@ def createProperty(request):
             number_of_bedrooms = bedrooms,
             number_of_bathrooms = bathrooms,
             square_meters = sqm,
-            status = status_input,
+            status = "Open",
             image = imageURL,
             listing_date = datetime.date.today()
-
-            
         )
+
+        PropertyImages.objects.create(
+            property = newProperty,
+            image_url = imageURL,
+            image_description = "main"
+        )
+
+        for image in images:
+            try:
+                PropertyImages.objects.create(
+                    property = newProperty,
+                    image_url = image,
+                    image_description = ""
+                )
+            except Exception:
+                continue
+
         
-        return redirect('my-properties')
+        return redirect(f"real-estates/{newProperty.id}")
     
     return redirect('my-properties')
 

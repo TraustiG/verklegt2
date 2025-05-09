@@ -1,9 +1,7 @@
 {% load static %}
-{% if user.is_authenticated %}
-    {% block scripts %}
-    <script defer src="{% static 'js/search.js' %}"></script>
-    {% endblock %}
-{% endif %}
+{% block scripts %}
+<script defer src="{% static 'js/search.js' %}"></script>
+{% endblock %}
 <div class="bg-mid d-flex justify-content-center search-form">
     <div class="bg-mid container pb-4">
         <form action="/search" method="GET">
@@ -83,7 +81,7 @@
                                 {% else %}
                                 btn-primary"
                                 {% endif %}
-                                data-bs-toggle="dropdown" aria-expanded="false">
+                                data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="d-flex justify-content-center gap-1">
                                         <span class="d-flex align-items-center">
                                             <svg class="align-self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-plus" viewBox="0 0 16 16">
@@ -98,13 +96,14 @@
                                 </button>
                                 <div class="dropdown-menu mx-1 px-1">
                                     <div class="container">
-                                        <input class="form-control mb-2" id="id_filterName" type="text" placeholder="Nafn" aria-label="filter name input" style="color:var(--bs-card-title-color)"> 
+                                        <label for="id_filterName">Nafn</label>
+                                        <input class="form-control mb-2" id="id_filterName" type="text" aria-label="filter name input" style="color:var(--bs-card-title-color)"> 
                                     </div>
                                     <div class="d-flex gap-1 align-items-center justify-content-center">
                                         <div>
                                             <div class="form-check">
                                                 <div>
-                                                    <input type="checkbox" class="form-check-input" id="dropdownCheck">
+                                                    <input type="checkbox" class="form-check-input" id="dropdownCheck" aria-label="watch filter">
                                                 </div>
                                                 <label class="form-check-label" for="dropdownCheck">
                                                     Vakta síu
@@ -136,7 +135,7 @@
                                     </div>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    {% for filter in filters %}
+                                    {% for filter in user.filters %}
                                     <li><a class="saved-filter dropdown-item" filter="{{ filter.filters }}">{{ filter.name }}</a></li>
                                     {% endfor %}
                                 </ul>
