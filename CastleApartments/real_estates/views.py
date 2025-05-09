@@ -30,12 +30,15 @@ def getRealEstateById(request, id):
         return redirect('real-estates')
     similars = getSimilars(property_obj)
     images = PropertyImages.objects.filter(property=property_obj)
-    listings = Property.objects.all()
+    similars = Property.objects.all()
+    for prop in similars:
+        prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
+
 
     property_obj.listing_price = format_currency(property_obj.listing_price, "", locale="is_is")[:-4]
     property_obj.description = property_obj.description.splitlines()
 
-    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "seller": property_obj.seller, "listings": listings})
+    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "listings": similars})
     
 
 def imageGallery(request, id):
@@ -82,7 +85,6 @@ def filterListings(key: str, value: str, listings: list[Property]):
     if key in filters.keys():
         key = filters[key]
 
-    print(key, value, )
     if key == "postal_code":
         value = value.split()[0]
     if key == "description":
