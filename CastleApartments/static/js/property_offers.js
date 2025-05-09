@@ -56,3 +56,15 @@ const lastSibling = () => {
     const f = document.getElementById("seller-property-table-body").lastElementChild
     return f
 }
+
+
+//resets the edit property modal when its closed
+document.addEventListener("DOMContentLoaded", () => {
+    const modals = document.querySelectorAll('[id^="edit-property-modal-"]');
+
+    modals.forEach((modalEl) => {
+        modalEl.addEventListener("hidden.bs.modal", () => {
+            modalEl.querySelector("form").reset();
+        });
+    });
+});

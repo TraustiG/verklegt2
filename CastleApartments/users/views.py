@@ -101,6 +101,50 @@ def profile(request):
             offer.property.listing_price = format_currency(offer.property.listing_price, "", locale="is_is")[:-4]
 
         return render(request, 'users/profile.html', {'profile': request.user, 'offers':offers })
+    
+def editProfile(request):
+
+    #get the current user 
+    user = request.user
+
+
+
+    if request.method == 'POST':
+         
+        #allow changes for fullname / image as they are shared , save user
+        fullname = request.POST.get("fullname")
+        profile_image = request.POST.get("profile_image")
+
+        user.full_name = fullname
+        user.image = profile_image
+
+        user.save()
+         
+        #check if user is a seller & edit / save seller object if those fields have been edited
+        if user.is_seller:
+            seller = Seller.objects.get(user=user)
+
+            seller_type = request.POST.get("seller_type")
+            streetname = request.POST.get("streetname")
+            city_input = request.POST.get("city_input")
+            zip = request.POST.get("zip")
+            logo_input = request.POST.get("logo_input")
+            bio_input = request.POST.get("bio_input")
+
+            seller.type= seller_type
+            seller.street_name= streetname
+            seller.city= city_input
+            seller.postal_code= zip
+            seller.logo= logo_input
+            seller.bio= bio_input
+
+          
+            seller.save()
+        
+            return redirect('profile')
+
+
+    return redirect('profile')
         
 def seller(request, id):
     # get seller user
@@ -111,10 +155,14 @@ def seller(request, id):
     listings = Property.objects.filter(seller=seller)
     return render(request, 'users/profile.html', {'profile': seller.user, 'listings': listings})
 
+
 def my_properties(request):
+
+
     seller = Seller.objects.get(user=request.user)
     properties = Property.objects.filter(seller=seller)
     for property in properties:
+        property.raw_price = property.listing_price  #this is for edit property, cant have it on decimal format there
         property.listing_price = format_currency(property.listing_price, "", locale="is_is")[:-4]
     property_offers = {prop: [] for prop in properties}
     offers = Offer.objects.filter(property__seller = seller)
