@@ -38,24 +38,28 @@
             </div>
         </div>
     </div>
-</div>
     {% if user.is_seller %}
-        <div>
-            {% for line in bio_lines %}
-            <h5 class="">
-                {{ line }}
-                {% if line == "" %}
-                <br/>
-                {% endif %}
-            </h5>
-            {% endfor %}
-        </div>
-        {% include "_title_bar.html" with title="Fasteignir" %}
-        <div class="d-flex justify-content-center align-items-center">
-            {% include "real_estates/_listings.html" with cols=5 %}
-        </div>
-    {% else %}
-        {% include "_title_bar.html" with title="Tilboð" %}
-        {% include "users/_buyer_offers.html" %}
-    {% endif %}
+    <div class="container pb-3">
+        {% for line in seller.bio %}
+        <h5 class="m-0">
+            {{ line }}
+            {% if line == "" %}
+            <br/>
+            {% endif %}
+        </h5>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<div class="bg-low">
+{% if user.is_seller %}
+    {% include "_title_bar.html" with title="Fasteignir" %}
+    <div class="d-flex justify-content-center align-items-center">
+        {% include "real_estates/_listings.html" with cols=5 %}
+    </div>
+</div>
+{% else %}
+    {% include "_title_bar.html" with title="Tilboð" %}
+    {% include "users/_buyer_offers.html" %}
+{% endif %}
 {% endblock %}

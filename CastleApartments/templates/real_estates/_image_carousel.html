@@ -8,7 +8,7 @@
         aria-current="true" aria-label="Slide {{forloop.counter0}}"></button>
         {% endfor %}
     </div> -->
-    <div class="carousel-inner">
+    <div class="carousel-inner text-center">
         {% for image in images %}
         {% if forloop.first %}
         <div class="carousel-item active">
@@ -20,7 +20,7 @@
                 </a>
             </div>
         {% empty %}
-            <div class="carousel-item active"><p>Engar myndir fyrir eignina.</p></div>
+            <div class="carousel-item active"><h1>Engar myndir fyrir eignina.</h1></div>
         {% endfor %}
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">

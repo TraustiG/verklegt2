@@ -1,5 +1,6 @@
 
 from django.db import models
+from babel.numbers import format_currency
 
 class PropertyImages(models.Model):
 

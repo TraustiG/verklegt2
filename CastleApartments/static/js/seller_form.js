@@ -1,6 +1,4 @@
 document.getElementsByName("role").forEach((element) => {
-    console.log(element.id)
-    console.log("setup")
     element.addEventListener("change", () => {
         toggleSellerForm()
     })
