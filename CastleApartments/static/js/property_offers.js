@@ -75,6 +75,7 @@ const imageRow = document.getElementById("new-images-row")
 const submittedImageRow = document.getElementById("added-images-row-submit")
 const editPropertyButtons = document.getElementsByName("editProperty")
 const createPropertyButton = document.getElementById("makeOffer")
+const deletePropertyButtons = document.getElementsByName("deleteProperty")
 let form = Array.from(document.forms).filter((f) => f.id === "create-new-property")[0]
 let imageObjs = []
 let imageElements = []
@@ -197,4 +198,13 @@ createPropertyButton.addEventListener("click", () => {
     form["bathrooms"].setAttribute("value", "")
     form["sqm"].setAttribute("value", "")
     form["desc"].innerHTML = ""
+})
+
+
+deletePropertyButtons.forEach((element) => {
+    element.addEventListener("click", () => {
+        console.log(element.getAttribute("data-street"))
+        document.getElementById("delete-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir eyða ${element.getAttribute("data-street")}?`
+        form.action = `/delete-property/${element.getAttribute("data-id")}`
+    })
 })
