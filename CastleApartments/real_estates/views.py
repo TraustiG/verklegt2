@@ -17,10 +17,11 @@ def index(request):
         listings = Property.objects.all()
         areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
         types = sorted(list(set([f"{x.property_type}" for x in listings])))
+        prices = getPrices()
         filters = []
         for item in listings:
             item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
-        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "filters": filters})
+        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
 
 def getRealEstateById(request, id):
     # get realestate from database - make object to send in render
@@ -60,6 +61,7 @@ def search(request):
         listings = Property.objects.all()
         areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
         types = sorted(list(set([f"{x.property_type}" for x in listings])))
+        prices = getPrices()
         filter = {"areaSelect": 300,
                 "typeSelect": "Fjölbýlishús",
                 "priceInput": "80000000-110000000",
@@ -68,15 +70,12 @@ def search(request):
 
         for key in request.GET.keys():
             value = request.GET.get(key)
-            if not value:
-                print(key)
-                continue
             listings = filterListings(key, value, listings)
 
         for item in listings:
             item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
 
-        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "filters": filters})
+        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
       
 #### Breyta object paths þegar model er komið ####
 def filterListings(key: str, value: str, listings: list[Property]):
@@ -144,19 +143,25 @@ def createOffer(request, id):
 
 def createProperty(request):
     if request.method == 'POST':
-        
-        streetname = request.POST.get("streetname")
-        city_input = request.POST.get("city_input")
-        zip = request.POST.get("zip")
-        desc = request.POST.get("desc")
-        bedrooms = request.POST.get("bedrooms")
-        bathrooms = request.POST.get("bathrooms")
-        sqm = request.POST.get("sqm")
-        type = request.POST.get("type")
-        price = request.POST.get("price")
-        images = request.POST.get("hidden-images-list")
-        images = json.loads(images)
-        
+        try:
+            streetname = request.POST.get("streetname")
+            city_input = request.POST.get("city_input")
+            zip = request.POST.get("zip")
+            desc = request.POST.get("desc")
+            bedrooms = request.POST.get("bedrooms")
+            bathrooms = request.POST.get("bathrooms")
+            sqm = request.POST.get("sqm")
+            type = request.POST.get("type")
+            price = request.POST.get("price")
+            images = request.POST.get("hidden-images-list")
+            if not images:
+                images = "{}"
+            images = json.loads(images)
+        except Exception:
+            print("huh")
+            redirect('my-properties')
+            
+        seller_obj = Seller.objects.get(user=request.user)
         newProperty = Property.objects.create(
             seller = seller_obj,
             street_name = streetname,
@@ -181,17 +186,14 @@ def createProperty(request):
             fileName = default_storage.save(f"{image['desc']}.png", newImage)
             PropertyImages.objects.create(
                 property = newProperty,
-                image_url = f"media/{fileName}",
+                image_url = f"/media/{fileName}",
                 image_description = image["desc"]
             )
 
             ## main image fremst i lista
             if i == 0:
-                newProperty.image = f"media/{fileName}"
-
-
-
-        seller_obj = Seller.objects.get(user=request.user)
+                newProperty.image = f"/media/{fileName}"
+                newProperty.save()
 
 
         for image in images:
@@ -209,43 +211,44 @@ def createProperty(request):
     
     return redirect('my-properties')
 
-def editProperty(request, property_id):
-    
-    if request.method == 'PATCH':
-        property_obj = Property.objects.get(id=property_id)
+def editProperty(request, id):
+    property_obj = Property.objects.get(id=id)
 
-        streetname = request.PATCH.get("streetname")
-        city_input = request.PATCH.get("city_input")
-        zip = request.PATCH.get("zip")
-        desc = request.PATCH.get("desc")
-        bedrooms = request.PATCH.get("bedrooms")
-        bathrooms = request.PATCH.get("bathrooms")
-        sqm = request.PATCH.get("sqm")
-        imageURL = request.PATCH.get("imageURL")
-        type = request.PATCH.get("type")
-        price = request.PATCH.get("price")
+    if request.method == 'POST':
+        
+        streetname = request.POST.get("streetname")
+        city_input = request.POST.get("city_input")
+        zip = request.POST.get("zip")
+        desc = request.POST.get("desc")
+        bedrooms = request.POST.get("bedrooms")
+        bathrooms = request.POST.get("bathrooms")
+        sqm = request.POST.get("sqm")
+        imageURL = request.POST.get("imageURL")
+        type = request.POST.get("type")
+        price = request.POST.get("price")
 
 
-        property_obj.street_name = streetname,
-        property_obj.city= city_input,
-        property_obj.postal_code = zip,
-        property_obj.description = desc,
-        property_obj.property_type = type,
-        property_obj.listing_price = price,
-        property_obj. number_of_bedrooms = bedrooms,
-        property_obj.number_of_bathrooms = bathrooms,
-        property_obj.square_meters = sqm,
-        property_obj.image = imageURL,
+        property_obj.street_name = streetname
+        property_obj.city= city_input
+        property_obj.postal_code = zip
+        property_obj.description = desc
+        property_obj.property_type = type
+        property_obj.listing_price = price
+        property_obj.number_of_bedrooms = bedrooms
+        property_obj.number_of_bathrooms = bathrooms
+        property_obj.square_meters = sqm
+        property_obj.image = imageURL
 
         property_obj.save()
 
+    return redirect('my-properties')
 
+def deleteProperty(request, id): 
 
-        return redirect('my-properties')
+    if request.method == 'POST':
 
-def deleteProperty(request, property_id): 
-
-    if request.method == 'DELETE':
+        property_obj = Property.objects.get(id=id)
+        property_obj.delete()
 
         return redirect('my-properties')
 
@@ -261,3 +264,12 @@ def selectPayment(request, offer_id):
         )
         return redirect('profile')
     return redirect('profile')
+
+def getPrices():
+    bigs = [75,85,95,105,115]
+    nums = [x for x in range(25, 111) if x%5==0 and x not in bigs]
+    nums.extend([125, 150, 175, 200, 250, 300])
+    prices = {}
+    for num in nums:
+        prices[num] = {"visual": f"{num} mkr.", "value": str(num*1000000)}
+    return prices

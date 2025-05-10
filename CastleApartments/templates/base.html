@@ -16,9 +16,11 @@
 </head>
 
 <body>
-    {% include "_nav.html" %}
-    {% block content %}
-    {% endblock %}
+    <div id="main-content-div">
+        {% include "_nav.html" %}
+        {% block content %}
+        {% endblock %}
+    </div>
     <div class="footer-divider"></div>
     {% include "_footer.html" %}
 </body>

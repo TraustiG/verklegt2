@@ -1,7 +1,4 @@
 {% load static %}
-{% block scripts %}
-<script defer src="{% static 'js/search.js' %}"></script>
-{% endblock %}
 <div class="bg-mid d-flex justify-content-center search-form">
     <div class="bg-mid container pb-4">
         <form action="/search" method="GET">
@@ -32,11 +29,8 @@
                         <label for="id_typeSelect">Tegund</label>
                     </div>
                 </div>
-                <div class="col-sm-2">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" name="priceInput" id="id_priceInput" placeholder="">
-                        <label for="id_priceInput">Verð</label>
-                    </div>
+                <div class="col-sm-3">
+                    {% include "_temp_price_search.html" %}
                 </div>
             </div>
             <div class="row justify-content-evenly">
@@ -74,7 +68,7 @@
                                 </div>
                             </button>
                             <div class="dropdown-center">
-                                <button id="saveFilter" type="button" 
+                                <button id="saveFilterButton" type="button" 
                                 class="btn 
                                 {% if not user.full_name %}
                                 " disabled

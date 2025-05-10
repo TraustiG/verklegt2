@@ -1,28 +1,41 @@
 const submitButtons = document.getElementsByName("add-all-images-button") // classname ("image-modal-submit-btn")
-const images = document.getElementsByName("hidden-images-list")[0]
 const imageReader = new FileReader();
 const imgAdderButton = document.getElementById("image-adder-button")
 const imgInput = document.getElementById("new-image-file-input")
+const imgDesc = document.getElementById("new-image-description") 
 const imageRow = document.getElementById("new-images-row")
+const modalResets = document.getElementsByName("property-modal-reset-button")
 let imageDescs = []
 
 
 submitButtons.forEach((el) => {
     el.addEventListener("click", () => {
-        images.setAttribute("value", JSON.stringify(imageDescs))
+        if (el.classList.contains("image-modal-submit-btn")) {
+            forms = document.forms
+            form = Array.from(forms).filter((f) => f.id === "create-new-property")[0]
+            let images = form.querySelector('input[name="hidden-images-list"]')
+            images.setAttribute("value", JSON.stringify(imageDescs))
+        }
     
         imageDescs = []
         imageRow.innerHTML = ""
-})
+        descEl.innerHTML = ""
+        imgInput.value = ""
+    })
 })
 
 
 imgAdderButton.addEventListener("click", () => {
     const file = imgInput.files[0]
-    if (file) {
-        let desc = document.getElementById("new-image-description").value
+    if (file && imgDesc.value) {
+        let desc = imgDesc.value
         let imgElement = newImageElement(file, desc)
         imageRow.appendChild(imgElement)
+        imgDesc.innerHTML = ""
+        imgInput.value = ""
+
+    } else {
+        console.log("input??")
     }
 })
 

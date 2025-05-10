@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}{{ profile.full_name }}{% endblock %}
 
 {% block content %}
@@ -16,7 +17,8 @@
                         {% endif %}
                         />
                         {% if user.id == profile.id %}
-                        <button class="position-absolute bottom-0 btn btn-primary mb-3">Breyta prófíl</button>
+                        <button id= "editProfile" class="position-absolute bottom-0 btn btn-primary mb-3" onclick="editProfile()" data-bs-toggle="modal" data-bs-target="#edit-profile-modal-{{user.id}}">Breyta prófíl</button>
+                        {% include 'users/_edit_profile_modal.html' %}
                         {% endif %}
                     </div>
                 </div>
@@ -62,4 +64,7 @@
     {% include "_title_bar.html" with title="Tilboð" %}
     {% include "users/_buyer_offers.html" %}
 {% endif %}
+<script src="{% static 'js/profile.js' %}" defer></script>
+
 {% endblock %}
+
