@@ -143,23 +143,19 @@ def createOffer(request, id):
 
 def createProperty(request):
     if request.method == 'POST':
-        try:
-            streetname = request.POST.get("streetname")
-            city_input = request.POST.get("city_input")
-            zip = request.POST.get("zip")
-            desc = request.POST.get("desc")
-            bedrooms = request.POST.get("bedrooms")
-            bathrooms = request.POST.get("bathrooms")
-            sqm = request.POST.get("sqm")
-            type = request.POST.get("type")
-            price = request.POST.get("price")
-            images = request.POST.get("hidden-images-list")
-            if not images:
-                images = "{}"
-            images = json.loads(images)
-        except Exception:
-            print("huh")
-            redirect('my-properties')
+        streetname = request.POST.get("streetname")
+        city_input = request.POST.get("city_input")
+        zip = request.POST.get("zip")
+        desc = request.POST.get("desc")
+        bedrooms = request.POST.get("bedrooms")
+        bathrooms = request.POST.get("bathrooms")
+        sqm = request.POST.get("sqm")
+        type = request.POST.get("type")
+        price = request.POST.get("price")
+        images = request.POST.get("hidden-images-list")
+        if not images:
+            images = "{}"
+        images = json.loads(images)
             
         seller_obj = Seller.objects.get(user=request.user)
         newProperty = Property.objects.create(
