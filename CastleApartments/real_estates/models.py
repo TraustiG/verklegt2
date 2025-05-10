@@ -1,6 +1,5 @@
 
 from django.db import models
-from babel.numbers import format_currency
 
 class PropertyImages(models.Model):
 
@@ -14,6 +13,12 @@ class PropertyImages(models.Model):
     def __str__(self):
         return f"{self.image_url}"
 
+
+class PropertyStatus(models.TextChoices):
+        OPEN = 'OPEN', 'Open'
+        SOLD = 'SOLD', 'Sold'
+        CONTINGENT = 'CONTINGENT', 'Contingent'
+        PROCESSED = 'PROCESSED', 'Processed'
 
 class Property(models.Model):
 
@@ -30,7 +35,7 @@ class Property(models.Model):
     number_of_bedrooms = models.IntegerField()
     number_of_bathrooms = models.IntegerField()
     square_meters = models.IntegerField()
-    status = models.CharField(max_length = 100)
+    status = models.CharField(choices=PropertyStatus.choices, default=PropertyStatus.OPEN)
     image = models.TextField()
 
     def __str__(self):

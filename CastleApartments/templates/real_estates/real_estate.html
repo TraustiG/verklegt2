@@ -21,8 +21,8 @@
                 </div>
                 <div class="row d-flex justify-content-center">
                     <div class="d-flex justify-content-center">
-                        {% if user.is_buyer %}
-                            {% if property.status != "Sold" %}
+                        {% if user.is_authenticated %}
+                            {% if property.status != "Sold" and user.is_buyer %}
                                 <button id="makeOffer" type="button" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#offer-modal" 
                                     class="btn btn-big btn-primary">
                                     Gera tilboð
@@ -30,8 +30,8 @@
                                 {% include 'real_estates/_offer_modal.html' %}
                             {% else %}
                                 <button id="property-sold-offer-button" type="button" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#offer-modal" 
-                                    class="btn btn-big btn-primary">
-                                    Seld
+                                    class="btn btn-big btn-primary" style="visibility:hidden;" disabled>
+                                    {% if property.status == "Sold" and user.is_buyer %}SELD{% endif %}
                                 </button>
                             {% endif %}
                         {% else %}
