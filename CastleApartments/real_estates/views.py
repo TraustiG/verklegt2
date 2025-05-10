@@ -1,7 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
+from django.core.files.storage import default_storage
 from babel.numbers import format_currency
-import copy
+from io import BytesIO
+import base64
 import json
 import datetime
 from .models import Property, Offer, PropertyImages, Payment
@@ -15,10 +17,11 @@ def index(request):
         listings = Property.objects.all()
         areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
         types = sorted(list(set([f"{x.property_type}" for x in listings])))
+        prices = getPrices()
         filters = []
         for item in listings:
             item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
-        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "filters": filters})
+        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
 
 def getRealEstateById(request, id):
     # get realestate from database - make object to send in render
@@ -58,6 +61,7 @@ def search(request):
         listings = Property.objects.all()
         areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
         types = sorted(list(set([f"{x.property_type}" for x in listings])))
+        prices = getPrices()
         filter = {"areaSelect": 300,
                 "typeSelect": "Fjölbýlishús",
                 "priceInput": "80000000-110000000",
@@ -66,15 +70,12 @@ def search(request):
 
         for key in request.GET.keys():
             value = request.GET.get(key)
-            if not value:
-                print(key)
-                continue
             listings = filterListings(key, value, listings)
 
         for item in listings:
             item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
 
-        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "filters": filters})
+        return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
       
 #### Breyta object paths þegar model er komið ####
 def filterListings(key: str, value: str, listings: list[Property]):
@@ -142,23 +143,25 @@ def createOffer(request, id):
 
 def createProperty(request):
     if request.method == 'POST':
-        
-        streetname = request.POST.get("streetname")
-        city_input = request.POST.get("city_input")
-        zip = request.POST.get("zip")
-        desc = request.POST.get("desc")
-        bedrooms = request.POST.get("bedrooms")
-        bathrooms = request.POST.get("bathrooms")
-        sqm = request.POST.get("sqm")
-        status_input = request.POST.get("status_input")
-        imageURL = request.POST.get("imageURL")
-        type = request.POST.get("type")
-        price = request.POST.get("price")
-        images = request.POST.get("images").replace(" ","").split(",")
-
-
+        try:
+            streetname = request.POST.get("streetname")
+            city_input = request.POST.get("city_input")
+            zip = request.POST.get("zip")
+            desc = request.POST.get("desc")
+            bedrooms = request.POST.get("bedrooms")
+            bathrooms = request.POST.get("bathrooms")
+            sqm = request.POST.get("sqm")
+            type = request.POST.get("type")
+            price = request.POST.get("price")
+            images = request.POST.get("hidden-images-list")
+            if not images:
+                images = "{}"
+            images = json.loads(images)
+        except Exception:
+            print("huh")
+            redirect('my-properties')
+            
         seller_obj = Seller.objects.get(user=request.user)
-
         newProperty = Property.objects.create(
             seller = seller_obj,
             street_name = streetname,
@@ -171,15 +174,27 @@ def createProperty(request):
             number_of_bathrooms = bathrooms,
             square_meters = sqm,
             status = "Open",
-            image = imageURL,
+            image = "",
             listing_date = datetime.date.today()
         )
 
-        PropertyImages.objects.create(
-            property = newProperty,
-            image_url = imageURL,
-            image_description = "main"
-        )
+        for i, image in enumerate(images):
+            newImage = BytesIO(base64.b64decode(str(image["url"]).split(",")[1]))
+            
+            # newImage.save("media/123123123.png") no need pillow ??
+
+            fileName = default_storage.save(f"{image['desc']}.png", newImage)
+            PropertyImages.objects.create(
+                property = newProperty,
+                image_url = f"/media/{fileName}",
+                image_description = image["desc"]
+            )
+
+            ## main image fremst i lista
+            if i == 0:
+                newProperty.image = f"/media/{fileName}"
+                newProperty.save()
+
 
         for image in images:
             try:
@@ -219,7 +234,7 @@ def editProperty(request, id):
         property_obj.description = desc
         property_obj.property_type = type
         property_obj.listing_price = price
-        property_obj. number_of_bedrooms = bedrooms
+        property_obj.number_of_bedrooms = bedrooms
         property_obj.number_of_bathrooms = bathrooms
         property_obj.square_meters = sqm
         property_obj.image = imageURL
@@ -249,3 +264,12 @@ def selectPayment(request, offer_id):
         )
         return redirect('profile')
     return redirect('profile')
+
+def getPrices():
+    bigs = [75,85,95,105,115]
+    nums = [x for x in range(25, 111) if x%5==0 and x not in bigs]
+    nums.extend([125, 150, 175, 200, 250, 300])
+    prices = {}
+    for num in nums:
+        prices[num] = {"visual": f"{num} mkr.", "value": str(num*1000000)}
+    return prices

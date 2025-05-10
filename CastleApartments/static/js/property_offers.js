@@ -1,7 +1,6 @@
 const offerTableRows = document.getElementsByName("offer-table-row")
 const propertyTableRows = document.getElementsByName("property-table-row")
 let activeRow;
-console.log(activeRow)
 
 propertyTableRows.forEach((element) => {
     element.addEventListener("click", () => {
@@ -14,7 +13,6 @@ const visibleRows = (element) => {
         activeRow.classList.toggle("table-active")
     }
     activeRow = element
-    console.log(activeRow)
     activeRow.classList.toggle("table-active")
     document.getElementById("offer-table").style.display = ""
     offerTableRows.forEach((el) => {
@@ -30,15 +28,14 @@ const visibleRows = (element) => {
 
 window.addEventListener("keydown", (event) => {
     if (["ArrowUp", "ArrowDown"].includes(event.key)) {
+        event.preventDefault()
         let newRow;
         if (activeRow) {
             if (event.key == "ArrowUp") {
                 newRow = activeRow.previousElementSibling ? activeRow.previousElementSibling : lastSibling()
-                console.log(newRow)
                 
             } else if (event.key == "ArrowDown") {
                 newRow = activeRow.nextElementSibling ? activeRow.nextElementSibling : firstSibling()
-                console.log(newRow)
             }
         } else {
             newRow = propertyTableRows[0]

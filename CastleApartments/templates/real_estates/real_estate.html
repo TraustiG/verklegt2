@@ -12,7 +12,10 @@
             <div class="col-8">
                 {% include 'real_estates/_image_carousel.html' with width='856px' height='570px' images=images %}
             </div>
-            <div class="col-4 align-self-center">
+            <div class="text-center col-4 align-self-center">
+                <h3 class="subtext mt-1">
+                    Staða eignar: {{ property.status }}
+                </h3>
                 <div class="row d-flex justify-content-center">
                     {% include 'users/_seller_card.html' with seller=property.seller %}
                 </div>

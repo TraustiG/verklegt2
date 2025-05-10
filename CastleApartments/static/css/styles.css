@@ -10,8 +10,48 @@
     box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
 }
 
+.price-dropdown-item-menu {
+    --bs-dropdown-min-width: 7rem;
+}
+
+.search-price-value, .search-price-value:hover {
+    background-color: var(--bs-body-bg);
+    text-align: center;
+    color: var(--bs-body-color);
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+.search-price-value-indicator, 
+.search-price-value-indicator:hover {
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem;
+    min-width: 12rem;
+    border-radius: 0;
+}
+
+.search-price-value-indicator:not(:disabled) {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+@media only screen and (max-width: 800px) {
+    .search-price-value-indicator {
+        min-width: 5rem;
+    }
+}
+
+.image-thumbnail {
+    width: 150px;
+}
+
 .footer * {
     color: #b4b4b4;
+    border-color: #04A5E5;
+}
+.footer .nav {
+    border-bottom: 2px solid #04A5E5;
+    border-color: #04A5E5;
+
 }
 
 .title-bar {
@@ -242,7 +282,7 @@ html[data-theme="light"] .bg-low {
 }
 
 html[data-theme="dark"] .bg-low {
-    background-color: #121212;
+    background-color: #1D1D1D;
     color: #F3F3F3;
 }
 
@@ -287,4 +327,9 @@ html[data-theme="dark"] .bg-high {
     background-color: #04A5E5;
     border-width: 3px;
     border-color: black;
+}
+
+#main-content-div {
+    min-height: 100vh;
+    background-color: var(--bs-body-bg);
 }

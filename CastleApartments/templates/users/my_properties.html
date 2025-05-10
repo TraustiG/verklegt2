@@ -3,20 +3,22 @@
 {% block title %}Fasteignirnar Mínar{% endblock %}
 {% block scripts %}
 <script defer src="{% static 'js/property_offers.js' %}"></script>
+<script defer src="{% static 'js/image_select.js' %}"></script>
 {% endblock %}
 {% block content %}
 
-<div class="d-flex align-items-center overflow-hidden" style="height:50vh">
+<div class="d-flex align-items-center overflow-hidden" style="min-height:50vh">
     {% include 'real_estates/_property_modal.html' %}
+    {% include '_image_modal.html' %}
     {% if properties|length == 0 %}
-    <button id="makeOffer" type="button" onclick="createProperty()" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+    <button id="makeOffer" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
         Skrá eign
     </button>
     <div class="py-5">
         <h1 class="text-center subtext">Engar fasteignir</h1>
     </div>
     {% else %}
-    <button id="makeOffer" type="button" onclick="createProperty()" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+    <button id="makeOffer" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
         Skrá eign
     </button>
     <table class="table table-bordered table-striped table-hover justify-content-center mt-1">
@@ -39,9 +41,9 @@
                 <td class="align-middle text-end px-3" scope="row"><h4>{{ property.listing_price }}</h4></td>
                 <td class="align-middle text-end" scope="row">{{ property.listing_date }}</td>
                 <td class="align-middle text-center" scope="row"><h4>{{ offers|length }}</h4></td>
-                <td class="d-flex justify-content-center align-items-center" scope="row"><h4><b>{{ property.status}}</b></h4></td>
+                <td class="align-middle text-center" scope="row"><h4><b>{{ property.status}}</b></h4></td>
                 <th scope="row">
-                    <button id="editProperty" type="button" onclick="editProperty()" class="btn btn-primary btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#edit-property-modal-{{ property.id }}" 
+                    <button id="editProperty" type="button" class="btn btn-primary btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#edit-property-modal-{{ property.id }}" 
                     data-id="{{ property.id }}"
                     data-street="{{ property.street_name }}"
                     data-city="{{ property.city }}"
@@ -56,7 +58,7 @@
                     data-price="{{  property.raw_price }}">
                         Breyta Eign
                     </button>
-                    <button id="deleteProperty" type="button" onclick="deleteProperty()" class="btn btn-danger btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#delete-property-modal-{{property.id}}">
+                    <button id="deleteProperty" type="button" class="btn btn-danger btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#delete-property-modal-{{property.id}}">
                        Eyða Eign
                     </button>
                     {% include 'real_estates/_edit_property_modal.html' %}
@@ -73,10 +75,10 @@
     <thead>
         <tr class="text-center">
             <th scope="col"></th>
-            <th style="width:20%;" scope="col">Kaupandi</th>
-            <th style="width:20%;" scope="col">Upphæð</th>
-            <th style="width:10%;" scope="col">Gildistími</th>
-            <th style="width:15%;" scope="col">Aðgerðir</th>
+            <th scope="col">Kaupandi</th>
+            <th scope="col">Upphæð</th>
+            <th scope="col">Gildistími</th>
+            <th scope="col">Aðgerðir</th>
             <th scope="col"></th>
         </tr>
     </thead>
@@ -88,7 +90,7 @@
             <th class="px-3" scope="col"><h3>{{ offer.buyer.user.full_name }}</h3></th>
             <th class="text-end px-5" scope="col"><h3>{{ offer.offer_amount }}</h3></th>
             <th class="text-center" scope="col"><h3>{{ offer.offer_expiry }}</h3></th>
-            <th class="d-flex justify-content-center align-items-center gap-1" scope="col">
+            <th class="d-flex justify-content-evenly align-items-center gap-1" scope="col">
                 <button class="btn btn-success">Accept</button>
                 <button class="btn btn-primary">Contingent</button>
                 <button class="btn btn-danger">Reject</button>

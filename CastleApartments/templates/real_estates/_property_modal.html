@@ -1,4 +1,4 @@
-<div class="modal fade" id="property-modal" focus tabindex="-1" aria-labelledby="property-modalLabel" aria-hidden="true">
+<div class="modal fade" id="property-modal" data-bs-backdrop="static" focus tabindex="-1" aria-labelledby="property-modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-mid">
             <div class="modal-header">
@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{% url 'create-property' %}">
+                <form method="POST" id="create-new-property" action="{% url 'create-property' %}">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="streetname" class="form-label">Heimilisfang</label>
@@ -36,18 +36,16 @@
                         <label for="sqm" class="form-label">Fermetrafjöldi</label>
                         <input type="number" class="form-control" id="sqm" name="sqm" required>
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label for="imageURL" class="form-label">Mynd</label>
                         <input type="text" class="form-control" id="imageURL" name="imageURL" required>
+                    </div> -->
+                    <div>
+                        <button class="btn btn-primary" data-bs-target="#imageModalToggle" data-bs-toggle="modal">Myndir</button>
                     </div>
-                    <div class="mb-3">
-                        <label for="formFileMultiple" class="form-label">Aðrar myndir</label>
-                        <input name="images" class="form-control" type="file" id="formFileMultiple" multiple>
+                    <div class="mb-3 visually-hidden">
+                        <input class="form-control" type="text" id="images" name="hidden-images-list">
                     </div>                
-                    <div class="mb-3">
-                        <label for="images" class="form-label">Aðrar myndir</label>
-                        <input type="text" class="form-control" id="images" name="images" required>
-                    </div>
                     <div class="mb-3">
                         <label for="type" class="form-label">Týpa</label>
                         <input type="text" class="form-control" id="type" name="type" required>

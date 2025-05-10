@@ -10,15 +10,17 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
     <script defer src="{% static 'js/darkmode.js' %}"></script>
-    {% block scripts %}
     <script defer src="{% static 'js/seller_form.js' %}"></script>
+    {% block scripts %}
     {% endblock %}
 </head>
 
 <body>
-    {% include "_nav.html" %}
-    {% block content %}
-    {% endblock %}
+    <div id="main-content-div">
+        {% include "_nav.html" %}
+        {% block content %}
+        {% endblock %}
+    </div>
     <div class="footer-divider"></div>
     {% include "_footer.html" %}
 </body>
