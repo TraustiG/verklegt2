@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}{{ profile.full_name }}{% endblock %}
+{% block scripts %}
+<script defer src="{% static 'js/profile.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <div class="bg-mid">
@@ -17,7 +20,7 @@
                         {% endif %}
                         />
                         {% if user.id == profile.id %}
-                        <button id= "editProfile" class="position-absolute bottom-0 btn btn-primary mb-3" onclick="editProfile()" data-bs-toggle="modal" data-bs-target="#edit-profile-modal-{{user.id}}">Breyta prófíl</button>
+                        <button id= "editProfile" class="position-absolute bottom-0 btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#edit-profile-modal">Breyta prófíl</button>
                         {% include 'users/_edit_profile_modal.html' %}
                         {% endif %}
                     </div>
@@ -64,7 +67,6 @@
     {% include "_title_bar.html" with title="Tilboð" %}
     {% include "users/_buyer_offers.html" %}
 {% endif %}
-<script src="{% static 'js/profile.js' %}" defer></script>
 
 {% endblock %}
 

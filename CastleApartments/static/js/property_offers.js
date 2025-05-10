@@ -44,27 +44,12 @@ window.addEventListener("keydown", (event) => {
 })
 
 const firstSibling = () => {
-    const f = document.getElementById("seller-property-table-body").firstElementChild
-    return f
+    return document.getElementById("seller-property-table-body").firstElementChild
 }
 
 const lastSibling = () => {
-    const f = document.getElementById("seller-property-table-body").lastElementChild
-    return f
+    return document.getElementById("seller-property-table-body").lastElementChild
 }
-
-
-//resets the edit property modal when its closed
-document.addEventListener("DOMContentLoaded", () => {
-    const modals = document.querySelectorAll('[id^="edit-property-modal-"]');
-
-    modals.forEach((modalEl) => {
-        modalEl.addEventListener("hidden.bs.modal", () => {
-            modalEl.querySelector("form").reset();
-        });
-    });
-});
-
 
 const submitButtons = document.getElementsByName("add-all-images-button") // classname ("image-modal-submit-btn")
 const imageReader = new FileReader();
@@ -74,11 +59,19 @@ const imgDesc = document.getElementById("new-image-description")
 const imageRow = document.getElementById("new-images-row")
 const submittedImageRow = document.getElementById("added-images-row-submit")
 const editPropertyButtons = document.getElementsByName("editProperty")
-const createPropertyButton = document.getElementById("makeOffer")
+const createPropertyButton = document.getElementById("create-property-button")
 const deletePropertyButtons = document.getElementsByName("deleteProperty")
 let form = Array.from(document.forms).filter((f) => f.id === "create-new-property")[0]
 let imageObjs = []
 let imageElements = []
+
+//resets the edit property modal when its closed
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.querySelector('[id="property-modal"]');
+    modal.addEventListener("hidden.bs.modal", () => {
+        clearForm();
+    });
+});
 
 
 submitButtons.forEach((el) => {
@@ -173,37 +166,47 @@ editPropertyButtons.forEach((element) => {
         document.getElementById("create-property-modal").innerHTML = "Breyta eign"
         form.action = `/edit-property/${element.getAttribute("data-id")}/`
         
-        form["streetname"].setAttribute("value", element.getAttribute("data-street"))
-        form["city_input"].setAttribute("value", element.getAttribute("data-city"))
-        form["zip"].setAttribute("value", element.getAttribute("data-zip"))
-        form["price"].setAttribute("value", element.getAttribute("data-price"))
-        form["type"].setAttribute("value", element.getAttribute("data-type"))
-        form["bedrooms"].setAttribute("value", element.getAttribute("data-bedrooms"))
-        form["bathrooms"].setAttribute("value", element.getAttribute("data-bathrooms"))
-        form["sqm"].setAttribute("value", element.getAttribute("data-sqm"))
+        console.log(element.getAttribute("data-street"))
+        console.log(form)
+        setFormValue("streetname", element.getAttribute("data-street"))
+        setFormValue("city_input", element.getAttribute("data-city"))
+        setFormValue("zip", element.getAttribute("data-zip"))
+        setFormValue("price", element.getAttribute("data-price"))
+        setFormValue("type", element.getAttribute("data-type"))
+        setFormValue("bedrooms", element.getAttribute("data-bedrooms"))
+        setFormValue("bathrooms", element.getAttribute("data-bathrooms"))
+        setFormValue("sqm", element.getAttribute("data-sqm"))
+        setFormValue("desc", element.getAttribute("data-desc"))
         form["desc"].innerHTML = element.getAttribute("data-desc")
+        form["desc"].value = element.getAttribute("data-desc")
+        console.log(form)
     })
 })
+
+const setFormValue = (formfield, val) => {
+        form[formfield].setAttribute("value", val)
+        form[formfield].value = val
+}
 
 createPropertyButton.addEventListener("click", () => {
     document.getElementById("create-property-modal").innerHTML = "Skrá eign"
     form.action = "/create-property"
-    
-    form["streetname"].setAttribute("value", "")
-    form["city_input"].setAttribute("value", "")
-    form["zip"].setAttribute("value", "")
-    form["price"].setAttribute("value", "")
-    form["type"].setAttribute("value", "")
-    form["bedrooms"].setAttribute("value", "")
-    form["bathrooms"].setAttribute("value", "")
-    form["sqm"].setAttribute("value", "")
-    form["desc"].innerHTML = ""
 })
 
+const clearForm = () => {
+        setFormValue("streetname", "")
+        setFormValue("city_input", "")
+        setFormValue("zip", "")
+        setFormValue("price", "")
+        setFormValue("type", "")
+        setFormValue("bedrooms", "")
+        setFormValue("bathrooms", "")
+        setFormValue("sqm", "")
+        setFormValue("desc", "")
+}
 
 deletePropertyButtons.forEach((element) => {
     element.addEventListener("click", () => {
-        console.log(element.getAttribute("data-street"))
         document.getElementById("delete-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir eyða ${element.getAttribute("data-street")}?`
         form.action = `/delete-property/${element.getAttribute("data-id")}`
     })

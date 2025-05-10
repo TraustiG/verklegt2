@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.core.files.storage import default_storage
+from django.db.models import Q
 from babel.numbers import format_currency
 from io import BytesIO
 import base64
@@ -33,7 +34,6 @@ def getRealEstateById(request, id):
         return redirect('real-estates')
     similars = getSimilars(property_obj)
     images = PropertyImages.objects.filter(property=property_obj)
-    similars = Property.objects.all()
     for prop in similars:
         prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
 
@@ -70,6 +70,8 @@ def search(request):
 
         for key in request.GET.keys():
             value = request.GET.get(key)
+            if not value:
+                continue
             listings = filterListings(key, value, listings)
 
         for item in listings:
@@ -115,7 +117,35 @@ def checkDesc(search: str, listing: Property):
     return False
 
 def getSimilars(prop):
-    ...
+    listings = Property.objects.filter(~Q(id=prop.id))
+
+    i = 10
+    while len(listings) > 3 and i > 0:
+        print(listings)
+        filtered = getSimilarListings(listings, prop, i)
+        listings = [x for x in listings if x in filtered]
+        i -= 1
+    print(listings)
+    return listings[:3]
+
+def getSimilarListings(listings, prop: Property, level: int):
+    def checkLen(items):
+        if len(items) <= 3:
+            return items
+        return False
+
+    listings = listings.filter(postal_code__gte=prop.postal_code-level, postal_code__lte=prop.postal_code+level)
+    print(prop.postal_code)
+    for listing in listings:
+        print(listing.street_name, "--", listing.postal_code)
+    if checkLen(listings): return listings
+
+    listings = listings.filter(listing_price__gte=prop.listing_price-level*1000000, listing_price__lte=prop.listing_price+level*1000000)
+    if checkLen(listings): return listings
+
+    listings = listings.filter(square_meters__gte=prop.square_meters-level*3, square_meters__lte=prop.square_meters+level*3)
+    return listings
+
 
 def createOffer(request, id):
 

@@ -317,7 +317,9 @@ html[data-theme="dark"] .bg-high {
     --bs-btn-active-border-bg: #212529;
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-danger:hover,
+.btn-secondary:hover {
     box-shadow: 0 8px 14px 5px rgba(0,0,0,0.44);
 }
 
@@ -332,4 +334,20 @@ html[data-theme="dark"] .bg-high {
 #main-content-div {
     min-height: 100vh;
     background-color: var(--bs-body-bg);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.form-control * {
+    appearance: none;
+    -moz-appearance: textfield;
+}
+
+/* Firefox */
+input[type=number] {
+    appearance: none;
+    -moz-appearance: textfield;
 }

@@ -9,7 +9,7 @@
                 <form method="POST" action="{% url 'delete-property' id=1 %}">
                     {% csrf_token %}
                     <div class="modal-body" id="delete-modal-body-prompt">
-                        Ertu viss um að þú viljir eyða {{ property.street_name }}?
+                        Hvernig komstu hingað?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
