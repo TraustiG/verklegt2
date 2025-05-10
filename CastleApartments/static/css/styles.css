@@ -51,7 +51,16 @@
 .footer .nav {
     border-bottom: 2px solid #04A5E5;
     border-color: #04A5E5;
+}
 
+.nav-item-notification .nav-link {
+    padding: 2px;
+    margin-right: 5px;
+}
+
+.nav-item-notification span {
+    top: 10%;
+    right: -10%;
 }
 
 .title-bar {

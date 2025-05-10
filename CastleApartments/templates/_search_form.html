@@ -70,7 +70,7 @@
                             <div class="dropdown-center">
                                 <button id="saveFilterButton" type="button" 
                                 class="btn 
-                                {% if not user.full_name %}
+                                {% if not user.is_buyer %}
                                 " disabled
                                 {% else %}
                                 btn-primary"
@@ -111,7 +111,7 @@
                             <div class="dropdown-center" style="width:118px">
                                 <button id="watchFilter" role="button" 
                                 class="btn 
-                                {% if not user.full_name %}
+                                {% if not user.is_buyer %}
                                 " disabled
                                 {% else %}
                                 btn-primary"

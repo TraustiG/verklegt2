@@ -55,3 +55,17 @@ class Filter(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Notification(models.Model):
+
+    user = models.ForeignKey(
+        "User", on_delete=models.CASCADE, null=True, blank=True)
+
+    property = models.ForeignKey(
+        "real_estates.Property", on_delete=models.CASCADE, null=True, blank=True)
+
+    offer = models.ForeignKey(
+        "real_estates.Offer", on_delete=models.CASCADE, null=True, blank=True)
+
+    count = models.IntegerField()
