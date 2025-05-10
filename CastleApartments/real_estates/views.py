@@ -1,7 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
+from django.core.files.storage import default_storage
 from babel.numbers import format_currency
-import copy
+from io import BytesIO
+import base64
 import json
 import datetime
 from .models import Property, Offer, PropertyImages, Payment
@@ -150,15 +152,11 @@ def createProperty(request):
         bedrooms = request.POST.get("bedrooms")
         bathrooms = request.POST.get("bathrooms")
         sqm = request.POST.get("sqm")
-        status_input = request.POST.get("status_input")
-        imageURL = request.POST.get("imageURL")
         type = request.POST.get("type")
         price = request.POST.get("price")
-        images = request.POST.get("images").replace(" ","").split(",")
-
-
-        seller_obj = Seller.objects.get(user=request.user)
-
+        images = request.POST.get("hidden-images-list")
+        images = json.loads(images)
+        
         newProperty = Property.objects.create(
             seller = seller_obj,
             street_name = streetname,
@@ -171,15 +169,30 @@ def createProperty(request):
             number_of_bathrooms = bathrooms,
             square_meters = sqm,
             status = "Open",
-            image = imageURL,
+            image = "",
             listing_date = datetime.date.today()
         )
 
-        PropertyImages.objects.create(
-            property = newProperty,
-            image_url = imageURL,
-            image_description = "main"
-        )
+        for i, image in enumerate(images):
+            newImage = BytesIO(base64.b64decode(str(image["url"]).split(",")[1]))
+            
+            # newImage.save("media/123123123.png") no need pillow ??
+
+            fileName = default_storage.save(f"{image['desc']}.png", newImage)
+            PropertyImages.objects.create(
+                property = newProperty,
+                image_url = f"media/{fileName}",
+                image_description = image["desc"]
+            )
+
+            ## main image fremst i lista
+            if i == 0:
+                newProperty.image = f"media/{fileName}"
+
+
+
+        seller_obj = Seller.objects.get(user=request.user)
+
 
         for image in images:
             try:

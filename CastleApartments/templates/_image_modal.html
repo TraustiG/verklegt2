@@ -1,0 +1,35 @@
+<div class="modal fade" id="imageModalToggle" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="imageModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="imageModalToggleLabel">Modal 1</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex container justify-content-center">
+            <div class="col">
+                <div id="new-images-row" class="d-flex row justify-content-center">
+                    <!-- IMAGES FROM JAVASCRIPT image_select.js -->
+                </div>
+                <div class="d-flex row align-self-middle justify-content-evenly mb-3">
+                    <div class="col-4 align-self-end">
+                        <label for="new-image-description" class="form-label">Lýsing</label>
+                        <input id="new-image-description" class="form-control" type="text" aria-label="default input example">
+                    </div>
+                    <div class="col-4 align-self-end">
+                        <input accept="image/*" class="form-control" type="file" id="new-image-file-input">
+                    </div>
+                    <div class="col-2 align-self-end">
+                        <button class="btn btn-primary" id="image-adder-button">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button name="add-all-images-button" class="btn btn-secondary" data-bs-target="#property-modal" data-bs-toggle="modal">Hætta við</button>
+        <button name="add-all-images-button" class="btn btn-primary image-modal-submit-btn" data-bs-target="#property-modal" data-bs-toggle="modal">Áfram</button>
+      </div>
+    </div>
+  </div>
+</div>
