@@ -8,6 +8,7 @@
 
 <div class="d-flex align-items-center overflow-hidden" style="min-height:50vh">
     {% include 'real_estates/_property_modal.html' %}
+    {% include 'real_estates/_delete_property_modal.html' %}
     {% include 'real_estates/_image_modal.html' %}
     {% if properties|length == 0 %}
     <button id="makeOffer" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
@@ -57,10 +58,11 @@
                     data-price="{{  property.raw_price }}">
                         Breyta Eign
                     </button>
-                    <button id="deleteProperty" type="button" class="btn btn-danger btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#delete-property-modal-{{property.id}}">
+                    <button name="deleteProperty" type="button" class="btn btn-danger btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#delete-property-modal"
+                    data-id="{{ property.id }}"
+                    data-street="{{ property.street_name }}">
                        Eyða Eign
                     </button>
-                    {% include 'real_estates/_delete_property_modal.html' %}
                 </th>
             </tr>
             {% endfor %}
