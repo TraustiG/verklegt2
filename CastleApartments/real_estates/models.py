@@ -7,9 +7,8 @@ class PropertyImages(models.Model):
     property = models.ForeignKey(
         "Property", on_delete=models.CASCADE)
     
-    image_url = models.URLField()
+    image_url = models.TextField()
     image_description = models.TextField()
-
 
     
     def __str__(self):
@@ -23,16 +22,16 @@ class Property(models.Model):
     
     street_name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
-    postal_code = models.CharField(max_length=5)
+    postal_code = models.IntegerField()
     description = models.TextField()
     property_type = models.CharField(max_length=100)
     listing_date = models.DateField()
-    listing_price = models.CharField(max_length = 15)
-    number_of_bedrooms = models.CharField(max_length=2)
-    number_of_bathrooms = models.CharField(max_length=2)
-    square_meters = models.CharField(max_length = 4)
+    listing_price = models.IntegerField()
+    number_of_bedrooms = models.IntegerField()
+    number_of_bathrooms = models.IntegerField()
+    square_meters = models.IntegerField()
     status = models.CharField(max_length = 100)
-    image = models.URLField()
+    image = models.TextField()
 
     def __str__(self):
         return f"{self.street_name}"

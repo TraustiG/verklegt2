@@ -6,7 +6,7 @@ const imgDesc = document.getElementById("new-image-description")
 const imageRow = document.getElementById("new-images-row")
 const submittedImageRow = document.getElementById("added-images-row-submit")
 const editPropertyButtons = document.getElementsByName("editProperty")
-const createPropertyButton = document.getElementById("makeOffer")
+const createPropertyButton = document.getElementById("create-property-button")
 let form = Array.from(document.forms).filter((f) => f.id === "create-new-property")[0]
 let imageObjs = []
 let imageElements = []

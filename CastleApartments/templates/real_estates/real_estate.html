@@ -22,11 +22,18 @@
                 <div class="row d-flex justify-content-center">
                     <div class="d-flex justify-content-center">
                         {% if user.is_buyer %}
-                            <button id="makeOffer" type="button" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#offer-modal" 
-                                class="btn btn-big btn-primary">
-                                Gera tilboð
-                            </button>
-                            {% include 'users/_payment_modal.html' %}
+                            {% if property.status != "Sold" %}
+                                <button id="makeOffer" type="button" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#offer-modal" 
+                                    class="btn btn-big btn-primary">
+                                    Gera tilboð
+                                </button>
+                                {% include 'real_estates/_offer_modal.html' %}
+                            {% else %}
+                                <button id="property-sold-offer-button" type="button" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#offer-modal" 
+                                    class="btn btn-big btn-primary">
+                                    Seld
+                                </button>
+                            {% endif %}
                         {% else %}
                             <button id="makeOffer-unavailable" type="button" style="height:6rem; width:16rem" class="btn btn-big btn-primary">
                                 Gera tilboð

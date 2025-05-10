@@ -11,14 +11,14 @@
     {% include 'real_estates/_delete_property_modal.html' %}
     {% include 'real_estates/_image_modal.html' %}
     {% if properties|length == 0 %}
-    <button id="makeOffer" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+    <button id="create-property-button" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
         Skrá eign
     </button>
     <div class="py-5">
         <h1 class="text-center subtext">Engar fasteignir</h1>
     </div>
     {% else %}
-    <button id="makeOffer" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+    <button id="create-property-button" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
         Skrá eign
     </button>
     <table class="table table-bordered table-striped table-hover justify-content-center mt-1">
