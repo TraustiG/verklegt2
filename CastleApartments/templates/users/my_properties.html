@@ -34,13 +34,20 @@
             </tr>
         </thead>
         <tbody id="seller-property-table-body" class="table-group-divider" style="border-top-color: black;">
-        {% for property, offers in properties.items %}
+        {% for property, info in properties.items %}
             <tr name="property-table-row" id="{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}">
                 <th class="align-middle" scope="row"></th>
                 <th class="align-middle text-center" scope="row"><h4>{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}</h4></th>
                 <td class="align-middle text-end px-3" scope="row"><h4>{{ property.listing_price }}</h4></td>
                 <td class="align-middle text-end" scope="row">{{ property.listing_date }}</td>
-                <td class="align-middle text-center" scope="row"><h4>{{ offers|length }}</h4></td>
+                <td class="position-relative align-middle text-center" scope="row">
+                    <h4>{{ info.offers|length }}</h4>
+                        {% if info.notifs != 0 %}
+                        <span class="position-absolute translate-middle badge rounded-pill bg-danger user-select-none notification-pill">
+                            {{ info.notifs }}
+                        <span class="visually-hidden">unread messages</span>
+                        {% endif %}
+                </td>
                 <td class="align-middle text-center" scope="row"><h4><b>{{ property.status}}</b></h4></td>
                 <th scope="row">
                     <button name="editProperty" type="button" class="btn btn-primary btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#property-modal" 
@@ -83,8 +90,8 @@
         </tr>
     </thead>
     <tbody>
-        {% for prop, offers in properties.items %}
-        {% for offer in offers %}
+        {% for prop, info in properties.items %}
+        {% for offer in info.offers %}
         <tr name="offer-table-row" class="{{ prop.street_name }} - {{ prop.postal_code }} {{ prop.city }}" style="display: none;">
             <th scope="col"></th>
             <th class="px-3" scope="col"><h3>{{ offer.buyer.user.full_name }}</h3></th>
