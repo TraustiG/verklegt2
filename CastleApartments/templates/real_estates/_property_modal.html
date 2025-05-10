@@ -1,62 +1,71 @@
 <div class="modal fade" id="property-modal" data-bs-backdrop="static" focus tabindex="-1" aria-labelledby="property-modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content bg-mid">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Skrá Eign</h1>
+                <h1 class="modal-title fs-5" id="create-property-modal">Skrá Eign</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form method="POST" id="create-new-property" action="{% url 'create-property' %}">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="streetname" class="form-label">Heimilisfang</label>
-                        <input type="text" class="form-control" id="streetname" name="streetname" required>
+                    <div class="container d-flex gap-3 justify-content-evenly">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="streetname" class="form-label">Heimilisfang</label>
+                                <input type="text" class="form-control" id="streetname" name="streetname" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="city_input" class="form-label">Borg</label>
+                                <input type="text" class="form-control" id="city_input" name="city_input" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="zip" class="form-label">Póstnúmer</label>
+                                <input type="text" class="form-control" id="zip" name="zip" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Verð</label>
+                                <input type="text" class="form-control" id="price" name="price" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Týpa</label>
+                                <input type="text" class="form-control" id="type" name="type" required>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="bedrooms" class="form-label">Fjöldi Svefnherbergja</label>
+                                <input type="number" class="form-control" id="bedrooms" name="bedrooms" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="bathrooms" class="form-label">Fjöldi Baðherbergja</label>
+                                <input type="number" class="form-control" id="bathrooms" name="bathrooms" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sqm" class="form-label">Fermetrafjöldi</label>
+                                <input type="number" class="form-control" id="sqm" name="sqm" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="desc" class="form-label">Lýsing</label>
+                                <textarea type="text" class="form-control" id="desc" name="desc" required style="height: 8rem"> </textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex modal-footer px-0 justify-content-evenly" style="min-height: 25vh;">
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="city_input" class="form-label">Borg</label>
-                        <input type="text" class="form-control" id="city_input" name="city_input" required>
+                    <div class="col-12">
+                        <div class="d-flex row justify-content-center">
+                            <div class="d-flex col-4 justify-content-center mb-3">
+                                <button class="btn btn-primary" data-bs-target="#imageModalToggle" data-bs-toggle="modal">Bæta inn myndum</button>
+                            </div>
+                            <div class="mb-3 visually-hidden">
+                                <input class="form-control" type="text" id="images" name="hidden-images-list">
+                            </div>                
+                        </div>
+                        <div id="added-images-row-submit" class="d-flex row justify-content-center">
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="zip" class="form-label">Póstnúmer</label>
-                        <input type="text" class="form-control" id="zip" name="zip" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="desc" class="form-label">Lýsing</label>
-                        <textarea type="text" class="form-control" id="desc" name="desc" required> </textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="bedrooms" class="form-label">Fjöldi Svefnherbergja</label>
-                        <input type="number" class="form-control" id="bedrooms" name="bedrooms" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="bathrooms" class="form-label">Fjöldi Baðherbergja</label>
-                        <input type="number" class="form-control" id="bathrooms" name="bathrooms" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="sqm" class="form-label">Fermetrafjöldi</label>
-                        <input type="number" class="form-control" id="sqm" name="sqm" required>
-                    </div>
-                    <!-- <div class="mb-3">
-                        <label for="imageURL" class="form-label">Mynd</label>
-                        <input type="text" class="form-control" id="imageURL" name="imageURL" required>
-                    </div> -->
-                    <div>
-                        <button class="btn btn-primary" data-bs-target="#imageModalToggle" data-bs-toggle="modal">Myndir</button>
-                    </div>
-                    <div class="mb-3 visually-hidden">
-                        <input class="form-control" type="text" id="images" name="hidden-images-list">
-                    </div>                
-                    <div class="mb-3">
-                        <label for="type" class="form-label">Týpa</label>
-                        <input type="text" class="form-control" id="type" name="type" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="price" class="form-label">Verð</label>
-                        <input type="text" class="form-control" id="price" name="price" required>
-                    </div>
-            
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button name="create-property-modal-cancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>

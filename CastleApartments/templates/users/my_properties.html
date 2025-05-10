@@ -3,13 +3,12 @@
 {% block title %}Fasteignirnar Mínar{% endblock %}
 {% block scripts %}
 <script defer src="{% static 'js/property_offers.js' %}"></script>
-<script defer src="{% static 'js/image_select.js' %}"></script>
 {% endblock %}
 {% block content %}
 
 <div class="d-flex align-items-center overflow-hidden" style="min-height:50vh">
     {% include 'real_estates/_property_modal.html' %}
-    {% include '_image_modal.html' %}
+    {% include 'real_estates/_image_modal.html' %}
     {% if properties|length == 0 %}
     <button id="makeOffer" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
         Skrá eign
@@ -43,7 +42,7 @@
                 <td class="align-middle text-center" scope="row"><h4>{{ offers|length }}</h4></td>
                 <td class="align-middle text-center" scope="row"><h4><b>{{ property.status}}</b></h4></td>
                 <th scope="row">
-                    <button id="editProperty" type="button" class="btn btn-primary btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#edit-property-modal-{{ property.id }}" 
+                    <button name="editProperty" type="button" class="btn btn-primary btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#property-modal" 
                     data-id="{{ property.id }}"
                     data-street="{{ property.street_name }}"
                     data-city="{{ property.city }}"
@@ -61,7 +60,6 @@
                     <button id="deleteProperty" type="button" class="btn btn-danger btn-small" style="height:4rem; width:10rem" data-bs-toggle="modal" data-bs-target="#delete-property-modal-{{property.id}}">
                        Eyða Eign
                     </button>
-                    {% include 'real_estates/_edit_property_modal.html' %}
                     {% include 'real_estates/_delete_property_modal.html' %}
                 </th>
             </tr>

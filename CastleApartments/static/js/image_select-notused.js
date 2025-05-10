@@ -4,22 +4,31 @@ const imgAdderButton = document.getElementById("image-adder-button")
 const imgInput = document.getElementById("new-image-file-input")
 const imgDesc = document.getElementById("new-image-description") 
 const imageRow = document.getElementById("new-images-row")
-const modalResets = document.getElementsByName("property-modal-reset-button")
-let imageDescs = []
+const submittedImageRow = document.getElementById("added-images-row-submit")
+const editPropertyButtons = document.getElementsByName("editProperty")
+const createPropertyButton = document.getElementById("makeOffer")
+let form = Array.from(document.forms).filter((f) => f.id === "create-new-property")[0]
+let imageObjs = []
+let imageElements = []
 
 
 submitButtons.forEach((el) => {
     el.addEventListener("click", () => {
         if (el.classList.contains("image-modal-submit-btn")) {
-            forms = document.forms
-            form = Array.from(forms).filter((f) => f.id === "create-new-property")[0]
             let images = form.querySelector('input[name="hidden-images-list"]')
-            images.setAttribute("value", JSON.stringify(imageDescs))
+            if (images.getAttribute("value")) {
+                let oldImages = JSON.parse(images.getAttribute("value"))
+                imageObjs = oldImages.concat(imageObjs)
+            }
+            imageElements.forEach((imgEl) => {
+                submittedImageRow.appendChild(imgEl)
+            })
+            images.setAttribute("value", JSON.stringify(imageObjs))
         }
     
-        imageDescs = []
+        imageObjs = []
         imageRow.innerHTML = ""
-        descEl.innerHTML = ""
+        imgDesc.value = ""
         imgInput.value = ""
     })
 })
@@ -31,7 +40,7 @@ imgAdderButton.addEventListener("click", () => {
         let desc = imgDesc.value
         let imgElement = newImageElement(file, desc)
         imageRow.appendChild(imgElement)
-        imgDesc.innerHTML = ""
+        imgDesc.value = ""
         imgInput.value = ""
 
     } else {
@@ -56,7 +65,7 @@ const newImageElement = (file, desc) => {
     let reader = new FileReader()
     reader.onload = () => {
         img.src = reader.result
-        imageDescs.push({url: reader.result, desc: desc})
+        imageObjs.push({url: reader.result, desc: desc})
     }
     reader.readAsDataURL(file)
     img.style.position = "relative"
@@ -69,6 +78,7 @@ const newImageElement = (file, desc) => {
     row.appendChild(img)
     row.appendChild(name)
     div.appendChild(row)
+    imageElements.push(div)
 
     return div
 }
@@ -86,3 +96,37 @@ const createRedCross = () => {
     return div
 }
 */
+
+
+
+editPropertyButtons.forEach((element) => {
+    element.addEventListener("click", () => {
+        document.getElementById("create-property-modal").innerHTML = "Breyta eign"
+        form.action = `/edit-property/${element.getAttribute("data-id")}/`
+        
+        form["streetname"].setAttribute("value", element.getAttribute("data-street"))
+        form["city_input"].setAttribute("value", element.getAttribute("data-city"))
+        form["zip"].setAttribute("value", element.getAttribute("data-zip"))
+        form["price"].setAttribute("value", element.getAttribute("data-price"))
+        form["type"].setAttribute("value", element.getAttribute("data-type"))
+        form["bedrooms"].setAttribute("value", element.getAttribute("data-bedrooms"))
+        form["bathrooms"].setAttribute("value", element.getAttribute("data-bathrooms"))
+        form["sqm"].setAttribute("value", element.getAttribute("data-sqm"))
+        form["desc"].innerHTML = element.getAttribute("data-desc")
+    })
+})
+
+createPropertyButton.addEventListener("click", () => {
+    document.getElementById("create-property-modal").innerHTML = "Skrá eign"
+    form.action = "/create-property"
+    
+    form["streetname"].setAttribute("value", "")
+    form["city_input"].setAttribute("value", "")
+    form["zip"].setAttribute("value", "")
+    form["price"].setAttribute("value", "")
+    form["type"].setAttribute("value", "")
+    form["bedrooms"].setAttribute("value", "")
+    form["bathrooms"].setAttribute("value", "")
+    form["sqm"].setAttribute("value", "")
+    form["desc"].innerHTML = ""
+})
