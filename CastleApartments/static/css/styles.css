@@ -58,6 +58,11 @@
     margin-right: 5px;
 }
 
+td .notification-pill {
+    top:20%;
+    right:20%;
+}
+
 .nav-item-notification span {
     top: 10%;
     right: -10%;

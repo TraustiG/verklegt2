@@ -62,6 +62,7 @@ const editPropertyButtons = document.getElementsByName("editProperty")
 const createPropertyButton = document.getElementById("create-property-button")
 const deletePropertyButtons = document.getElementsByName("deleteProperty")
 let form = Array.from(document.forms).filter((f) => f.id === "create-new-property")[0]
+let deleteForm = Array.from(document.forms).filter((f) => f.id === "delete-property-form")[0]
 let imageObjs = []
 let imageElements = []
 
@@ -208,6 +209,7 @@ const clearForm = () => {
 deletePropertyButtons.forEach((element) => {
     element.addEventListener("click", () => {
         document.getElementById("delete-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir eyða ${element.getAttribute("data-street")}?`
-        form.action = `/delete-property/${element.getAttribute("data-id")}`
+        console.log(deleteForm)
+        deleteForm.action = `/delete-property/${element.getAttribute("data-id")}`
     })
 })

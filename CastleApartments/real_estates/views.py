@@ -18,7 +18,7 @@ from users.models import Buyer, Seller, Notification
 def fetchNotifications(view_func):
     def _decorated(request, *args, **kwargs):
         try:
-            notifs = Notification.objects.filter(user=request.user)
+            notifs = Notification.objects.filter(user=request.user, count__gt=0)
             request.user.notifications = notifs
             return view_func(request, *args, **kwargs)
         except Exception:
@@ -190,26 +190,25 @@ def createProperty(request):
     return redirect(f"real-estates/{newProperty.id}")
 
 
-@require_POST
 @fetchNotifications
 def editProperty(request, id):
-    property_obj = Property.objects.get(id=id)
-    
-    property_obj.street_name = request.POST.get("streetname")
-    property_obj.city = request.POST.get("city_input")
-    property_obj.postal_code = request.POST.get("zip")
-    property_obj.description = request.POST.get("desc")
-    property_obj.number_of_bedrooms = request.POST.get("bedrooms")
-    property_obj.number_of_bathrooms = request.POST.get("bathrooms")
-    property_obj.square_meters = request.POST.get("sqm")
-    property_obj.image = request.POST.get("imageURL")
-    property_obj.property_type = request.POST.get("type")
-    property_obj.listing_price = request.POST.get("price")
-    property_obj.save()
+    if request.method == "POST":
+        property_obj = Property.objects.get(id=id)
+        
+        property_obj.street_name = request.POST.get("streetname")
+        property_obj.city = request.POST.get("city_input")
+        property_obj.postal_code = request.POST.get("zip")
+        property_obj.description = request.POST.get("desc")
+        property_obj.number_of_bedrooms = request.POST.get("bedrooms")
+        property_obj.number_of_bathrooms = request.POST.get("bathrooms")
+        property_obj.square_meters = request.POST.get("sqm")
+        property_obj.image = request.POST.get("imageURL")
+        property_obj.property_type = request.POST.get("type")
+        property_obj.listing_price = request.POST.get("price")
+        property_obj.save()
 
-    return redirect('my-properties')
+        return redirect('my-properties')
 
-@require_http_methods(["DELETE"])
 @fetchNotifications
 def deleteProperty(request, id): 
 

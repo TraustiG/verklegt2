@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
 from babel.numbers import format_currency
 from .forms import RegistrationForm , SellerForm, SearchForm
-from .models import Seller, Buyer, Filter, User
+from .models import Seller, Buyer, Filter, User, Notification
 from real_estates.models import Offer,Property
 from real_estates.views import index, fetchNotifications
 
@@ -157,23 +157,30 @@ def seller(request, id):
     return render(request, 'users/profile.html', {'profile': seller.user, 'listings': listings})
 
 
-@require_safe
+@require_http_methods(["GET", "POST"])
 @fetchNotifications
 def my_properties(request):
+
 
     seller = Seller.objects.get(user=request.user)
     properties = Property.objects.filter(seller=seller)
     for property in properties:
         property.raw_price = property.listing_price  #this is for edit property, cant have it on decimal format there
         property.listing_price = format_currency(property.listing_price, "", locale="is_is")[:-4]
-    property_offers = {prop: [] for prop in properties}
+    property_offers = {prop: {"notifs": 0, "offers": []} for prop in properties}
     offers = Offer.objects.filter(property__seller = seller)
 
     for offer in offers:
         offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
         for prop, list in property_offers.items():
+            notifs = Notification.objects.filter(user=request.user, property=prop, count__gt=0)
+            list["notifs"] = len(notifs)
+            for notif in notifs:
+                notif.count = 0
+                notif.save()
+
             if offer.property == prop:
-                list.append(offer)
+                list["offers"].append(offer)
 
     return render(request, 'users/my_properties.html', {"properties": property_offers, })
 
