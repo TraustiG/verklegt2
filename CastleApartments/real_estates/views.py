@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
+from django.contrib import messages
 from babel.numbers import format_currency
 from io import BytesIO
 import base64
@@ -113,6 +114,10 @@ def createOffer(request, id):
     property_obj = Property.objects.get(id=id)
     buyer_obj = Buyer.objects.get(user=request.user)
 
+    #check if user has existing offer for this property, delete that first and then create the new one
+    existing_offer = Offer.objects.filter(property = property_obj , buyer=buyer_obj)
+    if existing_offer:
+        existing_offer.delete()
 
     Offer.objects.create(
         property = property_obj,
@@ -122,6 +127,8 @@ def createOffer(request, id):
         offer_date = datetime.date.today()
     )
     notify(user=property_obj.seller.user, prop=property_obj)
+
+    messages.success(request, "Tilboð hefur verið sent!")
     
     return redirect('real-estate-by-id', id=id)
 
@@ -191,7 +198,7 @@ def editProperty(request, id):
         property_obj.number_of_bedrooms = request.POST.get("bedrooms")
         property_obj.number_of_bathrooms = request.POST.get("bathrooms")
         property_obj.square_meters = request.POST.get("sqm")
-        property_obj.image = request.POST.get("imageURL")
+  
         property_obj.property_type = request.POST.get("type")
         property_obj.listing_price = request.POST.get("price")
         property_obj.save()
