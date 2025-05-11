@@ -12,12 +12,15 @@
 <table class="table table-bordered table-striped table-hover justify-content-center mt-1">
     <thead>
         <tr class="text-center">
-            <th scope="col"></th>
-            <th style="width:45%;" scope="col">Heimilisfang</th>
+            <th style="width:5%" scope="col"></th>
+            <th style="width:20%;" scope="col">Heimilisfang</th>
             <th style="width:10%;" scope="col">Skráð verð</th>
             <th style="width:10%;" scope="col">Tilboð</th>
-            <th class="w-25" scope="col">Staða</th>
-            <th scope="col"></th>
+            <th style="width:5%" scope="col">Staða</th>
+            <th style="width:5%" scope="col">Seljandi</th>
+            <th style="width:7%" scope="col">Dagsetning tilboðs</th>
+            <th style="width:7%" scope="col">Gildistími</th>
+            <th style="width:5%"scope="col"></th>
         </tr>
     </thead>
     <tbody class="table-group-divider" style="border-top-color: black;">
@@ -32,11 +35,15 @@
         {% endif %}
         >
             <th class="align-middle" scope="row"></th>
-            <th class="align-middle text-center" scope="row"><h4>{{ offer.property.street_name }} - {{ offer.property.postal_code }} {{ offer.property.city }}</h4></th>
-            <td class="align-middle text-end" scope="row"><h4>{{ offer.property.listing_price }}</h4></td>
-            <td class="align-middle text-end" scope="row"><h4>{{ offer.offer_amount }}</h4></td>
-            <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><h4><b>{{ offer.offer_status }}</b></h4>
+            <th class="align-middle text-center" scope="row"><a href="{% url 'real-estate-by-id' offer.property.id %}"> <h4>{{ offer.property.street_name }} - {{ offer.property.postal_code }} {{ offer.property.city }}</h4></a></th>
+            <td class="align-middle text-center" scope="row"><h4>{{ offer.property.listing_price }}</h4></td>
+            <td class="align-middle text-center" scope="row"><h4>{{ offer.offer_amount }}</h4></td>
+            <td class="align-middle text-center" scope="row"><h4><b>{{ offer.offer_status }}</b></h4></td>
+            <td class="align-middle text-center"scope="row"><h4><b>{{ offer.property.seller.user.full_name }}</b></h4></td>
+            <td class="align-middle text-center" scope="row"><h4><b>{{ offer.offer_date }}</b></h4></td>
+            <td class="align-middle text-center" scope="row"><h4><b>{{ offer.offer_expiry }}</b></h4></td>
                 {% if offer.offer_status == "Accepted" %}
+             <td>  
                 <button name="offer-accepted-button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contact-info-modal" 
                 data-id="{{ offer.id }}"
                 data-street-name="{{ offer.property.street_name }}"
@@ -52,7 +59,6 @@
                 <button class="btn btn-primary">Skoða</button>
                 {% endif %}
             </td>
-            <th scope="row"></th>
         </tr>
         {% empty %}
     </tbody>
