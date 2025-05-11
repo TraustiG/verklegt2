@@ -181,7 +181,7 @@ def createProperty(request):
     
     return redirect('my-properties')
 
-def selectPayment(request, offer_id):
+def payment(request, offer_id):
     if request.method == 'POST':
         offer = Offer.objects.get(id=offer_id)
         

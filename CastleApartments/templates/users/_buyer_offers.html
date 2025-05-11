@@ -28,8 +28,8 @@
             <td class="align-middle text-end" scope="row"><h4>{{ offer.offer_amount }}</h4></td>
             <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><b>{{ offer.offer_status }}</b>
                 {% if offer.offer_status == "Accepted" %}
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#paymentOptionModal">Afgreiða!</button>
-                {% include "users/_payment_option_modal.html" %}
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contact_info_modal">Afgreiða!</button>
+                {% include "users/_payment_modal.html" %}
                 {% elif offer.offer_status == "Declined" %}
                 <button class="btn btn-primary">Skoða</button>
                 {% elif offer.offer_status == "Contingent" %}

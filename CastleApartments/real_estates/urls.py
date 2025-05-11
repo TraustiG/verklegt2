@@ -9,6 +9,5 @@ urlpatterns  = [
     path("search/", views.search, name="search"),
     path("real-estates/<int:id>/create-offer/", views.createOffer, name="create-offer"),
     path("create-property", views.createProperty, name="create-property"),
-    #path('profile/', views.profile_view, name='profile'),
-    path('select-payment/<int:offer_id>/', views.selectPayment, name='selectPayment'),
+    path('payment/<int:offer_id>/', views.payment, name='payment'),
 ]

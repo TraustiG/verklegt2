@@ -1,34 +1,307 @@
-<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form method="POST" action="google.com">
-          {% csrf_token %}
-          <div class="modal-header">
-            <h5 class="modal-title" id="paymentModalLabel">Greiðsluupplýsingar</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Loka"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="cardName" class="form-label">Nafn á korti</label>
-              <input type="text" class="form-control" name="card_name" required>
+<form method="POST" action="{% url 'payment' offer.id %}">
+    {% csrf_token %}
+  
+    <div class="modal fade" id="contact_info_modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Skráðu Tengiliðaupplýsingar</h5>
             </div>
-            <div class="mb-3">
-              <label for="cardNumber" class="form-label">Kortanúmer</label>
-              <input type="text" class="form-control" name="card_number" required>
+            <div class="modal-body">
+
+                <div class="mb-3">
+                    <label for="street_name" class="form-label">Götuheiti</label>
+                    <input type="text" class="form-control" name="street_name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="city" class="form-label">Borg</label>
+                    <input type="text" class="form-control" name="city" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="postal_code" class="form-label">Póstnúmer</label>
+                    <input type="text" class="form-control" name="postal_code" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="country" class="form-label">Land</label>
+                    <select class="form-select" name="country" required>
+                        <option value="">Veldu land</option>
+                        <option value="IS">Ísland</option>
+                        <option value="NO">Noregur</option>
+                        <option value="SE">Svíþjóð</option>
+                        <option value="DK">Danmörk</option>
+                        <option value="FI">Finnland</option>
+                        <option value="US">Bandaríkin</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="national_id" class="form-label">Kennitala</label>
+                    <input type="text" class="form-control" name="national_id" required>
+                </div>
             </div>
-            <div class="mb-3">
-              <label for="expiry" class="form-label">Gildistími</label>
-              <input type="text" class="form-control" name="expiry" placeholder="MM/YY" required>
-            </div>
-            <div class="mb-3">
-              <label for="cvc" class="form-label">CVC</label>
-              <input type="text" class="form-control" name="cvc" required>
-            </div>
-          </div>
+
+        
           <div class="modal-footer">
-            <button type="submit" class="btn btn-success">Staðfesta greiðslu</button>
+            <button type="button" class="btn btn-primary" data-bs-target="#payment_option_modal" data-bs-toggle="modal" data-bs-dismiss="modal">Áfram</button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
-  </div>
+  
+    <div class="modal fade" id="payment_option_modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5>Veldu greiðslumáta</h5>
+          </div>
+          <div class="modal-body">
+            <label for="payment_option">Greiðslumáti:</label>
+            <select name="payment_option" id="payment_option_select" class="form-select" required>
+              <option value="CREDIT_CARD">Kreditkort</option>
+              <option value="BANK_ACCOUNT">Millifærsla</option>
+              <option value="MORTGAGE">Lán</option>
+            </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-target="#contact_info_modal" data-bs-toggle="modal" data-bs-dismiss="modal">Til baka</button>
+                <button type="button" class="btn btn-primary" onclick="openChosenPaymentModal()" data-bs-dismiss="modal">Áfram</button>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="credit_card_modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5>Skráðu kreditkortaupplýsingar</h5>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="cardName" class="form-label">Nafn á korti</label>
+                    <input type="text" class="form-control" name="card_name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="cardNumber" class="form-label">Kortanúmer</label>
+                    <input type="text" class="form-control" name="card_number" required>
+                </div>
+                <div class="mb-3">
+                    <label for="expiry" class="form-label">Gildistími</label>
+                    <input type="text" class="form-control" name="expiry" placeholder="MM/YY" required>
+                </div>
+                <div class="mb-3">
+                    <label for="cvc" class="form-label">CVC</label>
+                    <input type="text" class="form-control" name="cvc" required>
+                </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-target="#payment_option_modal" data-bs-toggle="modal" data-bs-dismiss="modal">Til baka</button>
+                  <button type="button" class="btn btn-primary" onclick="showSummary()" data-bs-toggle="modal" data-bs-target="#summary_modal">Áfram</button>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="bank_transfer_modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5>Skráðu bankaupplýsingar</h5>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="payer_name" class="form-label">Nafn greiðanda</label>
+                    <input type="text" class="form-control" name="payer_name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="payer_id" class="form-label">Kennitala</label>
+                    <input type="text" class="form-control" name="payer_id" required>
+                </div>
+                <div class="mb-3">
+                    <label for="bank_number" class="form-label">Bankanúmer</label>
+                    <input type="text" class="form-control" name="bank_number">
+                </div>
+                <div class="mb-3">
+                    <label for="payment_date" class="form-label">Dagsetning greiðslu</label>
+                    <input type="date" class="form-control" name="payment_date" required>
+                </div>
+                <div class="mb-3">
+                    <label for="receipt" class="form-label">Hlaða upp kvittun</label>
+                    <input type="file" class="form-control" name="receipt" accept=".png, .jpg, .jpeg, .pdf" required>
+                </div>             
+            </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-target="#payment_option_modal" data-bs-toggle="modal" data-bs-dismiss="modal">Til baka</button>
+                  <button type="button" class="btn btn-primary" onclick="showSummary()" data-bs-toggle="modal" data-bs-target="#summary_modal">Áfram</button>
+              </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mortgage_modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5>Skráðu lánaupplýsingar</h5>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="loan_institution" class="form-label">Lánastofnun</label>
+                    <input type="text" class="form-control" name="loan_institution" placeholder="T.d. Landsbankinn" required>
+                </div>
+                <div class="mb-3">
+                    <label for="payer_name" class="form-label">Nafn greiðanda</label>
+                    <input type="text" class="form-control" name="payer_name" placeholder="Nafn greiðanda" required>
+                </div>
+                <div class="mb-3">
+                    <label for="payer_id" class="form-label">Kennitala</label>
+                    <input type="text" class="form-control" name="payer_id" placeholder="Kennitala" required>
+                </div>                
+            </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-target="#payment_option_modal" data-bs-toggle="modal" data-bs-dismiss="modal">Til baka</button>
+                  <button type="button" class="btn btn-primary" onclick="showSummary()" data-bs-toggle="modal" data-bs-target="#summary_modal">Áfram</button>
+              </div>
+          </div>
+        </div>
+    </div> 
+
+    <div class="modal fade" id="summary_modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Yfirlit og staðfesting</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="summary_details">
+                        <!-- Summary birtist hér -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-target="#payment_option_modal" data-bs-toggle="modal" data-bs-dismiss="modal">Til baka</button>
+                    <button type="button" class="btn btn-success" onclick="submitFormAndOpenModal(event)">Staðfesta greiðslu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="modal fade" id="confirmation_modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Greiðslu lokið</h5>
+            </div>
+            <div class="modal-body">
+                <p>Greiðsluferlinu er lokið</p>
+                <p>Takk fyrir viðskiptin</p>
+            </div>
+            <div class="modal-footer">
+                <a href="/" class="btn btn-secondary">Aftur á heimasíðu</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function openChosenPaymentModal() {
+        var selectedOption = document.getElementById("payment_option_select").value;
+        var modalToOpen;
+
+        if (selectedOption === "CREDIT_CARD") {
+            modalToOpen = "credit_card_modal";
+        } else if (selectedOption === "BANK_ACCOUNT") {
+            modalToOpen = "bank_transfer_modal";
+        } else if (selectedOption === "MORTGAGE") {
+            modalToOpen = "mortgage_modal";
+        }
+
+        if (modalToOpen) {
+            var modalElement = document.getElementById(modalToOpen);
+            var modalInstance = new bootstrap.Modal(modalElement);
+            modalInstance.show();
+        }
+    }
+
+    function showSummary() {
+        var selectedOption = document.getElementById("payment_option_select").value;
+        var summaryDetails = document.getElementById("summary_details");
+
+        // Tengiliðaupplýsingar
+        var streetName = document.querySelector('[name="street_name"]').value;
+        var city = document.querySelector('[name="city"]').value;
+        var postalCode = document.querySelector('[name="postal_code"]').value;
+        var country = document.querySelector('[name="country"]').value;
+        var nationalId = document.querySelector('[name="national_id"]').value;
+
+        // Setja tengiliðaupplýsingar í yfirlitið
+        var contactInfo = `
+            <h6 style="font-size: 1.25rem; font-weight: bold;">Tengiliðaupplýsingar</h6>
+            <p><strong>Götuheiti:</strong> ${streetName}</p>
+            <p><strong>Borg:</strong> ${city}</p>
+            <p><strong>Póstnúmer:</strong> ${postalCode}</p>
+            <p><strong>Land:</strong> ${country}</p>
+            <p><strong>Kennitala:</strong> ${nationalId}</p>
+            <br>
+        `;
+
+        // Greiðslumáti
+        if (selectedOption === "CREDIT_CARD") {
+            var cardName = document.querySelector('[name="card_name"]').value;
+            var cardNumber = document.querySelector('[name="card_number"]').value;
+            var expiry = document.querySelector('[name="expiry"]').value;
+            var cvc = document.querySelector('[name="cvc"]').value;
+
+            summaryDetails.innerHTML = `
+                ${contactInfo}
+                <h6 style="font-size: 1.25rem; font-weight: bold; margin-top: 1rem;">Kreditkortaupplýsingar</h6>
+                <p><strong>Nafn á korti:</strong> ${cardName}</p>
+                <p><strong>Kortanúmer:</strong> ${cardNumber}</p>
+                <p><strong>Gildistími:</strong> ${expiry}</p>
+                <p><strong>CVC:</strong> ${cvc}</p>
+            `;
+        } else if (selectedOption === "BANK_ACCOUNT") {
+            var payerName = document.querySelector('[name="payer_name"]').value;
+            var payerId = document.querySelector('[name="payer_id"]').value;
+            var bankNumber = document.querySelector('[name="bank_number"]').value;
+            var paymentDate = document.querySelector('[name="payment_date"]').value;
+
+            summaryDetails.innerHTML = `
+                ${contactInfo}
+                <h6 style="font-size: 1.25rem; font-weight: bold; margin-top: 1rem;">Millifærsluupplýsingar</h6>
+                <p><strong>Nafn greiðanda:</strong> ${payerName}</p>
+                <p><strong>Kennitala:</strong> ${payerId}</p>
+                <p><strong>Bankanúmer:</strong> ${bankNumber}</p>
+                <p><strong>Dagsetning greiðslu:</strong> ${paymentDate}</p>
+            `;
+        } else if (selectedOption === "MORTGAGE") {
+            var loanInstitution = document.querySelector('[name="loan_institution"]').value;
+            var payerName = document.querySelector('[name="payer_name"]').value;
+            var payerId = document.querySelector('[name="payer_id"]').value;
+
+            summaryDetails.innerHTML = `
+                ${contactInfo}
+                <h6 style="font-size: 1.25rem; font-weight: bold; margin-top: 1rem;">Lánaupplýsingar</h6>
+                <p><strong>Lánastofnun:</strong> ${loanInstitution}</p>
+                <p><strong>Nafn greiðanda:</strong> ${payerName}</p>
+                <p><strong>Kennitala greiðanda:</strong> ${payerId}</p>
+            `;
+        }
+    }
+
+    function submitFormAndOpenModal(event) {
+        event.preventDefault();
+
+        document.querySelector('form').submit();
+
+        var summaryModal = bootstrap.Modal.getInstance(document.getElementById('summary_modal'));
+        summaryModal.hide();
+
+        var confirmationModal = new bootstrap.Modal(document.getElementById('confirmation_modal'));
+        confirmationModal.show();
+    }
+</script>
