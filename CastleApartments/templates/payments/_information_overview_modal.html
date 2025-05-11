@@ -1,7 +1,7 @@
     <div class="modal" data-bs-backdrop="static" id="payment-summary-modal" tabindex="-1">
         <div class="modal-dialog modal-lg payment-modal-group">
             <div class="modal-content payment-modal-group">
-                <div class="modal-header">
+                <div class="modal-header d-block align-self-center">
                     <h5>Yfirlit og staðfesting</h5>
                 </div>
                 {% include 'payments/_payment_modal_sub_header.html' %}
@@ -140,9 +140,9 @@
                     {% csrf_token %}
                         <button type="submit" class="btn btn-success" data-bs-target="#payment-confirmation-modal" data-bs-toggle="modal">Staðfesta greiðslu</button>
                         <label for="payment-option" class="visually-hidden">Heimilisfang</label>
-                        <input class="visually-hidden" type="text" name="payment-option" id="payment-form-actual-payment-option">
+                        <input class="visually-hidden" type="text" name="payment-option" id="payment-form-actual-payment-option" readonly>
                         <label for="offer-id" class="visually-hidden">Heimilisfang</label>
-                        <input class="visually-hidden" type="text" name="offer-id" id="payment-form-actual-offer-id">
+                        <input class="visually-hidden" type="text" name="offer-id" id="payment-form-actual-offer-id" readonly>
                     </form>
                 </div>
             </div>

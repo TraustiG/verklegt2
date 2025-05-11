@@ -2,19 +2,19 @@
     <div class="hidden-payment-option bank-transfer" style="display: none;">
         <div class="mb-3">
             <label for="payer-name" class="form-label">Nafn greiðanda</label>
-            <input id="payment-option-bank-transfer-payer-name" type="text" class="form-control" name="payer-name" required>
+            <input id="payment-option-bank-transfer-payer-name" type="text" class="form-control payment-input" name="payer-name" required pattern="[a-zA-Z ]{4,}">
         </div>
         <div class="mb-3">
             <label for="bank-number" class="form-label">Bankanúmer</label>
-            <input id="payment-option-bank-transfer-bank-number" type="text" class="form-control" name="bank-number">
+            <input id="payment-option-bank-transfer-bank-number" type="text" class="form-control payment-input" name="bank-number" required pattern="[0-9\-]{6,}">
         </div>
         <div class="mb-3">
             <label for="payment-date" class="form-label">Dagsetning greiðslu</label>
-            <input id="payment-option-bank-transfer-payment-date" type="date" class="form-control" name="payment-date" required>
+            <input id="payment-option-bank-transfer-payment-date" type="date" class="form-control payment-input" name="payment-date" required>
         </div>
         <div class="mb-3">
             <label for="receipt" class="form-label">Hlaða upp kvittun</label>
-            <input id="payment-option-bank-transfer-receipt" type="file" class="form-control" name="receipt" accept=".png, .jpg, .jpeg, .pdf" required>
+            <input id="payment-option-bank-transfer-receipt" type="file" class="form-control payment-input" name="receipt" accept=".png, .jpg, .jpeg, .pdf" required>
         </div>
     </div>
 </div>

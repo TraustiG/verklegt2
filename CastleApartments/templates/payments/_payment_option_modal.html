@@ -1,11 +1,11 @@
 <div class="modal" id="payment-option-modal" aria-hidden="true" data-bs-backdrop="static" aria-labelledby="payment-option-modal-label" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg payment-modal-group">
         <div class="modal-content payment-modal-group">
-            <div class="modal-header">
-                <h5>Veldu greiðslumáta</h5>
+            <div class="modal-header d-block align-self-center">
+                <h5>Greiðslumáti</h5>
             </div>
                 {% include 'payments/_payment_modal_sub_header.html' %}
-                <div class="modal-body payment-modal-group-body">
+                <div class="modal-body payment-modal-group-body w-50 d-block align-self-center">
                     <label for="payment-option">Greiðslumáti:</label>
                     <select name="payment-option" id="payment-option-select" class="form-select" required>
                         <option value="" selected></option>
