@@ -23,13 +23,14 @@ optionContinueButton.addEventListener("click", () => {
     addPaymentInformation(paymentPicker.value)
 })
 
-paymentContactFields.forEach((element, i) => {
-    element.addEventListener("change", (event) => {
-        paymentContactCheck[i] = checkEntry(event.target.name, event.target.value)
-        if (paymentContactCheck.reduce((f, s) => f && s)) {
+paymentContactFields.forEach((element) => {
+    element.addEventListener("change", () => {
+        if (Array.from(paymentContactFields).map((el) => el.checkValidity()).reduce((f, s) =>  f && s)) {
             entryContinueButton.disabled = false
+            element.setAttribute("isvalid", false)
         } else {
             entryContinueButton.disabled = true
+            element.setAttribute("isvalid", true)
         }
     })
 })
@@ -40,29 +41,6 @@ const addContactInformation = () => {
         document.querySelector(queryString).innerHTML = element.value
     })
 }
-
-const checkEntry = (type, val) => {
-    const rex = {
-        "street-name": /^[a-zA-Z0-9, \.-]{3,}$/,
-        "city": /^[a-zA-Z ]{4,}$/,
-        "postal-code": /^[0-9]{2,5}$/,
-        "country": /^[a-zA-Z ]{2,}$/,
-        "national-id": /^[0-9]{6}-?[0-9]{4}$/,
-        "card-name": /^[a-zA-Z ]{5,}$/,
-        "card-number": /^[0-9]{16}$/,
-        "expiry": /.+/,
-        "cvc": /^[0-9]{3}$/,
-        "payer-name": /^[a-zA-Z ]{5,}$/,
-        "mortgage-payer": /^[a-zA-Z ]{5,}$/,
-        "bank-number": /^[0-9-]+$/,
-        "payment-date": /.+/,
-        "receipt": /.+/,
-        "loan-institution": /^[a-zA-Z0-9,\. ]{3,}$/,
-        "loan-amount": /^[0-9]+$/
-    }
-    return rex[type].test(val)
-}
-
 
 paymentPicker.addEventListener("change", (event) => {
     paymentFormToggle(event.target.value)
@@ -98,8 +76,7 @@ const paymentFieldsToggle = (option) => {
     optionFields.forEach((element, i) => {
         paymentOptionFields.add(element)
         element.addEventListener("change", (event) => {
-            optionCheck[i] = checkEntry(event.target.name, event.target.value)
-            if (optionCheck.reduce((f, s) => f && s)) {
+            if (Array.from(optionFields).map((el) => el.checkValidity()).reduce((f, s) =>  f && s)) {
                 let confirmElName = `[id="payment-form-offer-property-${event.target.name}"]`
                 try {
                     document.querySelector(confirmElName).innerHTML = event.target.value
@@ -109,8 +86,10 @@ const paymentFieldsToggle = (option) => {
                     console.log(confirmElName)
                 }
                 optionContinueButton.disabled = false
+                element.setAttribute("isvalid", false)
             } else {
                 optionContinueButton.disabled = true
+                element.setAttribute("isvalid", true)
             }
         })
     })
@@ -139,9 +118,9 @@ makePaymentButtons.forEach((element) => {
                     let vis;
                     temp = element.getAttribute(`data-${str}`)
                     if (str==="offer-amount") {
-                        vis = `Söluverð ${temp}`
+                        vis = `Söluverð ${temp} kr.`
                     } else if (str==="listing-price") {
-                        vis = `Skráð ${temp}`
+                        vis = `Skráð ${temp} kr.`
                     } else { vis = temp }
                     el.innerHTML = vis
                 }
@@ -183,9 +162,14 @@ const resetForm = () => {
     paymentContactFields.forEach((el) => {
         el.value = ""
         el.setAttribute("value", "")
+        el.removeAttribute("isvalid")
     })
     paymentOptionFields.forEach((el) => {
         el.value = ""
         el.setAttribute("value", "")
+        el.removeAttribute("isvalid")
+    })
+    hiddenPaymentOptions.forEach((el) => {
+        el.style.display = "none"
     })
 }
