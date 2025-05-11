@@ -1,9 +1,86 @@
+.footer-divider {
+    height: 3rem;
+    background-color: #04A5E527;
+    border: solid rgba(0, 0, 0, .15);
+    border-top-width: medium;
+    border-right-width: medium;
+    border-bottom-width: medium;
+    border-left-width: medium;
+    border-width: 1px 0;
+    box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+}
+
+.price-dropdown-item-menu {
+    --bs-dropdown-min-width: 7rem;
+}
+
+.search-price-value, .search-price-value:hover {
+    background-color: var(--bs-body-bg);
+    text-align: center;
+    color: var(--bs-body-color);
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+.search-price-value-indicator, 
+.search-price-value-indicator:hover {
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem;
+    min-width: 12rem;
+    border-radius: 0;
+}
+
+.search-price-value-indicator:not(:disabled) {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+@media only screen and (max-width: 800px) {
+    .search-price-value-indicator {
+        min-width: 5rem;
+    }
+}
+
+.image-thumbnail {
+    width: 150px;
+}
+
+.footer * {
+    color: #b4b4b4;
+    border-color: #04A5E5;
+}
+.footer .nav {
+    border-bottom: 2px solid #04A5E5;
+    border-color: #04A5E5;
+}
+
+.nav-item-notification .nav-link {
+    padding: 2px;
+    margin-right: 5px;
+}
+
+td .notification-pill {
+    top:20%;
+    right:20%;
+}
+
+.nav-item-notification span {
+    top: 10%;
+    right: -10%;
+}
+
 .title-bar {
     display: grid;
     border-top: 2px solid black;
     border-bottom: 2px solid black;
     justify-items: center;
     align-items: center;
+    color: var(--bs-card-title-color);
+}
+
+.real-estate-extra-info {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-top: 2px solid black;
     color: var(--bs-card-title-color);
 }
 
@@ -152,19 +229,33 @@ html[data-theme="dark"] {
     --bs-card-title-color: #FFFFFF;
     --bs-body-color-rgb: #5C5F77;
     --bs-body-color: #ABB2BF;
+    --bs-table-bg-state: #CCCCCC;
 }
 
 html[data-theme="light"] {
     --bg-mid: #000000;
 }
 
-html[data-theme="dark"] .title-bar {
+
+html[data-theme="dark"] .real-estate-extra-info, .title-bar {
     border-top: 1px solid #04A5E5;
+}
+
+html[data-theme="dark"] .title-bar {
     border-bottom: 1px solid #04A5E5;
 }
 
+.table * {
+    --bs-table-hover-bg: #04A5E552;
+}
+
 html[data-theme="dark"] .table * {
+    --bs-table-striped-bg: #313131;
     color: var(--bs-card-title-color);
+}
+
+.table-active * {
+    --bs-table-bg-state: #04A5E591;
 }
 
 html[data-theme="dark"] .subtext {
@@ -205,7 +296,7 @@ html[data-theme="light"] .bg-low {
 }
 
 html[data-theme="dark"] .bg-low {
-    background-color: #121212;
+    background-color: #1D1D1D;
     color: #F3F3F3;
 }
 
@@ -240,7 +331,9 @@ html[data-theme="dark"] .bg-high {
     --bs-btn-active-border-bg: #212529;
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-danger:hover,
+.btn-secondary:hover {
     box-shadow: 0 8px 14px 5px rgba(0,0,0,0.44);
 }
 
@@ -250,4 +343,25 @@ html[data-theme="dark"] .bg-high {
     background-color: #04A5E5;
     border-width: 3px;
     border-color: black;
+}
+
+#main-content-div {
+    min-height: 100vh;
+    background-color: var(--bs-body-bg);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.form-control * {
+    appearance: none;
+    -moz-appearance: textfield;
+}
+
+/* Firefox */
+input[type=number] {
+    appearance: none;
+    -moz-appearance: textfield;
 }

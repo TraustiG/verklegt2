@@ -1,77 +1,23 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods, require_safe, require_POST
 from babel.numbers import format_currency
 from .forms import RegistrationForm , SellerForm, SearchForm
-from .models import Seller, Buyer, Filter, User
+from .models import Seller, Buyer, Filter, User, Notification
 from real_estates.models import Offer,Property
-
-listing = {
-    "id": 1,
-    "date": "30.april 2025", 
-    "desc": """
-            Íbúð 203: 102 fm 4ra herbergja íbúð á 1. hæð með sér  þvottahúsi. Eigninni fylgir sérafnotareitur. Íbúðin er 93,4 fm ásamt 5,3 fm geymslu. 
-            Innréttingar og skápir: Hvítt\n
-            AFHENDING VIÐ KAUPSAMNING\n\n
-            Stofa/alrými með útgengt út á svalir\n
-            Eldhús: Raftæki eru frá AEG, bakaraofn og helluborð\n
-            Svefnherbergi með fataskáp\n
-            Baðherbergi með sturtu, hvítri innréttingu, handlaug, upphengdu salerni og handklæðaofn. Aðstaða fyrir þvottavél og þurrkara.\n
-            Geymsla á fyrstu hæð\n\n
-            Húsbyggjandi: Breiðahvarf ehf\n
-            Aðalhönnuður: Úti inni arkitektar: Baldur Svarvarsson\n
-            Verkfræðihönnun: Víðsjá\n
-            Raflagnahönnun: Lumex: Helgi Eiríksson
-            """, 
-    "status": "Open", 
-    "price": 96900000, 
-    "type": "Fjölbýlishús",
-    "address": "Maríugata 3, íbúð 203",
-    "city": "Garðabær",
-    "zip": 210,
-    "sqm": 102,
-    "baths": 1,
-    "beds": 4,
-    "images": [
-                {"url": "https://api-beta.fasteignir.is/pictures/811668/547d88356c7c77b207c1d2dcc1d65460-large.jpg",
-                "desc": "kitchen"},
-                {"url": "https://api-beta.fasteignir.is/pictures/811668/2002e4756c85dffff2794a97acb2f9d7-large.jpg",
-                "desc": "living room"},
-                {"url": "https://api-beta.fasteignir.is/pictures/811668/753f7a8a0b267f767ba18a3aa369d88a-large.jpg",
-                "desc": "bathroom"},
-                {"url": "https://api-beta.fasteignir.is/pictures/811668/068aeaf912fa617d3539adec6674ed9e-large.jpg",
-                "desc": "layout"},
-        ]
-}
-
-"""akeUser = {
-    "name": "Pétur Hermannsson",
-    "inits": "PH",
-    "is_authenticated": True,
-    "id": 1,
-    "image": "https://media.istockphoto.com/id/1171169127/photo/headshot-of-cheerful-handsome-man-with-trendy-haircut-and-eyeglasses-isolated-on-gray.jpg?s=612x612&w=0&k=20&c=yqAKmCqnpP_T8M8I5VTKxecri1xutkXH7zfybnwVWPQ=",
-    "username": "PesiiHann",
-    "offers": [{
-        "expiry": "01.01.2026", w
-        "offer_amount": 94000000,
-        "status": "Accepted",
-        "listing": listing},
-        {"expiry": "01.01.2026",
-        "offer_amount": 94000000,
-        "status": "Open",
-        "listing": listing}
-    ]
-}"""
+from real_estates.views import index, fetchNotifications
 
 # Create your views here.
 
-
+@require_http_methods(["GET", "POST"])
+@fetchNotifications
 def register(request):
-
     if request.method == 'POST':
         role = request.POST.get('role')
         form = RegistrationForm(request.POST)
-        
         seller_form = SellerForm(request.POST, request.FILES) if role == 'seller' else SellerForm()
 
         if form.is_valid():
@@ -96,12 +42,14 @@ def register(request):
                     seller.save()
                 
                 else:
+                    print(seller_form.errors)
                     return render(request, 'users/register.html',{
                         'form':form,
                         'seller_form':seller_form
                     })
         
-            return redirect('login')
+            login(request, user)
+            return redirect(index)
     
         return render(request,'users/register.html', {
             'form': form,
@@ -113,13 +61,10 @@ def register(request):
             'form': RegistrationForm(),
             'seller_form': SellerForm()
         })
-        
-    # area = forms.CharField(label="areaSelect", max_length=100, required=False)
-    # re_type = forms.CharField(label="typeSelect", max_length=100, required=False)
-    # price = forms.CharField(label="priceInput", max_length=100, required=False)
-    # desc = forms.CharField(label="descInput", max_length=100, required=False)
 
 
+@require_POST
+@fetchNotifications
 def saveFilter(request):
     if request.method == "POST":
         form = SearchForm()
@@ -137,19 +82,17 @@ def saveFilter(request):
     return redirect('search')
 
 
+@require_safe
+@fetchNotifications
 def profile(request):
 
     user = request.user
-
     if user.is_seller:
         seller = Seller.objects.get(user=user)
         listings = Property.objects.filter(seller=seller)
-        bio_lines = seller.bio.splitlines()
+        seller.bio = seller.bio.splitlines()
 
-
-
-
-        return render(request, 'users/profile.html', {'user': request.user, 'listings':listings, 'seller':seller, 'bio_lines':bio_lines})
+        return render(request, 'users/profile.html', {'profile': seller.user, 'listings': listings })
 
     elif user.is_buyer:
         buyer = Buyer.objects.get(user=user)
@@ -158,20 +101,90 @@ def profile(request):
             offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
             offer.property.listing_price = format_currency(offer.property.listing_price, "", locale="is_is")[:-4]
 
-        return render(request, 'users/profile.html', {'user': request.user, 'offers':offers, 'buyer':buyer})
+        return render(request, 'users/profile.html', {'profile': request.user, 'offers':offers })
+    
+@require_POST
+@fetchNotifications
+def editProfile(request):
+
+    user = request.user
         
+    #allow changes for fullname / image as they are shared , save user
+    fullname = request.POST.get("fullname")
+    profile_image = request.POST.get("profile_image")
+
+    user.full_name = fullname
+    user.image = profile_image
+
+    user.save()
+        
+    #check if user is a seller & edit / save seller object if those fields have been edited
+    if user.is_seller:
+        seller = Seller.objects.get(user=user)
+
+        seller_type = request.POST.get("seller_type")
+        streetname = request.POST.get("streetname")
+        city_input = request.POST.get("city_input")
+        zip = request.POST.get("zip")
+        logo_input = request.POST.get("logo_input")
+        bio_input = request.POST.get("bio_input")
+
+        seller.type= seller_type
+        seller.street_name= streetname
+        seller.city= city_input
+        seller.postal_code= zip
+        seller.logo= logo_input
+        seller.bio= bio_input
+
+        
+        seller.save()
+    
+        return redirect('profile')
+
+
+    return redirect('profile')
+        
+@require_safe
+@fetchNotifications
 def seller(request, id):
-    # get seller user
-    user = User.objects.get(id=id)
-    seller = Seller.objects.get(user=user)
-    user = seller.user
+    
+    if request.user.id == id:
+        return redirect('profile')
+
+    seller = Seller.objects.get(user_id=id)
+    seller.bio = seller.bio.splitlines()
     listings = Property.objects.filter(seller=seller)
-    bio_lines = seller.bio.splitlines()
+    return render(request, 'users/profile.html', {'profile': seller.user, 'listings': listings})
 
 
-    return render(request, 'users/profile.html', {'user':user, 'listings':listings, 'seller':seller, 'bio_lines':bio_lines, 'seller_id': id})
-
+@require_http_methods(["GET", "POST"])
+@fetchNotifications
 def my_properties(request):
+
+
     seller = Seller.objects.get(user=request.user)
     properties = Property.objects.filter(seller=seller)
-    return render(request, 'users/my_properties.html', {"properties": properties})
+    for property in properties:
+        property.raw_price = property.listing_price  #this is for edit property, cant have it on decimal format there
+        property.listing_price = format_currency(property.listing_price, "", locale="is_is")[:-4]
+    property_offers = {prop: {"notifs": 0, "offers": []} for prop in properties}
+    offers = Offer.objects.filter(property__seller = seller)
+
+    for offer in offers:
+        offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
+        for prop, list in property_offers.items():
+            notifs = Notification.objects.filter(user=request.user, property=prop, count__gt=0)
+            list["notifs"] = len(notifs)
+            for notif in notifs:
+                notif.count = 0
+                notif.save()
+
+            if offer.property == prop:
+                list["offers"].append(offer)
+
+    return render(request, 'users/my_properties.html', {"properties": property_offers, })
+
+@require_safe
+@fetchNotifications
+def property_offers(request):
+    return render(request, 'users/seller_property_offers.html')

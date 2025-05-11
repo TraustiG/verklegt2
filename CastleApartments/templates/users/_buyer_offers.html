@@ -26,7 +26,7 @@
             <th class="align-middle text-center" scope="row"><h4>{{ offer.property.street_name }} - {{ offer.property.postal_code }} {{ offer.property.city }}</h4></th>
             <td class="align-middle text-end" scope="row"><h4>{{ offer.property.listing_price }}</h4></td>
             <td class="align-middle text-end" scope="row"><h4>{{ offer.offer_amount }}</h4></td>
-            <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><b>{{ offer.offer_status }}</b>
+            <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><h4><b>{{ offer.offer_status }}</b></h4>
                 {% if offer.offer_status == "Accepted" %}
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contact_info_modal">Afgreiða!</button>
                 {% include "users/_payment_modal.html" %}
@@ -38,14 +38,14 @@
             </td>
             <th scope="row"></th>
         </tr>
+        {% empty %}
     </tbody>
 </table>
 </div>
-    {% empty %}
-    </tbody>
-</table>
-</div>
-<div class="py-5">
+<div class="py-5" style="min-height: 50vh;">
     <h1 class="text-center subtext">Engin virk tilboð..</h1>
 </div>
-    {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+</div>

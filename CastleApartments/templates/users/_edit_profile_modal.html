@@ -1,0 +1,60 @@
+<div class="modal fade" id="edit-profile-modal" focus tabindex="-1" aria-labelledby="edit-profile-modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-mid">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Breyta Prófíl</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'edit-profile' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="fullname" class="form-label">Nafn</label>
+                        <input type="text" class="form-control" id="fullname" name="fullname" value="{{user.full_name}}" required> 
+                    </div>
+                    <div class="mb-3">
+                        <label for="profile_image" class="form-label">Mynd</label>
+                        <input type="text" class="form-control" id="profile_image" name="profile_image" value="{{user.image}}" required>
+                    </div>
+
+                    {% if user.is_seller %}
+                    <div class="mb-3">
+                        <label for="seller_type" class="form-label">Tegund</label>
+                        <input type="text" class="form-control" id="seller_type" name="seller_type" value="{{ user.seller.type }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="streetname" class="form-label">Heimilisfang</label>
+                        <input type="text" class="form-control" id="streetname" name="streetname" value="{{ user.seller.street_name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="city_input" class="form-label">Borg</label>
+                        <input type="text" class="form-control" id="city_input" name="city_input" value="{{ user.seller.city }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="zip" class="form-label">Póstnúmer</label>
+                        <input type="text" class="form-control" id="zip" name="zip" value="{{ user.seller.postal_code }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="logo_input" class="form-label">Logo URL</label>
+                        <input type="text" class="form-control" id="logo_input" name="logo_input" value="{{ user.seller.logo }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="bio_input" class="form-label">Lýsing</label>
+                        <textarea class="form-control" id="bio_input" name="bio_input">{{ user.seller.bio }}</textarea>
+                    </div>
+                {% endif %}
+            
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
-{% block title %}{{ user.name }}{% endblock %}
+{% load static %}
+{% block title %}{{ profile.full_name }}{% endblock %}
+{% block scripts %}
+<script defer src="{% static 'js/profile.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <div class="bg-mid">
@@ -8,58 +12,61 @@
             <div class="h-100 col-4">
                 <div class="h-100 row justify-content-center">
                     <div class="position-relative h-100 col-9 rounded rounded-5 d-flex justify-content-center align-items-center bg-low profile-image" style="overflow:hidden">
-                        <img src="{{ user.image }}" class="h-100"
-                        {% if user.is_seller %}
+                        <img src="{{ profile.image }}" class="h-100"
+                        {% if profile.is_seller %}
                         alt="Photo of realtor"
                         {% else %}
                         alt="Profile photo"
                         {% endif %}
                         />
-                        {% if request.path == '/profile/' %}
-                            {% if not user.is_seller or user.id == seller_id %}
-                                <button class="position-absolute bottom-0 btn btn-primary mb-3">Breyta prófíl</button>
-                            {% endif %}
+                        {% if user.id == profile.id %}
+                        <button id= "editProfile" class="position-absolute bottom-0 btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#edit-profile-modal">Breyta prófíl</button>
+                        {% include 'users/_edit_profile_modal.html' %}
                         {% endif %}
                     </div>
                 </div>
             </div>
             <div class="col-4 align-self-center">
-                <h1 class="mb-0">{{ user.full_name }}</h1>
-                {% if user.is_seller %}
-                <h6 class="px-3 subtext">{{ user.seller.type }}</h6>
-                {% if not user.seller.type == 'Individual' %}
-                <h5>{{ user.seller.street_name}}</h5>
-                <h5>{{ user.seller.postal_code }} {{ user.seller.city }}</h5>
+                <h1 class="mb-0">{{ profile.full_name }}</h1>
+                {% if profile.is_seller %}
+                <h6 class="px-3 subtext">{{ profile.seller.type }}</h6>
+                {% if not profile.seller.type == 'Individual' %}
+                <h5>{{ profile.seller.street_name}}</h5>
+                <h5>{{ profile.seller.postal_code }} {{ profile.seller.city }}</h5>
                 {% endif %}
                 {% endif %}
             </div>
             <div class="col-4">
-                {% if user.is_seller %}
-                    <img class="border border-black border-4 rounded rounded-5" src="{{ user.seller.logo }}" style="height: auto; width:100%;" />
+                {% if profile.is_seller %}
+                    <img class="border border-black border-4 rounded rounded-5" src="{{ profile.seller.logo }}" style="height: auto; width:100%;" />
                 {% endif %}
             </div>
         </div>
     </div>
+    {% if profile.is_seller %}
+    <div class="container pb-3">
+        {% for line in profile.seller.bio %}
+        <h5 class="m-0">
+            {{ line }}
+            {% if line == "" %}
+            <br/>
+            {% endif %}
+        </h5>
+        {% endfor %}
+    </div>
 </div>
-    {% if user.is_seller %}
-        <div>
-            {% for line in bio_lines %}
-            <h5 class="">
-                {{ line }}
-                {% if line == "" %}
-                <br/>
-                {% endif %}
-            </h5>
-            {% endfor %}
-        </div>
-        {% include "_title_bar.html" with title="Fasteignir" %}
-        <div class="d-flex justify-content-center align-items-center">
-            <div class="flex-grow-1">
-            {% include "real_estates/_listings.html" with cols=5 %}
-            </div>
-        </div>
-    {% else %}
-        {% include "_title_bar.html" with title="Tilboð" %}
-        {% include "users/_buyer_offers.html" %}
-    {% endif %}
+{% endif %}
+<div class="bg-low">
+{% if profile.is_seller %}
+    {% include "_title_bar.html" with title="Fasteignir" %}
+    <div class="">
+        {% include "real_estates/_listings.html" with cols=5 %}
+    </div>
+</div>
+{% else %}
+    {% include "_title_bar.html" with title="Tilboð" %}
+    {% include "users/_buyer_offers.html" %}
+{% endif %}
+
 {% endblock %}
+

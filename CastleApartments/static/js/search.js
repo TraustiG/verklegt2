@@ -3,6 +3,56 @@ document.getElementById("orderBySelect")
         sortItems(event)
 })
 
+priceButtons = document.getElementsByName("search-price-value-item")
+searchPriceIndicator = document.getElementById("search-price-value-indicator")
+searchPriceInput = document.getElementById("id_priceInput")
+
+const visualToVal = (text) => text = text.split(" ")[0]*1000000
+
+priceButtons.forEach((element) => {
+    element.addEventListener("click", () => {
+        let textValue = searchPriceIndicator.innerHTML.trim()
+        if (textValue === "Verð") {
+            searchPriceIndicator.toggleAttribute("disabled")
+            if (element.classList.contains("-min-")) {
+                    searchPriceIndicator.innerHTML = element.innerHTML + " +"
+                    searchPriceInput.value = visualToVal(element.innerHTML) + "-"
+            } else {
+                    searchPriceIndicator.innerHTML = "0 - " + element.innerHTML
+                    searchPriceInput.value = "-" + visualToVal(element.innerHTML)
+            }
+        } else if (textValue.includes("+")) {
+            if (element.classList.contains("-min-")) {
+                 textValue = element.innerHTML + " +"
+                searchPriceInput.value = visualToVal(element.innerHTML) + "-"
+            } else {
+                let prev = textValue
+                searchPriceIndicator.innerHTML = textValue.replace("+","- ") + element.innerHTML
+                searchPriceInput.value = visualToVal(prev) + "-" + visualToVal(element.innerHTML)
+            }
+        } else {
+            let parts = textValue.split(" - ")
+            if (element.classList.contains("-min-")) {
+                parts[0] = element.innerHTML
+            } else {
+                parts[1] = element.innerHTML
+            }
+            searchPriceIndicator.innerHTML = parts.join(" - ")
+            searchPriceInput.value = parts.map((val) => {
+                return visualToVal(val)
+            }).join("-")
+            
+        }
+    })
+})
+
+
+searchPriceIndicator.addEventListener("click", () => {
+    searchPriceIndicator.toggleAttribute("disabled")
+    searchPriceIndicator.innerHTML = "Verð"
+})
+
+
 const sortItems = (event) => {
     const elements = [...document.querySelectorAll(".real-estate-card")]
     const parentElement = elements[0].parentNode

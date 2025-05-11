@@ -6,23 +6,17 @@
                 class="d-inline-block align-text-top" />
             <b>Castle Apartments</b>
         </a>
-        {% if user %}
+        {% if user.is_authenticated %}
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="position-relative nav-item">
-                    <a class="nav-link" href="#">
-                        <span class="position-absolute top-25 start-100 translate-middle badge rounded-pill bg-danger">
-                            4
-                            <span class="visually-hidden">unread messages</span>
-                        </span>
-                        Vaktin mín
-                    </a>
+                <li class="position-relative nav-item nav-item-notification">
+                    <a class="nav-link" href="{% url 'my-properties' %}">{% if user.is_buyer %}Vaktin mín{% else %}Fasteignirnar mínar{% endif %}</a>
+                    {% if user.notifications %}
+                    <span class="position-absolute translate-middle badge rounded-pill bg-danger user-select-none">
+                        {{ user.notifications|length }}
+                    <span class="visually-hidden">unread messages</span>
+                    {% endif %}
                 </li>
-            {% if user.is_seller %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'my-properties' %}">Fasteignirnar mínar</a>
-                </li>
-            {% endif %}
             </ul>
         </div>
         {% endif %}

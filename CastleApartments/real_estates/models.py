@@ -6,14 +6,19 @@ class PropertyImages(models.Model):
     property = models.ForeignKey(
         "Property", on_delete=models.CASCADE)
     
-    image_url = models.URLField()
+    image_url = models.TextField()
     image_description = models.TextField()
-
 
     
     def __str__(self):
         return f"{self.image_url}"
 
+
+class PropertyStatus(models.TextChoices):
+        OPEN = 'OPEN', 'Open'
+        SOLD = 'SOLD', 'Sold'
+        CONTINGENT = 'CONTINGENT', 'Contingent'
+        PROCESSED = 'PROCESSED', 'Processed'
 
 class Property(models.Model):
 
@@ -22,16 +27,16 @@ class Property(models.Model):
     
     street_name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
-    postal_code = models.CharField(max_length=5)
+    postal_code = models.IntegerField()
     description = models.TextField()
     property_type = models.CharField(max_length=100)
     listing_date = models.DateField()
-    listing_price = models.CharField(max_length = 15)
-    number_of_bedrooms = models.CharField(max_length=2)
-    number_of_bathrooms = models.CharField(max_length=2)
-    square_meters = models.CharField(max_length = 4)
-    status = models.CharField(max_length = 100)
-    image = models.URLField()
+    listing_price = models.IntegerField()
+    number_of_bedrooms = models.IntegerField()
+    number_of_bathrooms = models.IntegerField()
+    square_meters = models.IntegerField()
+    status = models.CharField(choices=PropertyStatus.choices, default=PropertyStatus.OPEN)
+    image = models.TextField()
 
     def __str__(self):
         return f"{self.street_name}"
@@ -54,6 +59,7 @@ class Offer(models.Model):
     
     offer_amount = models.CharField(max_length=20)
     offer_expiry = models.DateField()
+    offer_date = models.DateField(auto_now_add=True)
 
     offer_status = models.CharField(choices=OfferStatus.choices, default=OfferStatus.OPEN,)
     

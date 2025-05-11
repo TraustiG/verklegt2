@@ -1,4 +1,4 @@
-<div id="carousel" class="carousel carousel-dark slide carousel-fade profile-image align-content-center bg-low object-fit-cover" style="width: 856px; height: 570px; overflow: hidden"> <!-- "max-width: {{ width }}; max-height: {{ height }}; overflow: hidden;"> -->
+<div id="carousel" class="carousel carousel-dark slide carousel-fade profile-image align-content-center bg-low object-fit-cover ratio ratio-4x3" style="overflow:hidden"> <!-- "max-width: {{ width }}; max-height: {{ height }}; overflow: hidden;"> -->
     <!-- <div class="carousel-indicators">
         {% for image in images %}
         <button type="button" data-bs-target="#carouselIndicators" data-bs-slide-to="{{forloop.counter0}}" 
@@ -8,10 +8,10 @@
         aria-current="true" aria-label="Slide {{forloop.counter0}}"></button>
         {% endfor %}
     </div> -->
-    <div class="carousel-inner">
+    <div class="carousel-inner active align-content-center text-center">
         {% for image in images %}
         {% if forloop.first %}
-        <div class="carousel-item active">
+        <div class="carousel-item">
             {% else %}
             <div class="carousel-item">
                 {% endif %}
@@ -20,9 +20,10 @@
                 </a>
             </div>
         {% empty %}
-            <div class="carousel-item active"><p>Engar myndir fyrir eignina.</p></div>
+            <div class="carousel-item active"><h1>Engar myndir fyrir eignina.</h1></div>
         {% endfor %}
     </div>
+    {% if images|length != 0 %}
     <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
@@ -31,4 +32,5 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
+    {% endif %}
 </div>

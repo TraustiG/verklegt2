@@ -13,7 +13,7 @@ class RegistrationForm(UserCreationForm):
         fields = ("username","full_name","image", "password1","password2","role")
 
 class SellerForm(forms.ModelForm):
-    ROLE_CHOICES =(('individual','Individual'),('agency','Real estate agency'))
+    ROLE_CHOICES =(('Individual','Individual'),('Real estate agency','Real estate agency'))
     type = forms.ChoiceField(choices=ROLE_CHOICES, widget=forms.RadioSelect) #svo annaðhvort sé valið
     class Meta:
         model = Seller
@@ -24,3 +24,6 @@ class SearchForm(forms.Form):
     re_type = forms.CharField(label="typeSelect", max_length=100, required=False)
     price = forms.CharField(label="priceInput", max_length=100, required=False)
     desc = forms.CharField(label="descInput", max_length=100, required=False)
+
+    name = forms.CharField(label="nameInput", max_length=100, required=False)
+    desc = forms.BooleanField(label="watchCheck")
