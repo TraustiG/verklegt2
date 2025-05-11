@@ -70,7 +70,7 @@ let imageElements = []
 document.addEventListener("DOMContentLoaded", () => {
     const modal = document.querySelector('[id="property-modal"]');
     modal.addEventListener("hidden.bs.modal", () => {
-        clearForm();
+        clearFormImages();
     });
 });
 
@@ -192,18 +192,22 @@ const setFormValue = (formfield, val) => {
 createPropertyButton.addEventListener("click", () => {
     document.getElementById("create-property-modal").innerHTML = "Skrá eign"
     form.action = "/create-property"
+    setFormValue("streetname", "")
+    setFormValue("city_input", "")
+    setFormValue("zip", "")
+    setFormValue("price", "")
+    setFormValue("type", "")
+    setFormValue("bedrooms", "")
+    setFormValue("bathrooms", "")
+    setFormValue("sqm", "")
+    setFormValue("desc", "")
+    clearFormImages()
 })
 
-const clearForm = () => {
-        setFormValue("streetname", "")
-        setFormValue("city_input", "")
-        setFormValue("zip", "")
-        setFormValue("price", "")
-        setFormValue("type", "")
-        setFormValue("bedrooms", "")
-        setFormValue("bathrooms", "")
-        setFormValue("sqm", "")
-        setFormValue("desc", "")
+const clearFormImages = () => {
+    let images = form.querySelector('input[name="hidden-images-list"]')
+    images.setAttribute("value", "")
+    submittedImageRow.innerHTML = ""
 }
 
 deletePropertyButtons.forEach((element) => {
