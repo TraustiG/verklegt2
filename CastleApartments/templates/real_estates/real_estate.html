@@ -27,6 +27,12 @@
                                     class="btn btn-big btn-primary">
                                     {% if user.has_offer %}Endursenda tilboð{% else %}Tilboð{% endif %}
                                 </button>
+                                {% if offer %}
+                                <div class="ms-3 d-flex align-items-center" style="height:6rem;">
+                                    Staða tilboðs: <strong class="ms-1">{{ offer.offer_status }}</strong>
+                                </div>
+                                 {% endif %}
+                                
                                 {% include 'real_estates/_offer_modal.html' %}
                             {% else %}
                                 <button id="property-sold-offer-button" type="button" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#offer-modal" 
@@ -38,7 +44,10 @@
                             <button id="makeOffer-unavailable" type="button" style="height:6rem; width:16rem" class="btn btn-big btn-primary">
                                 Gera tilboð
                             </button>
+
+                            
                         {% endif %}
+
                     </div>
                 </div>
             </div>

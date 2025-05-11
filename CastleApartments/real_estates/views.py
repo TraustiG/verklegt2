@@ -57,13 +57,13 @@ def getRealEstateById(request, id):
         prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
     
     if request.user.is_buyer:
-        offer = Offer.objects.filter(buyer=request.user.buyer, property=property_obj)
+        offer = Offer.objects.filter(buyer=request.user.buyer, property=property_obj).first()
         request.user.has_offer = bool(offer)
 
     property_obj.listing_price = format_currency(property_obj.listing_price, "", locale="is_is")[:-4]
     property_obj.description = property_obj.description.splitlines()
 
-    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "listings": similars})
+    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "listings": similars, "offer": offer})
     
 
 @require_safe
