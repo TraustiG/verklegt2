@@ -161,7 +161,6 @@ def seller(request, id):
 @fetchNotifications
 def my_properties(request):
 
-
     seller = Seller.objects.get(user=request.user)
     properties = Property.objects.filter(seller=seller)
     for property in properties:

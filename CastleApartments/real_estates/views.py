@@ -43,8 +43,6 @@ def index(request):
 @require_safe
 @fetchNotifications
 def getRealEstateById(request, id):
-    # get realestate from database - make object to send in render
-    # get list of similar real estates - by zip, size, rooms... put in listings
 
     try:
         property_obj = Property.objects.get(id=id)
@@ -54,7 +52,11 @@ def getRealEstateById(request, id):
     images = PropertyImages.objects.filter(property=property_obj)
     for prop in similars:
         prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
-
+    
+    if request.user.is_buyer:
+        offer = Offer.objects.filter(buyer=request.user.buyer, property=property_obj)
+        request.user.has_offer = bool(offer)
+        print(request.user.has_offer)
 
     property_obj.listing_price = format_currency(property_obj.listing_price, "", locale="is_is")[:-4]
     property_obj.description = property_obj.description.splitlines()
@@ -154,14 +156,12 @@ def createProperty(request):
         number_of_bathrooms = bathrooms,
         square_meters = sqm,
         status = "Open",
-        image = "",
+        image = "ee",
         listing_date = datetime.date.today()
     )
 
     for i, image in enumerate(images):
         newImage = BytesIO(base64.b64decode(str(image["url"]).split(",")[1]))
-        
-        # newImage.save("media/123123123.png") no need pillow ??
 
         fileName = default_storage.save(f"{image['desc']}.png", newImage)
         PropertyImages.objects.create(
@@ -170,21 +170,9 @@ def createProperty(request):
             image_description = image["desc"]
         )
 
-        ## main image fremst i lista
         if i == 0:
             newProperty.image = f"/media/{fileName}"
             newProperty.save()
-
-
-    for image in images:
-        try:
-            PropertyImages.objects.create(
-                property = newProperty,
-                image_url = image,
-                image_description = ""
-            )
-        except Exception:
-            continue
 
     
     return redirect(f"real-estates/{newProperty.id}")
@@ -273,11 +261,10 @@ def getSimilars(prop):
 
     i = 10
     while len(listings) > 3 and i > 0:
-        print(listings)
         filtered = getSimilarListings(listings, prop, i)
         listings = [x for x in listings if x in filtered]
         i -= 1
-    print(listings)
+
     return listings[:3]
 
 def getSimilarListings(listings, prop: Property, level: int):
