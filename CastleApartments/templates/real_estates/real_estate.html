@@ -25,7 +25,7 @@
                             {% if property.status != "Sold" and user.is_buyer %}
                                 <button id="makeOffer" type="button" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#offer-modal" 
                                     class="btn btn-big btn-primary">
-                                    {% if user.has_offer %}Nýtt tilboð{% else %}Tilboð{% endif %}
+                                    {% if user.has_offer %}Endursenda tilboð{% else %}Tilboð{% endif %}
                                 </button>
                                 {% include 'real_estates/_offer_modal.html' %}
                             {% else %}
@@ -151,5 +151,20 @@
 <div>
     {% include "_title_bar.html" with title='Sambærilegar eignir' %}
     {% include "real_estates/_listings.html" with cols=3 listings=listings %}
+</div> 
+{% if messages %}
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  {% for message in messages %}
+  <div class="toast align-items-center text-white bg-primary border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        {{ message }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+  {% endfor %}
 </div>
+{% endif %}
+
 {% endblock %}
