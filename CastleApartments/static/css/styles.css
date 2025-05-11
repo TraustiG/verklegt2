@@ -10,18 +10,17 @@ dt.buyer-info {
 .payment-modal-sub-header {
     border-bottom: 1px solid black;
     box-shadow: 0 8px 6px -6px #04a5e5, 0 -8px 6px -6px #04a5e5;
-    margin-bottom: 4rem;
+    margin-bottom: 1rem;
 }
 
 .modal-dialog,
 .modal-content {
-    /* 80% of window height */
-    height: 90%;
+    height: 95%;
 }
 
 .modal-body {
     /* 100% = dialog height, 120px = header + footer */
-    max-height: calc(100% - 120px);
+    max-height: calc(100% - 110px);
     overflow-y: scroll;
 }
 
@@ -395,4 +394,8 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     appearance: none;
     -moz-appearance: textfield;
+}
+.payment-input:invalid[isvalid] {
+    border-color: var(--bs-danger);
+    box-shadow: 0 0 5px 3px var(--bs-danger);
 }
