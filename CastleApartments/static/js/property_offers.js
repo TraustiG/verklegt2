@@ -167,8 +167,6 @@ editPropertyButtons.forEach((element) => {
         document.getElementById("create-property-modal").innerHTML = "Breyta eign"
         form.action = `/edit-property/${element.getAttribute("data-id")}/`
         
-        console.log(element.getAttribute("data-street"))
-        console.log(form)
         setFormValue("streetname", element.getAttribute("data-street"))
         setFormValue("city_input", element.getAttribute("data-city"))
         setFormValue("zip", element.getAttribute("data-zip"))
@@ -180,7 +178,6 @@ editPropertyButtons.forEach((element) => {
         setFormValue("desc", element.getAttribute("data-desc"))
         form["desc"].innerHTML = element.getAttribute("data-desc")
         form["desc"].value = element.getAttribute("data-desc")
-        console.log(form)
     })
 })
 
@@ -213,7 +210,6 @@ const clearFormImages = () => {
 deletePropertyButtons.forEach((element) => {
     element.addEventListener("click", () => {
         document.getElementById("delete-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir eyða ${element.getAttribute("data-street")}?`
-        console.log(deleteForm)
         deleteForm.action = `/delete-property/${element.getAttribute("data-id")}`
     })
 })

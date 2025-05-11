@@ -53,9 +53,8 @@ class Offer(models.Model):
 
     property = models.ForeignKey(
         "Property", on_delete=models.CASCADE)
-    
     buyer = models.ForeignKey(
-        "users.Buyer", on_delete=models.CASCADE, null=True, blank=True)
+        "users.Buyer", on_delete=models.SET_NULL, null=True, blank=True)
     
     offer_amount = models.CharField(max_length=20)
     offer_expiry = models.DateField()
@@ -66,22 +65,3 @@ class Offer(models.Model):
     def __str__(self):
         return f"{self.offer_amount}"
 
-
-    
-
-class PaymentOption(models.TextChoices):
-        CREDIT_CARD = "CREDIT_CARD", "Credit Card"
-        BANK_ACCOUNT = "BANK_ACCOUNT", "Bank Account"
-        MORTGAGE = "MORTGAGE", "Mortgage"
-
-class Payment(models.Model):
-
-    offer = models.OneToOneField(
-         "Offer", on_delete=models.CASCADE)
-
-    payment_option = models.CharField(max_length=16, choices=PaymentOption.choices)
-
-    payment_time = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.offer} - {self.payment_option}"

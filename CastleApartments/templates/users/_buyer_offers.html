@@ -1,5 +1,14 @@
-
+{% load static %}
+{% block scripts %}
+<script defer src="{% static 'js/payment_option_select.js' %}"></script>
+{% endblock %}
 <div class="d-flex justify-content-center align-items-center">
+<form id="temp-input-form">
+    {% include "payments/_entry_payment_modal.html" %}
+    {% include "payments/_payment_option_modal.html" %}
+</form>
+{% include "payments/_information_overview_modal.html" %}
+{% include "payments/_confirmation_modal.html" %}
 <table class="table table-bordered table-striped table-hover justify-content-center mt-1">
     <thead>
         <tr class="text-center">
@@ -28,8 +37,15 @@
             <td class="align-middle text-end" scope="row"><h4>{{ offer.offer_amount }}</h4></td>
             <td class="d-flex gap-5 justify-content-center align-middle align-items-center" scope="row"><h4><b>{{ offer.offer_status }}</b></h4>
                 {% if offer.offer_status == "Accepted" %}
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contact_info_modal">Afgreiða!</button>
-                {% include "users/_payment_modal.html" %}
+                <button name="offer-accepted-button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#contact-info-modal" 
+                data-id="{{ offer.id }}"
+                data-street-name="{{ offer.property.street_name }}"
+                data-offer-amount="{{ offer.offer_amount }}"
+                data-zip="{{ offer.property.postal_code }}"
+                data-city="{{ offer.property.city }}"
+                data-type="{{ offer.property.property_type }}"
+                data-image="{{ offer.property.image }}"
+                data-listing-price="{{ offer.property.listing_price }}">Afgreiða!</button>
                 {% elif offer.offer_status == "Declined" %}
                 <button class="btn btn-primary">Skoða</button>
                 {% elif offer.offer_status == "Contingent" %}

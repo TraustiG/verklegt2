@@ -1,0 +1,150 @@
+    <div class="modal" data-bs-backdrop="static" id="payment-summary-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg payment-modal-group">
+            <div class="modal-content payment-modal-group">
+                <div class="modal-header">
+                    <h5>Yfirlit og staðfesting</h5>
+                </div>
+                {% include 'payments/_payment_modal_sub_header.html' %}
+                <div class="container modal-body payment-modal-group-body payment-final-price">
+                    <div id="summary-details" class="d-flex row justify-content-center mb-5">
+                        <div class="px-1 col-8">
+                            <dl class="row">
+                                <dt class="col-sm-3 buyer-info">Kennitala</dt>
+                                <dd id="payment-form-offer-property-national-id" class="buyer-info col-sm-7">0610942969</dd>
+                                <span class="col-sm-2"></span>
+
+                                <dt class="col-sm-3 buyer-info">Land</dt>
+                                <dd id="payment-form-offer-property-country" class="buyer-info col-sm-8">Ísland</dd>
+                                <span class="col-sm-1"></span>
+                                
+                                <dt class="col-sm-3 buyer-info">Borg</dt>
+                                <dd id="payment-form-offer-property-city" class="buyer-info col-sm-8">Akranes</dd>
+                                <span class="col-sm-1"></span>
+                                
+                                <dt class="col-sm-3 buyer-info">Póstnúmer</dt>
+                                <dd id="payment-form-offer-property-postal-code" class="buyer-info col-sm-8">300</dd>
+                                <span class="col-sm-1"></span>
+
+                                <dt class="col-sm-3 text-align-end buyer-info">Götuheiti</dt>
+                                <dd id="payment-form-offer-property-street-name" class="buyer-info col-sm-6">hva ertha son</dd>
+                                <span class="col-sm-3"></span>
+                            </dl>
+                        </div>
+                        <div class="col-4">
+                            <div id="payment-form-offer-property-image d-flex justify-content-center align-items-center">
+                                <span id="payment-form-offer-property-image">her er kannski mynd</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden-payment-information mortgage" style="display:none;">
+                        <div class="d-flex row justify-content-center gap-3">
+                            <div class="px-5 col-12 pb-0 border-bottom border-black">
+                                <dl class="row mb-1">
+                                    <div class="col">
+                                        <dt class="col-sm-12">Greiðandi</dt>
+                                        <dd id="payment-form-mortgage-mortgage-payer" class="col-sm-12">Trausti gejejejf</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                            <div class="col-4 d-flex justify-content-center">
+                                <dl class="row w-50">
+                                    <div class="col">
+                                        <dt class="col-sm-12">Lánveitandi</dt>
+                                        <dd id="payment-form-mortgage-loan-institution" class="col-sm-12">Landsbankinn</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                            <div class="col-4 d-flex justify-content-center">
+                                <dl class="row w-100">
+                                    <div class="col">
+                                        <dt class="col-sm-12">Upphæð</dt>
+                                        <dd id="payment-form-mortgage-loan-amount" class="col-sm-9">42.000.000 kr</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="d-flex row justify-content-center">
+                        </div>
+                    </div>
+                    <div class="hidden-payment-information credit-card" style="display:none;"> 
+                        <div class="d-flex row justify-content-evenly gap-3">
+                            <div class="px-5 col-12 pb-0 border-bottom border-black">
+                                <dl class="row mb-1">
+                                    <div class="col">
+                                        <dt class="col-sm-3">Eigandi</dt>
+                                        <dd id="payment-form-credit-card-card-name" class="col-sm-9">Trausti gejejejf</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col-4 d-flex justify-content-center">
+                                <dl class="row w-50">
+                                    <div class="col">
+                                        <dt class="col-sm-3">Kortanúmer</dt>
+                                        <dd id="payment-form-credit-card-card-number" class="col-sm-9">......-1234</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                            <div class="col-4 d-flex justify-content-center">
+                                <dl class="row w-50">
+                                    <div class="col">
+                                        <dt class="col-sm-3">Gildistími</dt>
+                                        <dd id="payment-form-credit-card-expiry" class="col-sm-9">06/20/2026</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                            <div class="col-4 d-flex justify-content-center">
+                                <dl class="row w-50">
+                                    <div class="col">
+                                        <dt class="col-sm-3">CVC</dt>
+                                        <dd id="payment-form-credit-card-cvc" class="col-sm-9">xxx</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden-payment-information bank-transfer" style="display:none;">
+                        <div class="d-flex row justify-content-evenly gap-3">
+                            <div class="px-5 col-12 pb-0 border-bottom border-black">
+                                <dl class="row mb-1">
+                                    <div class="col">
+                                        <dt class="col-sm-3">Greiðandi</dt>
+                                        <dd id="payment-form-bank-transfer-payer-name" class="col-sm-9">Trausti gejejejf</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                            <div class="col-6 d-flex justify-content-center">
+                                <dl class="row w-50">
+                                    <div class="col">
+                                        <dt class="col-sm-3">Bankareikningur</dt>
+                                        <dd id="payment-form-bank-transfer-bank-number" class="col-sm-9">16-05-001334</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                            <div class="col-6 d-flex justify-content-center">
+                                <dl class="row w-50">
+                                    <div class="col">
+                                        <dt class="col-sm-3">Dags. greitt</dt>
+                                        <dd id="payment-form-bank-transfer-payment-date" class="col-sm-9">06/20/2026</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button id="payment-tester-fill-payments" type="button" class="btn btn-secondary" data-bs-target="#payment-option-modal"> tester takki</button> -->
+                    <button type="button" class="btn btn-secondary" data-bs-target="#payment-option-modal" data-bs-toggle="modal">Til baka</button>
+                    <form method="POST" id="offer-payment-form" action="{% url 'payment' %}">
+                    {% csrf_token %}
+                        <button type="submit" class="btn btn-success" data-bs-target="#payment-confirmation-modal" data-bs-toggle="modal">Staðfesta greiðslu</button>
+                        <label for="payment-option" class="visually-hidden">Heimilisfang</label>
+                        <input class="visually-hidden" type="text" name="payment-option" id="payment-form-actual-payment-option">
+                        <label for="offer-id" class="visually-hidden">Heimilisfang</label>
+                        <input class="visually-hidden" type="text" name="offer-id" id="payment-form-actual-offer-id">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

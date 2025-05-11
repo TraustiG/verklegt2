@@ -1,0 +1,191 @@
+
+/* <div id="hidden-payment-option hidden-credit-card-payment-option" style="visibility: hidden;"> /div> */
+const hiddenPaymentOptions = document.querySelectorAll(".hidden-payment-option")
+const hiddenPaymentInformation = document.querySelectorAll(".hidden-payment-information")
+const paymentPicker = document.getElementById("payment-option-select")
+let finalPaymentOption;
+
+const entryContinueButton = document.querySelector("#entry-payment-modal-continue-button")
+const optionContinueButton = document.querySelector("#option-payment-modal-continue-button")
+
+let paymentOptionFields = new Set([])
+const paymentContactFields = document.querySelectorAll('[id^="payment-contact"]')
+let paymentContactCheck = Array(paymentContactFields.length).fill(false)
+let realForm = Array.from(document.forms).filter((f) => f.id === "offer-payment-form")[0]
+let tempForm = Array.from(document.forms).filter((f) => f.id === "temp-input-form")[0]
+
+
+entryContinueButton.addEventListener("click", () => {
+    addContactInformation()
+})
+
+optionContinueButton.addEventListener("click", () => {
+    addPaymentInformation(paymentPicker.value)
+})
+
+paymentContactFields.forEach((element, i) => {
+    element.addEventListener("change", (event) => {
+        paymentContactCheck[i] = checkEntry(event.target.name, event.target.value)
+        if (paymentContactCheck.reduce((f, s) => f && s)) {
+            entryContinueButton.disabled = false
+        } else {
+            entryContinueButton.disabled = true
+        }
+    })
+})
+
+const addContactInformation = () => {
+    paymentContactFields.forEach((element) => {
+        let queryString = `[id="payment-form-offer-property-${element.name}"]`
+        document.querySelector(queryString).innerHTML = element.value
+    })
+}
+
+const checkEntry = (type, val) => {
+    const rex = {
+        "street-name": /^[a-zA-Z0-9, \.-]{3,}$/,
+        "city": /^[a-zA-Z ]{4,}$/,
+        "postal-code": /^[0-9]{2,5}$/,
+        "country": /^[a-zA-Z ]{2,}$/,
+        "national-id": /^[0-9]{6}-?[0-9]{4}$/,
+        "card-name": /^[a-zA-Z ]{5,}$/,
+        "card-number": /^[0-9]{16}$/,
+        "expiry": /.+/,
+        "cvc": /^[0-9]{3}$/,
+        "payer-name": /^[a-zA-Z ]{5,}$/,
+        "mortgage-payer": /^[a-zA-Z ]{5,}$/,
+        "bank-number": /^[0-9-]+$/,
+        "payment-date": /.+/,
+        "receipt": /.+/,
+        "loan-institution": /^[a-zA-Z0-9,\. ]{3,}$/,
+        "loan-amount": /^[0-9]+$/
+    }
+    return rex[type].test(val)
+}
+
+
+paymentPicker.addEventListener("change", (event) => {
+    paymentFormToggle(event.target.value)
+    paymentInformationToggle(event.target.value)
+    paymentFieldsToggle(event.target.value)
+})
+
+const paymentFormToggle = (option) => {
+    hiddenPaymentOptions.forEach((element) => {
+        if (element.classList.contains(option)) {
+            element.style.display = ""
+        } else {
+            element.style.display = "none"
+        }
+    })
+}
+
+const paymentInformationToggle = (option) => {
+    hiddenPaymentInformation.forEach((element) => {
+        if (element.classList.contains(option)) {
+            element.style.display = ""
+        } else {
+            element.style.display = "none"
+        }
+    })
+}
+
+const paymentFieldsToggle = (option) => {
+    let idName = `[id^="payment-option-${option}"]`
+    let optionFields = document.querySelectorAll(idName)
+    let optionCheck = Array(optionFields.length).fill(false)
+
+    optionFields.forEach((element, i) => {
+        paymentOptionFields.add(element)
+        element.addEventListener("change", (event) => {
+            optionCheck[i] = checkEntry(event.target.name, event.target.value)
+            if (optionCheck.reduce((f, s) => f && s)) {
+                let confirmElName = `[id="payment-form-offer-property-${event.target.name}"]`
+                try {
+                    document.querySelector(confirmElName).innerHTML = event.target.value
+                } catch (err) {
+                    console.log(err)
+                    console.log(element)
+                    console.log(confirmElName)
+                }
+                optionContinueButton.disabled = false
+            } else {
+                optionContinueButton.disabled = true
+            }
+        })
+    })
+    
+}
+
+const makePaymentButtons = document.querySelectorAll('[name="offer-accepted-button"]')
+
+makePaymentButtons.forEach((element) => {
+    element.addEventListener("click", () => {
+        resetForm()
+        let input = document.querySelector('[id="payment-form-actual-offer-id"]')
+        input.value = element.getAttribute("data-id")
+        input.setAttribute("value", element.getAttribute("data-id"))
+
+        let sub_header_items = ["street-name", "offer-amount", "zip-city", "type", "listing-price"]
+        sub_header_items.forEach((str) => {
+            let elements = document.getElementsByName(`payment-form-offer-property-${str}`)
+            elements.forEach((el) => {
+                if (str==="zip-city") {
+                    let zip = element.getAttribute("data-zip")
+                    let city = element.getAttribute("data-city")
+                    let temp = `${zip} ${city}`
+                    el.innerHTML = temp
+                } else {
+                    let vis;
+                    temp = element.getAttribute(`data-${str}`)
+                    if (str==="offer-amount") {
+                        vis = `Söluverð ${temp}`
+                    } else if (str==="listing-price") {
+                        vis = `Skráð ${temp}`
+                    } else { vis = temp }
+                    el.innerHTML = vis
+                }
+            })
+        })
+
+    })
+})
+
+////  tester takki
+// document.getElementById("payment-tester-fill-payments").addEventListener("click", () => {
+//     addContactInformation()
+// }
+// )
+
+const addPaymentInformation = (option) => {
+    let input = document.querySelector('[id="payment-form-actual-payment-option"]')
+    input.value = option
+    input.setAttribute("value", option)
+
+    const queryString = `[id^="payment-option-${option}"]`
+    informationFields = document.querySelectorAll(queryString)
+    informationFields.forEach((field) => {
+        try {
+            document.getElementById(`payment-form-${option}-${field.name}`).innerHTML = tempForm[field.name].value
+        } catch (err) {
+            console.log(err)
+        }
+    })
+
+}
+
+const resetForm = () => {
+    paymentContactCheck = Array(paymentContactFields.length).fill(false)
+    paymentPicker.value = ""
+    paymentPicker.setAttribute("value", "")
+    entryContinueButton.disabled = true
+    optionContinueButton.disabled = true
+    paymentContactFields.forEach((el) => {
+        el.value = ""
+        el.setAttribute("value", "")
+    })
+    paymentOptionFields.forEach((el) => {
+        el.value = ""
+        el.setAttribute("value", "")
+    })
+}

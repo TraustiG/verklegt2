@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
 from babel.numbers import format_currency
+import copy
 from .forms import RegistrationForm , SellerForm, SearchForm
 from .models import Seller, Buyer, Filter, User, Notification
 from real_estates.models import Offer,Property
@@ -42,7 +43,6 @@ def register(request):
                     seller.save()
                 
                 else:
-                    print(seller_form.errors)
                     return render(request, 'users/register.html',{
                         'form':form,
                         'seller_form':seller_form
@@ -69,7 +69,6 @@ def saveFilter(request):
     if request.method == "POST":
         form = SearchForm()
         search = Filter()
-        print(search.__dict__)
         search.area = form.area
         search.monitor = form.monitor
         search.name = form.name
@@ -168,15 +167,17 @@ def my_properties(request):
         property.listing_price = format_currency(property.listing_price, "", locale="is_is")[:-4]
     property_offers = {prop: {"notifs": 0, "offers": []} for prop in properties}
     offers = Offer.objects.filter(property__seller = seller)
+    for prop in property_offers.keys():
+        notifs = Notification.objects.filter(user=request.user, property=prop, count__gt=0)
+        property_offers[prop]["notifs"] = copy.deepcopy(len(notifs))
+        for notif in notifs:
+            notif.count = 0
+            notif.save()
 
     for offer in offers:
         offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
         for prop, list in property_offers.items():
             notifs = Notification.objects.filter(user=request.user, property=prop, count__gt=0)
-            list["notifs"] = len(notifs)
-            for notif in notifs:
-                notif.count = 0
-                notif.save()
 
             if offer.property == prop:
                 list["offers"].append(offer)
