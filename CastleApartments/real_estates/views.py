@@ -300,6 +300,62 @@ def getPrices():
         prices[num] = {"visual": f"{num} mkr.", "value": str(num*1000000)}
     return prices
 
+def createProperty(request):
+
+    if request.method == 'POST':
+        
+        streetname = request.POST.get("streetname")
+        city_input = request.POST.get("city_input")
+        zip = request.POST.get("zip")
+        desc = request.POST.get("desc")
+        bedrooms = request.POST.get("bedrooms")
+        bathrooms = request.POST.get("bathrooms")
+        sqm = request.POST.get("sqm")
+        status_input = request.POST.get("status_input")
+        imageURL = request.POST.get("imageURL")
+        type = request.POST.get("type")
+        price = request.POST.get("price")
+
+
+        seller_obj = Seller.objects.get(user=request.user)
+        
+
+
+        Property.objects.create(
+            seller = seller_obj,
+            street_name = streetname,
+            city= city_input,
+            postal_code = zip,
+            description = desc,
+            property_type = type,
+            listing_price = price,
+            number_of_bedrooms = bedrooms,
+            number_of_bathrooms = bathrooms,
+            square_meters = sqm,
+            status = status_input,
+            image = imageURL,
+            listing_date = datetime.date.today()
+
+            
+        )
+        
+        return redirect('my-properties')
+    
+    return redirect('my-properties')
+
+def payment(request, offer_id):
+    if request.method == 'POST':
+        offer = Offer.objects.get(id=offer_id)
+        
+        payment_option = request.POST.get("payment_option")
+
+        Payment.objects.create(
+            offer = offer,
+            payment_option = payment_option
+        )
+        return redirect('profile')
+    return redirect('profile')
+
 def notify(user, prop: Property = False, offer: Offer = False):
     try:
         kwargs = {"user": user, "property": prop, "offer": offer}
