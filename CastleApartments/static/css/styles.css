@@ -1,3 +1,30 @@
+dd.buyer-info {
+    border-bottom: 1px solid #04A5E5;
+    border-left: 1px solid #04A5E5;
+}
+
+dt.buyer-info {
+    text-align: end;
+}
+
+.payment-modal-sub-header {
+    border-bottom: 1px solid black;
+    box-shadow: 0 8px 6px -6px #04a5e5, 0 -8px 6px -6px #04a5e5;
+    margin-bottom: 4rem;
+}
+
+.modal-dialog,
+.modal-content {
+    /* 80% of window height */
+    height: 90%;
+}
+
+.modal-body {
+    /* 100% = dialog height, 120px = header + footer */
+    max-height: calc(100% - 120px);
+    overflow-y: scroll;
+}
+
 .footer-divider {
     height: 3rem;
     background-color: #04A5E527;
@@ -221,6 +248,10 @@ html[data-theme="light"] .theme-toggle .theme-label-when-light {
     border: 0;
     color: var(--body-fg);
     background-color: var(--body-bg);
+}
+
+.payment-final-price {
+    color: var(--bs-card-title-color)
 }
 
 html[data-theme="dark"] {

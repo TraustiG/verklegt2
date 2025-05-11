@@ -34,7 +34,7 @@
             </tr>
         </thead>
         <tbody id="seller-property-table-body" class="table-group-divider" style="border-top-color: black;">
-        {% for property, info in properties.items %}
+        {% for property, info in properties.items reversed %}
             <tr name="property-table-row" id="{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}">
                 <th class="align-middle" scope="row"></th>
                 <th class="align-middle text-center" scope="row"><h4>{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}</h4></th>
@@ -91,7 +91,7 @@
     </thead>
     <tbody>
         {% for prop, info in properties.items %}
-        {% for offer in info.offers %}
+        {% for offer in info.offers reversed %}
         <tr name="offer-table-row" class="{{ prop.street_name }} - {{ prop.postal_code }} {{ prop.city }}" style="display: none;">
             <th scope="col"></th>
             <th class="px-3" scope="col"><h3>{{ offer.buyer.user.full_name }}</h3></th>

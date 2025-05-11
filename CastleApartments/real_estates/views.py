@@ -10,7 +10,8 @@ from io import BytesIO
 import base64
 import json
 import datetime
-from .models import Property, Offer, PropertyImages, Payment
+from .models import Property, Offer, PropertyImages
+from payments.models import Payment
 from users.models import Buyer, Seller, Notification
 
 # Create your views here.
@@ -40,6 +41,7 @@ def index(request):
         item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
     return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
 
+
 @require_safe
 @fetchNotifications
 def getRealEstateById(request, id):
@@ -56,7 +58,6 @@ def getRealEstateById(request, id):
     if request.user.is_buyer:
         offer = Offer.objects.filter(buyer=request.user.buyer, property=property_obj)
         request.user.has_offer = bool(offer)
-        print(request.user.has_offer)
 
     property_obj.listing_price = format_currency(property_obj.listing_price, "", locale="is_is")[:-4]
     property_obj.description = property_obj.description.splitlines()
@@ -197,6 +198,7 @@ def editProperty(request, id):
 
         return redirect('my-properties')
 
+
 @fetchNotifications
 def deleteProperty(request, id): 
 
@@ -219,7 +221,6 @@ def selectPayment(request, offer_id):
     )
     return redirect('profile')
 
-      
 def filterListings(key: str, value: str, listings: list[Property]):
     filters = {"areaSelect": "postal_code",
                "typeSelect": "property_type",
@@ -257,25 +258,23 @@ def checkDesc(search: str, listing: Property):
     return False
 
 def getSimilars(prop):
-    listings = Property.objects.filter(~Q(id=prop.id))
-
+    listings = Property.objects.all()
     i = 10
     while len(listings) > 3 and i > 0:
-        filtered = getSimilarListings(listings, prop, i)
+        filtered = getSimilarListings(prop, i)
         listings = [x for x in listings if x in filtered]
         i -= 1
 
     return listings[:3]
 
-def getSimilarListings(listings, prop: Property, level: int):
+def getSimilarListings(prop: Property, level: int):
+    postalQ = Q(postal_code__gte=prop.postal_code-level, postal_code__lte=prop.postal_code+level)
+    priceQ = Q(listing_price__gte=prop.listing_price-level*1000000, listing_price__lte=prop.listing_price+level*1000000)
+    sqmQ = Q(square_meters__gte=prop.square_meters-level*3, square_meters__lte=prop.square_meters+level*3)
 
-    listings = listings.filter(postal_code__gte=prop.postal_code-level, postal_code__lte=prop.postal_code+level)
-    if len(listings)<=3: return listings
-
-    listings = listings.filter(listing_price__gte=prop.listing_price-level*1000000, listing_price__lte=prop.listing_price+level*1000000)
-    if len(listings)<=3: return listings
-
-    listings = listings.filter(square_meters__gte=prop.square_meters-level*3, square_meters__lte=prop.square_meters+level*3)
+    listings = Property.objects.filter(~Q(id=prop.id), postalQ|priceQ|sqmQ)
+    print(listings)
+    
     return listings
 
 def getPrices():
@@ -286,62 +285,6 @@ def getPrices():
     for num in nums:
         prices[num] = {"visual": f"{num} mkr.", "value": str(num*1000000)}
     return prices
-
-def createProperty(request):
-
-    if request.method == 'POST':
-        
-        streetname = request.POST.get("streetname")
-        city_input = request.POST.get("city_input")
-        zip = request.POST.get("zip")
-        desc = request.POST.get("desc")
-        bedrooms = request.POST.get("bedrooms")
-        bathrooms = request.POST.get("bathrooms")
-        sqm = request.POST.get("sqm")
-        status_input = request.POST.get("status_input")
-        imageURL = request.POST.get("imageURL")
-        type = request.POST.get("type")
-        price = request.POST.get("price")
-
-
-        seller_obj = Seller.objects.get(user=request.user)
-        
-
-
-        Property.objects.create(
-            seller = seller_obj,
-            street_name = streetname,
-            city= city_input,
-            postal_code = zip,
-            description = desc,
-            property_type = type,
-            listing_price = price,
-            number_of_bedrooms = bedrooms,
-            number_of_bathrooms = bathrooms,
-            square_meters = sqm,
-            status = status_input,
-            image = imageURL,
-            listing_date = datetime.date.today()
-
-            
-        )
-        
-        return redirect('my-properties')
-    
-    return redirect('my-properties')
-
-def payment(request, offer_id):
-    if request.method == 'POST':
-        offer = Offer.objects.get(id=offer_id)
-        
-        payment_option = request.POST.get("payment_option")
-
-        Payment.objects.create(
-            offer = offer,
-            payment_option = payment_option
-        )
-        return redirect('profile')
-    return redirect('profile')
 
 def notify(user, prop: Property = False, offer: Offer = False):
     try:

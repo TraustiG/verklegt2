@@ -1,0 +1,50 @@
+<div class="modal fade" id="contact-info-modal" aria-hidden="true" data-bs-backdrop="static" aria-labelledby="contact-info-modal-label" tabindex="-1" style="min-height:100vh">
+    <div class="modal-dialog modal-lg payment-modal-group">
+        <div class="modal-content payment-modal-group">
+            <div class="modal-header">
+                <h5>Skráðu Tengiliðaupplýsingar</h5>
+            </div>
+            {% include 'payments/_payment_modal_sub_header.html' %}
+            <div class="modal-body payment-modal-group-body">
+
+                <div class="mb-3">
+                    <label for="street-name" class="form-label">Götuheiti</label>
+                    <input id="payment-contact-input-street-name" type="text" class="form-control" name="street-name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="city" class="form-label">Borg</label>
+                    <input id="payment-contact-city" type="text" class="form-control" name="city" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="postal-code" class="form-label">Póstnúmer</label>
+                    <input id="payment-contact-postal-code" type="text" class="form-control" name="postal-code" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="country" class="form-label">Land</label>
+                    <select id="payment-contact-country" class="form-select" name="country" required>
+                        <option value="">Veldu land</option>
+                        <option value="IS">Ísland</option>
+                        <option value="NO">Noregur</option>
+                        <option value="SE">Svíþjóð</option>
+                        <option value="DK">Danmörk</option>
+                        <option value="FI">Finnland</option>
+                        <option value="US">Bandaríkin</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="national-id" class="form-label">Kennitala</label>
+                    <input id="payment-contact-national-id" type="text" class="form-control" name="national-id" required>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-target="#payment-option-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Hætta</button>
+                <button id="entry-payment-modal-continue-button" type="button" class="btn btn-primary" data-bs-target="#payment-option-modal" data-bs-toggle="modal" disabled>Áfram</button>
+            </div>
+        </div>
+    </div>
+</div>
