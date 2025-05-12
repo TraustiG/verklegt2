@@ -21,7 +21,8 @@ class PropertyStatus(models.TextChoices):
         PROCESSED = 'PROCESSED', 'Processed'
 
 class Property(models.Model):
-    ordering = ('listing_date', 'id')
+    class Meta:
+        ordering = ('-listing_date', '-id')
 
     seller = models.ForeignKey(
         "users.Seller", on_delete=models.CASCADE, null=True, blank=True)
@@ -51,6 +52,8 @@ class OfferStatus(models.TextChoices):
         PROCESSED = 'PROCESSED', 'Processed'
 
 class Offer(models.Model):
+    class Meta:
+        ordering = ('-offer_date', '-id')
 
     property = models.ForeignKey(
         "Property", on_delete=models.CASCADE)

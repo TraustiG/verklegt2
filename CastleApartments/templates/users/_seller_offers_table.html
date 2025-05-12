@@ -11,19 +11,39 @@
     </thead>
     <tbody>
         {% for prop, info in properties.items %}
-            {% for offer in info.offers reversed %}
-            <tr name="offer-table-row" class="{{ prop.street_name }} - {{ prop.postal_code }} {{ prop.city }}" style="display: none;">
+            {% for offer in info.offers %}
+            {% if offer.offer_status == "OPEN" or offer.offer_status == "CONTINGENT" or offer.offer_status == "PROCESSED" %}
+            <tr id="offer-id-{{ offer.id }}-row" name="offer-table-row" class="{{ prop.street_name }} - {{ prop.postal_code }} {{ prop.city }}" style="display: none;">
                 <th scope="col"></th>
                 <th class="px-3" scope="col"><h3>{{ offer.buyer.user.full_name }}</h3></th>
                 <th class="text-end px-5" scope="col"><h3>{{ offer.offer_amount }} kr.</h3></th>
                 <th class="text-center" scope="col"><h3>{{ offer.offer_expiry }}</h3></th>
                 <th class="d-flex justify-content-evenly align-items-center gap-1" scope="col">
-                    <button class="btn btn-success">Accept</button>
-                    <button class="btn btn-primary">Contingent</button>
-                    <button class="btn btn-danger">Reject</button>
+                {% if offer.offer_status == "OPEN" or offer.offer_status == "CONTINGENT" %}
+                    <button name="accept-offer-button" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#accept-offer-modal"
+                    data-id="{{ offer.id }}"
+                    data-buyer="{{ offer.buyer.user.full_name }}"
+                    data-street="{{ prop.street_name }}"
+                    data-city="{{ prop.city }}"
+                    data-zip="{{ prop.postal_code }}"
+                    data-offer-amount="{{ offer.offer_amount }}"
+                    >Samþykkja</button>
+                    <button name="contingent-offer-button" class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#contingent-offer-modal"
+                    data-id="{{ offer.id }}"
+                    >Skilyrði</button>
+                    <button name="reject-offer-button" class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#reject-offer-modal"
+                    data-id="{{ offer.id }}"
+                    data-offer-amount="{{ offer.offer_amount }}"
+                    >Hafna</button>
+                {% else %}
+                    <button name="delete-offer-button" class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#delete-offer-modal"
+                    data-id="{{ offer.id }}"
+                    >Eyða</button>
+                {% endif %}
                 </th>
                 <th scope="col"></th>
             </tr>
+            {% endif %}
             {% endfor %}
         {% endfor %}
     </tbody>

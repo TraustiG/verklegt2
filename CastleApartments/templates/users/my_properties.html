@@ -8,7 +8,11 @@
 
 <div class="d-flex align-items-center overflow-hidden" style="min-height:50vh">
     {% include 'real_estates/_property_modal.html' %}
-    {% include "_delete_item_modal.html" with item="property" title="Eyða eigneeeeeeee" %}
+    {% include "_do_item_modal.html" with item="property" title="Eyða eign" action="delete" %}
+    {% include "_do_item_modal.html" with item="offer" title="Samþykkja tilboð" action="accept" %}
+    {% include "_do_item_modal.html" with item="offer" title="Eyða tilboði" action="delete" %}
+    {% include "_do_item_modal.html" with item="offer" title="Hafna tilboði" action="reject" %}
+    {% include "_do_item_modal.html" with item="offer" title="Setja skilyrði" action="contingent" %}
     {% include 'real_estates/_image_modal.html' %}
     {% if properties|length == 0 %}
     <button id="create-property-button" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">

@@ -4,7 +4,7 @@
     let submitButton = document.getElementById("delete-offer-submit-button")
 
     deletePropertyButtons.forEach((element) => {
-        element.addEventListener("click", async () => {
+        element.addEventListener("click", () => {
             document.getElementById("delete-offer-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir eyða þessu tilboði?`
 
             id = element.getAttribute("data-id")
