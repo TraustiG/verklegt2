@@ -27,11 +27,6 @@
                                     class="btn btn-big btn-primary">
                                     {% if user.has_offer %}Endursenda tilboð{% else %}Tilboð{% endif %}
                                 </button>
-                                {% if offer %}
-                                <div class="ms-3 d-flex align-items-center" style="height:6rem;">
-                                    Staða tilboðs: <strong class="ms-1">{{ offer.offer_status }}</strong>
-                                </div>
-                                 {% endif %}
                                 
                                 {% include 'real_estates/_offer_modal.html' %}
                             {% else %}
@@ -49,6 +44,11 @@
                         {% endif %}
 
                     </div>
+                                {% if offer %}
+                                <div class="ms-3 d-flex align-items-center" style="height:6rem;">
+                                    Staða tilboðs: <strong class="ms-1">{{ offer.offer_status }}</strong>
+                                </div>
+                                 {% endif %}
                 </div>
             </div>
         </div>

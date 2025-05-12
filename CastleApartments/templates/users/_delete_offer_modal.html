@@ -1,14 +1,14 @@
-<div class="modal fade" id="delete-property-modal" focus tabindex="-1" aria-labelledby="edit-property-modalLabel" aria-hidden="true">
+<div class="modal fade" id="delete-offer-modal" tabindex="-1" aria-labelledby="delete-offer-modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-mid">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Eyða Eign</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Eyða tilboði</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="delete-property-form" method="POST" action="">
+                <form id="delete-offer-form" method="POST" action="">
                     {% csrf_token %}
-                    <div class="modal-body" id="delete-property-modal-body-prompt">
+                    <div class="modal-body" id="delete-offer-modal-body-prompt">
                         Hvernig komstu hingað?
                     </div>
                     <div class="modal-footer">
