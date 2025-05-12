@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
+from django.contrib import messages
 from babel.numbers import format_currency
 from io import BytesIO
 import base64
@@ -62,7 +63,7 @@ def getRealEstateById(request, id):
         propertyObj.listing_price = format_currency(propertyObj.listing_price, "", locale="is_is")[:-4]
         propertyObj.description = propertyObj.description.splitlines()
 
-        return render(request, "real_estates/real_estate.html", { "property": propertyObj, "images":images, "listings": similars})
+    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "listings": similars, "offer": offer})
 
     if request.method == "POST":
         if request.POST["action"] == "DELETE":
@@ -87,8 +88,6 @@ def getRealEstateById(request, id):
             propertyObj.save()
             
         return HttpResponse(status=200)
-
-
 
 @require_safe
 @fetchNotifications
@@ -138,6 +137,10 @@ def createOffer(request, id):
     propertyObj = Property.objects.get(id=id)
     buyerObj = Buyer.objects.get(user=request.user)
 
+    #check if user has existing offer for this property, delete that first and then create the new one
+    existing_offer = Offer.objects.filter(property = property_obj , buyer=buyer_obj)
+    if existing_offer:
+        existing_offer.delete()
 
     Offer.objects.create(
         property = propertyObj,
@@ -146,7 +149,11 @@ def createOffer(request, id):
         offer_expiry = expiry,
         offer_date = datetime.date.today()
     )
-    notify(user=propertyObj.seller.user, prop=propertyObj)
+
+    notify(user=property_obj.seller.user, prop=property_obj)
+
+    messages.success(request, "Tilboð hefur verið sent!")
+
     
     return redirect('real-estate-by-id', id=id)
 
@@ -209,6 +216,16 @@ def createImages(images, property, main=False):
             front = f"/media/{fileName}"
 
     return front
+
+        if i == 0:
+            newProperty.image = f"/media/{fileName}"
+            newProperty.save()
+
+    
+    return redirect(f"real-estates/{newProperty.id}")
+
+
+
 
 
 @require_POST
