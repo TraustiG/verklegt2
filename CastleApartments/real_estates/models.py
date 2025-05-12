@@ -62,6 +62,7 @@ class Offer(models.Model):
     offer_date = models.DateField(auto_now_add=True)
 
     offer_status = models.CharField(choices=OfferStatus.choices, default=OfferStatus.OPEN,)
+    offer_contingency_message = models.CharField(max_length = 100, blank=True)
     
     def __str__(self):
         return f"{self.offer_amount}"
