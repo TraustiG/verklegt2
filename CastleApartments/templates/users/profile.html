@@ -46,7 +46,7 @@
     {% if profile.is_seller %}
     <div class="container pb-3">
         {% for line in profile.seller.bio %}
-        <h5 class="m-0">
+        <h5 class="m-0 text-break">
             {{ line }}
             {% if line == "" %}
             <br/>

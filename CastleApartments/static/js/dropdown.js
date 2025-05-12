@@ -1,6 +1,8 @@
-document.getElementById("makeOffer-unavailable").addEventListener("click", () => {
-    clicker()
-})
+try {
+    document.getElementById("makeOffer-unavailable").addEventListener("click", () => {
+        clicker()
+    })
+} catch (err) {}
 
 const clicker = () => {
     const el = document.getElementById("login-signup-dropdown-button")

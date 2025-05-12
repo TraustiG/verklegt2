@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect
 from django.core.files.storage import default_storage
 from django.db.models import Q
@@ -43,39 +43,62 @@ def index(request):
     return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
 
 
-@require_safe
+@require_http_methods(["GET", "POST"])
 @fetchNotifications
 def getRealEstateById(request, id):
+    if request.method == "GET":
+        try:
+            propertyObj = Property.objects.get(id=id)
+        except Property.DoesNotExist:
+            return redirect('real-estates')
+        similars = getSimilars(propertyObj)
+        images = PropertyImages.objects.filter(property=propertyObj)
+        for prop in similars:
+            prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
+        
+        if request.user.is_buyer:
+            offer = Offer.objects.filter(buyer=request.user.buyer, property=propertyObj)
+            request.user.has_offer = bool(offer)
 
-    try:
-        property_obj = Property.objects.get(id=id)
-    except Property.DoesNotExist:
-        return redirect('real-estates')
-    similars = getSimilars(property_obj)
-    images = PropertyImages.objects.filter(property=property_obj)
-    for prop in similars:
-        prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
-    
-    if request.user.is_buyer:
-        offer = Offer.objects.filter(buyer=request.user.buyer, property=property_obj).first()
-        request.user.has_offer = bool(offer)
-
-    property_obj.listing_price = format_currency(property_obj.listing_price, "", locale="is_is")[:-4]
-    property_obj.description = property_obj.description.splitlines()
+        propertyObj.listing_price = format_currency(propertyObj.listing_price, "", locale="is_is")[:-4]
+        propertyObj.description = propertyObj.description.splitlines()
 
     return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "listings": similars, "offer": offer})
-    
+
+    if request.method == "POST":
+        if request.POST["action"] == "DELETE":
+            propertyObj = Property.objects.get(id=id)
+            propertyObj.delete()
+        else:
+            propertyObj = Property.objects.get(id=id)
+            
+            propertyObj.street_name = request.POST.get("streetname")
+            propertyObj.city = request.POST.get("city_input")
+            propertyObj.postal_code = request.POST.get("zip")
+            propertyObj.description = request.POST.get("desc")
+            propertyObj.number_of_bedrooms = request.POST.get("bedrooms")
+            propertyObj.number_of_bathrooms = request.POST.get("bathrooms")
+            propertyObj.square_meters = request.POST.get("sqm")
+            propertyObj.property_type = request.POST.get("type")
+            propertyObj.listing_price = request.POST.get("price")
+            images = request.POST.get("hidden-images-list")
+
+            createImages(images, propertyObj)
+            
+            propertyObj.save()
+            
+        return HttpResponse(status=200)
 
 @require_safe
 @fetchNotifications
 def imageGallery(request, id):
     # get realestate from database - make object to send in render
     try:
-        property_obj = Property.objects.get(id=id)
+        propertyObj = Property.objects.get(id=id)
     except Property.DoesNotExist:
         return redirect('real-estates')
     
-    images = PropertyImages.objects.filter(property=property_obj)
+    images = PropertyImages.objects.filter(property=propertyObj)
     if request.method == "GET":
         return render(request, "real_estates/gallery.html", {"images": images})
     
@@ -111,8 +134,8 @@ def createOffer(request, id):
     amount = request.POST.get("amount")
     expiry = request.POST.get("expiry")
 
-    property_obj = Property.objects.get(id=id)
-    buyer_obj = Buyer.objects.get(user=request.user)
+    propertyObj = Property.objects.get(id=id)
+    buyerObj = Buyer.objects.get(user=request.user)
 
     #check if user has existing offer for this property, delete that first and then create the new one
     existing_offer = Offer.objects.filter(property = property_obj , buyer=buyer_obj)
@@ -120,15 +143,17 @@ def createOffer(request, id):
         existing_offer.delete()
 
     Offer.objects.create(
-        property = property_obj,
-        buyer = buyer_obj,
+        property = propertyObj,
+        buyer = buyerObj,
         offer_amount = amount,
         offer_expiry = expiry,
         offer_date = datetime.date.today()
     )
+
     notify(user=property_obj.seller.user, prop=property_obj)
 
     messages.success(request, "Tilboð hefur verið sent!")
+
     
     return redirect('real-estate-by-id', id=id)
 
@@ -147,9 +172,6 @@ def createProperty(request):
     type = request.POST.get("type")
     price = request.POST.get("price")
     images = request.POST.get("hidden-images-list")
-    if not images:
-        images = "{}"
-    images = json.loads(images)
         
     seller_obj = Seller.objects.get(user=request.user)
     newProperty = Property.objects.create(
@@ -167,16 +189,33 @@ def createProperty(request):
         image = "ee",
         listing_date = datetime.date.today()
     )
+    
+    newProperty.image = createImages(images, newProperty, 0)
+    newProperty.save()
+
+
+    
+    return redirect(f"real-estates/{newProperty.id}")
+
+def createImages(images, property, main=False):
+    front = "/none"
+    if not images:
+        return front
+    images = json.loads(images)
 
     for i, image in enumerate(images):
         newImage = BytesIO(base64.b64decode(str(image["url"]).split(",")[1]))
-
         fileName = default_storage.save(f"{image['desc']}.png", newImage)
+
         PropertyImages.objects.create(
-            property = newProperty,
+            property = property,
             image_url = f"/media/{fileName}",
             image_description = image["desc"]
         )
+        if i == main:
+            front = f"/media/{fileName}"
+
+    return front
 
         if i == 0:
             newProperty.image = f"/media/{fileName}"
@@ -186,33 +225,7 @@ def createProperty(request):
     return redirect(f"real-estates/{newProperty.id}")
 
 
-@fetchNotifications
-def editProperty(request, id):
-    if request.method == "POST":
-        property_obj = Property.objects.get(id=id)
-        
-        property_obj.street_name = request.POST.get("streetname")
-        property_obj.city = request.POST.get("city_input")
-        property_obj.postal_code = request.POST.get("zip")
-        property_obj.description = request.POST.get("desc")
-        property_obj.number_of_bedrooms = request.POST.get("bedrooms")
-        property_obj.number_of_bathrooms = request.POST.get("bathrooms")
-        property_obj.square_meters = request.POST.get("sqm")
-  
-        property_obj.property_type = request.POST.get("type")
-        property_obj.listing_price = request.POST.get("price")
-        property_obj.save()
 
-        return redirect('my-properties')
-
-
-@fetchNotifications
-def deleteProperty(request, id): 
-
-    property_obj = Property.objects.get(id=id)
-    property_obj.delete()
-
-    return redirect('my-properties')
 
 
 @require_POST
