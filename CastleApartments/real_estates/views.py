@@ -63,7 +63,7 @@ def getRealEstateById(request, id):
         propertyObj.listing_price = format_currency(propertyObj.listing_price, "", locale="is_is")[:-4]
         propertyObj.description = propertyObj.description.splitlines()
 
-    return render(request, "real_estates/real_estate.html", { "property": property_obj, "images":images, "listings": similars, "offer": offer})
+        return render(request, "real_estates/real_estate.html", { "property": propertyObj, "images":images, "listings": similars, "offer": offer})
 
     if request.method == "POST":
         if request.POST["action"] == "DELETE":
@@ -138,7 +138,7 @@ def createOffer(request, id):
     buyerObj = Buyer.objects.get(user=request.user)
 
     #check if user has existing offer for this property, delete that first and then create the new one
-    existing_offer = Offer.objects.filter(property = property_obj , buyer=buyer_obj)
+    existing_offer = Offer.objects.filter(property = propertyObj , buyer=buyerObj)
     if existing_offer:
         existing_offer.delete()
 
@@ -150,7 +150,7 @@ def createOffer(request, id):
         offer_date = datetime.date.today()
     )
 
-    notify(user=property_obj.seller.user, prop=property_obj)
+    notify(user=propertyObj.seller.user, prop=propertyObj)
 
     messages.success(request, "Tilboð hefur verið sent!")
 
@@ -192,8 +192,6 @@ def createProperty(request):
     
     newProperty.image = createImages(images, newProperty, 0)
     newProperty.save()
-
-
     
     return redirect(f"real-estates/{newProperty.id}")
 
@@ -216,15 +214,6 @@ def createImages(images, property, main=False):
             front = f"/media/{fileName}"
 
     return front
-
-        if i == 0:
-            newProperty.image = f"/media/{fileName}"
-            newProperty.save()
-
-    
-    return redirect(f"real-estates/{newProperty.id}")
-
-
 
 
 
