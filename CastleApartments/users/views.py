@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from django.urls import reverse
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
@@ -166,11 +167,13 @@ def my_properties(request):
 
     seller = Seller.objects.get(user=request.user)
     properties = Property.objects.filter(seller=seller)
+    property_offers = {}
     for property in properties:
         property.raw_price = property.listing_price  #this is for edit property, cant have it on decimal format there
         property.listing_price = format_currency(property.listing_price, "", locale="is_is")[:-4]
-    property_offers = {prop: {"notifs": 0, "offers": []} for prop in properties}
-    offers = Offer.objects.filter(property__seller = seller)
+        property_offers[property] = {"notifs": 0, "offers": []}
+
+    offers = Offer.objects.filter(Q(property__seller = seller), ~Q(offer_status="ACCEPTED"))
     for prop in property_offers.keys():
         notifs = Notification.objects.filter(user=request.user, property=prop, count__gt=0)
         property_offers[prop]["notifs"] = copy.deepcopy(len(notifs))

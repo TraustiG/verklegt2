@@ -18,7 +18,7 @@
             <td class="position-relative align-middle text-center" scope="row">
                 <h4>{{ info.offers|length }}</h4>
                     {% if info.notifs != 0 %}
-                    <span class="position-absolute translate-middle badge rounded-pill bg-danger user-select-none notification-pill">
+                    <span name="offer-notification" class="position-absolute translate-middle badge rounded-pill bg-danger user-select-none notification-pill">
                         {{ info.notifs }}
                     <span class="visually-hidden">unread messages</span>
                     {% endif %}
