@@ -56,9 +56,12 @@ def getRealEstateById(request, id):
         for prop in similars:
             prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
         
-        if request.user.is_buyer:
-            offer = Offer.objects.filter(buyer=request.user.buyer, property=propertyObj)
-            request.user.has_offer = bool(offer)
+        #making sure offer returns None for seller / unauthenticated users
+        offer = None
+        if request.user.is_authenticated:
+            if request.user.is_buyer:
+                offer = Offer.objects.filter(buyer=request.user.buyer, property=propertyObj)
+                request.user.has_offer = bool(offer)
 
         propertyObj.listing_price = format_currency(propertyObj.listing_price, "", locale="is_is")[:-4]
         propertyObj.description = propertyObj.description.splitlines()
