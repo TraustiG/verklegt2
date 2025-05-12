@@ -4,10 +4,12 @@
     const hiddenPaymentOptions = document.querySelectorAll(".hidden-payment-option")
     const hiddenPaymentInformation = document.querySelectorAll(".hidden-payment-information")
     const paymentPicker = document.getElementById("payment-option-select")
+
     let finalPaymentOption;
     
     const entryContinueButton = document.querySelector("#entry-payment-modal-continue-button")
     const optionContinueButton = document.querySelector("#option-payment-modal-continue-button")
+    const contingentContinueButton = document.getElementById("contingency-payment-modal-continue-button")
     
     let paymentOptionFields = new Set([])
     const paymentContactFields = document.querySelectorAll('[id^="payment-contact"]')
@@ -72,7 +74,6 @@
     const paymentFieldsToggle = (option) => {
         let idName = `[id^="payment-option-${option}"]`
         let optionFields = document.querySelectorAll(idName)
-        let optionCheck = Array(optionFields.length).fill(false)
     
         optionFields.forEach((element, i) => {
             paymentOptionFields.add(element)
@@ -98,11 +99,18 @@
     }
     
     const makePaymentButtons = document.querySelectorAll('[name="offer-accepted-button"]')
+    const morePaymentButtons = document.querySelectorAll('[name="offer-contingency-button"]')
     
-    makePaymentButtons.forEach((element) => {
+    const formSetter = (element) => {
         element.addEventListener("click", () => {
             resetForm()
             let input = document.querySelector('[id="payment-form-actual-offer-id"]')
+
+            let contingencyMessage = document.querySelector('[id="contingency-modal-body-message"]')
+            if (contingencyMessage) {
+                contingencyMessage.innerHTML = element.getAttribute("data-offer-message")
+            }
+            
             input.value = element.getAttribute("data-id")
             input.setAttribute("value", element.getAttribute("data-id"))
     
@@ -129,8 +137,12 @@
             })
     
         })
-    })
+    }
     
+    makePaymentButtons.forEach((element) => formSetter(element))
+    morePaymentButtons.forEach((element) => formSetter(element))
+        
+        
     ////  tester takki
     // document.getElementById("payment-tester-fill-payments").addEventListener("click", () => {
     //     addContactInformation()

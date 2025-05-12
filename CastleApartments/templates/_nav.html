@@ -15,7 +15,7 @@
                     {% else %}
                     <a class="nav-link" href="{% url 'my-properties' %}">Fasteignirnar mínar</a>
                     {% endif %}
-                    {% if user.notifications %}
+                    {% if user.notifications and user.is_seller %}
                     <span class="position-absolute translate-middle badge rounded-pill bg-danger user-select-none">
                         {{ user.notifications|length }}
                     <span class="visually-hidden">unread messages</span>
