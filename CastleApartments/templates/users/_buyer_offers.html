@@ -34,6 +34,7 @@
         class="table-info"
         {% endif %}
         >
+
             <th class="align-middle text-center" scope="row">{{ offer.property.seller.user.full_name }}</th>
             <td class="d-flex align-middle text-start align-items-center justify-content-between" scope="row">
                 <h4 class="px-3">{{ offer.property.street_name }} - {{ offer.property.postal_code }} {{ offer.property.city }}</h4>
@@ -50,6 +51,7 @@
                 <button name="offer-accepted-button" class="btn btn-success bigger-btn" data-bs-toggle="modal" data-bs-target="#contact-info-modal" 
                 data-button-status="ACCEPTED"
                 data-offer-status="{{ offer.offer_status }}"
+
                 data-id="{{ offer.id }}"
                 data-street-name="{{ offer.property.street_name }}"
                 data-offer-amount="{{ offer.offer_amount }}"
@@ -70,7 +72,9 @@
                 <button name="delete-offer" class="btn btn-danger" data-id="{{ offer.id }}" data-bs-toggle="modal" data-bs-target="#delete-offer-modal">Eyða</button>
                 
             </td>
+
             <td class="align-middle text-center" scope="row"><h4><b>{{ offer.offer_status }}</b></h4></td>
+
         </tr>
         {% empty %}
     </tbody>
