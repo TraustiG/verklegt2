@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" id="create-new-property" action="{% url 'create-property' %}">
+                <form method="POST" id="create-new-property" action="">
                     {% csrf_token %}
                     <div class="container d-flex gap-3 justify-content-evenly">
                         <div class="col-6">

@@ -195,7 +195,7 @@ const setFormValue = (formfield, val) => {
 
 createPropertyButton.addEventListener("click", () => {
     document.getElementById("create-property-modal").innerHTML = "Skrá eign"
-    form.action = "/create-property"
+    form.action = "/real-estates/"
     setFormValue("streetname", "")
     setFormValue("city_input", "")
     setFormValue("zip", "")

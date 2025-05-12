@@ -196,7 +196,7 @@ def createProperty(request):
     newProperty.image = createImages(images, newProperty, 0)
     newProperty.save()
     
-    return redirect(f"real-estates/{newProperty.id}")
+    return redirect(f"/real-estates/{newProperty.id}")
 
 def createImages(images, property, main=False):
     front = "/none"
