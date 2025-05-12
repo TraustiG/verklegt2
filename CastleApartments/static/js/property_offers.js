@@ -1,3 +1,5 @@
+
+// property-line to offer-table
 (() => {
     const offerTableRows = document.getElementsByName("offer-table-row")
     const propertyTableRows = document.getElementsByName("property-table-row")
@@ -12,6 +14,10 @@
     const visibleRows = (element) => {
         if (activeRow) {
             activeRow.classList.toggle("table-active")
+            try {
+                notification = element.getElementsByClassName("notification-pill")[0]
+                notification.remove()
+            } catch (err) {}
         }
         activeRow = element
         activeRow.classList.toggle("table-active")
@@ -293,3 +299,215 @@ const deletePropertyOnSubmit = (id, rowId) => {
         })
     })
 }
+
+
+// Accept offer 
+(() => {
+
+    const acceptOfferButtons = document.getElementsByName("accept-offer-button")
+    let submitButton = document.getElementById("accept-offer-submit-button")
+
+    acceptOfferButtons.forEach((element) => {
+        element.addEventListener("click", () => {
+            let price = element.getAttribute("data-offer-amount")
+            let street = element.getAttribute("data-street")
+            let zip = element.getAttribute("data-zip")
+            let city = element.getAttribute("data-city")
+            let address = `${street} - ${zip} ${city}`
+            
+            let breaker = document.createElement("br")
+            let top = document.createElement("h4")
+            top.innerHTML = "Þú ert hér með að samþykkja sölu á "
+            top.classList.add("text-break")
+
+            //.innerHTML = `<h4 class="text-break">Þú ert hér með að samþykkja kaup á </h4><br/><h3 class="text-center">${address}</h3> <br/><h4 class="text-end px-2">uppá ${price} kr.</h4>`
+
+            let inner = document.createElement("h3")
+            inner.classList.add("text-center")
+            inner.classList.add("fw-semibold")
+            inner.classList.add("lh-lg")
+            inner.classList.add("text-decoration-underline")
+
+            inner.innerHTML = address
+
+            let bottom = document.createElement("h4")
+            bottom.classList.add("text-end")
+            bottom.classList.add("px-2")
+            bottom.innerHTML = `fyrir <u>${price}</u> kr.`
+
+            div = document.getElementById("accept-offer-modal-body-prompt")
+            div.innerHTML = ""
+            div.appendChild(top)
+            div.appendChild(breaker)
+            div.appendChild(inner)
+            div.appendChild(breaker)
+            div.appendChild(bottom)
+
+            id = element.getAttribute("data-id")
+            rowId = `offer-id-${id}-row`
+
+            submitButton.addEventListener("click", () => {
+                acceptOfferOnSubmit(id)
+            })
+        })
+    })
+
+
+    const acceptOfferOnSubmit = (id) => {
+        $("#accept-offer-form").submit( (e) => {
+            
+            e.preventDefault()
+            
+            $.ajax({
+                type: "POST",
+                url: `/offers/${id}`,
+                data: {
+                    action: "ACCEPT",
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+            })
+        })
+    }
+})();
+
+// Reject offer
+(() => {
+    const rejectOfferButtons = document.getElementsByName("reject-offer-button")
+    console.log(rejectOfferButtons)
+    let submitButton = document.getElementById("reject-offer-submit-button")
+
+    rejectOfferButtons.forEach((element) => {
+        element.addEventListener("click", () => {
+            let price = element.getAttribute("data-offer-amount")
+            document.getElementById("reject-offer-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir hafna þessu einstaka tækifæri til að græða ${price} kr.?`
+
+            id = element.getAttribute("data-id")
+            rowId = `offer-id-${id}-row`
+
+            submitButton.addEventListener("click", () => {
+                rejectOfferOnSubmit(id, rowId)
+            })
+        })
+    })
+
+
+    const rejectOfferOnSubmit = (id, rowId) => {
+        $("#reject-offer-form").submit( (e) => {
+            console.log("rejecting offer")
+            e.preventDefault()
+            let rowElement = document.getElementById(rowId)
+            rowElement.remove()
+            $.ajax({
+                type: "POST",
+                url: `/offers/${id}`,
+                data: {
+                    action: "REJECT",
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+            })
+        })
+    }
+})();
+
+
+// Delete offer
+(() => {
+
+    const deleteOfferButtons = document.getElementsByName("delete-offer-button")
+    let submitButton = document.getElementById("delete-offer-submit-button")
+
+    deleteOfferButtons.forEach((element) => {
+        element.addEventListener("click", () => {
+            document.getElementById("delete-offer-modal-body-prompt").innerHTML = `Þangað til næst! ;)`
+
+            id = element.getAttribute("data-id")
+            rowId = `offer-id-${id}-row`
+
+            submitButton.addEventListener("click", () => {
+                deleteOfferOnSubmit(id, rowId)
+            })
+        })
+    })
+
+
+    const deleteOfferOnSubmit = (id, rowId) => {
+        $("#delete-offer-form").submit( (e) => {
+            console.log("deleteing offer")
+            e.preventDefault()
+            let rowElement = document.getElementById(rowId)
+            rowElement.remove()
+            $.ajax({
+                type: "POST",
+                url: `/offers/${id}`,
+                data: {
+                    action: "DELETE",
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+            })
+        })
+    }
+})();
+
+
+// Contingent offer
+(() => {
+
+    const contingentOfferButtons = document.getElementsByName("contingent-offer-button")
+    let submitButton = document.getElementById("contingent-offer-submit-button")
+
+    contingentOfferButtons.forEach((element) => {
+        element.addEventListener("click", () => {
+            let div = document.createElement("div")
+            div.classList.add("form-floating")
+            let text = document.createElement("textarea")
+            text.setAttribute("id", "id_bio")
+            text.setAttribute("name", "bio")
+            text.classList.add("form-control")
+            text.style.height = "8rem"
+            let label = document.createElement("label")
+            label.setAttribute("for", "id_bio")
+            div.appendChild(text)
+            div.appendChild(label)
+
+            document.getElementById("contingent-offer-modal-body-prompt").innerHTML = ""
+            document.getElementById("contingent-offer-modal-body-prompt").appendChild(div)
+            id = element.getAttribute("data-id")
+
+            const submitter = () => {
+                contingentOfferOnSubmit(id, text)
+                return false
+            }
+
+            submitButton.addEventListener("click", () =>{
+                submitter()
+                submitButton.removeEventListener("click", submitter)
+            })
+            return false
+        })
+    })
+
+
+    const contingentOfferOnSubmit = (id, textarea) => {
+        $("#contingent-offer-form").submit( (e) => {
+            
+            e.preventDefault()
+            e.stopPropagation()
+            
+            $.ajax({
+                type: "POST",
+                url: `/offers/${id}`,
+                data: {
+                    action: "CONTINGENT",
+                    message: textarea.value,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+            })
+        })
+        console.log("preset")
+        console.log($("#contingent-offer-form")[0])
+        $("#contingent-offer-form")[0].reset()
+        console.log($("#contingent-offer-form")[0])
+        console.log("reset")
+
+    }
+})();

@@ -10,48 +10,45 @@
 </form>
 {% include "payments/_information_overview_modal.html" %}
 {% include "payments/_confirmation_modal.html" %}
-{% include "_delete_item_modal.html" with item="offer" title="Eyða tilboði" %}
+{% include "_do_item_modal.html" with item="offer" title="Eyða tilboði" action="delete" %}
+{% include "payments/_contingency_modal.html" %}
 <table class="table table-bordered table-striped table-hover justify-content-center mt-1">
     <thead>
         <tr class="text-center">
-            <th style="width:10%;" scope="col">Seljandi</th>
+            <th style="width:15%;" scope="col">Seljandi</th>
             <th style="width:35%;" scope="col">Heimilisfang</th>
             <th style="width:10%;" scope="col">Dags. tilboðs</th>
             <th style="width:10%;" scope="col">Gildistími</th>
-            <th style="width:10%;" scope="col">Tilboð</th>
-            <th style="width:10%" scope="col"></th>
+            <th style="width:20%;" scope="col">Tilboð</th>
+            <th style="width:10%" scope="col">Aðgerðir</th>
             <td class="offer-button-cell" scope="col">Staða</th>
         </tr>
     </thead>
     <tbody class="table-group-divider" style="border-top-color: black;">
     {% for offer in offers %}
-        <tr id="offer-id-{{ offer.id }}-row"
-        {% if offer.status == "Accepted" %}
-        class="table-success"
-        {% elif offer.status == "Declined" %}
-        class="table-danger"
-        {% elif offer.status == "Contingent" %}
-        class="table-info"
-        {% endif %}
-        >
+    <tr id="offer-id-{{ offer.id }}-row">
+    <!-- {% if offer.offer_status == "ACCEPTED" %}
+    class="table-success"
+    {% elif offer.offer_status == "DECLINED" %}
+    class="table-danger"
+    {% elif offer.offer_status == "CONTINGENT" %}
+    class="table-info"
+    {% endif %} -->
 
             <th class="align-middle text-center" scope="row">{{ offer.property.seller.user.full_name }}</th>
-            <td class="d-flex align-middle text-start align-items-center justify-content-between" scope="row">
-                <h4 class="px-3">{{ offer.property.street_name }} - {{ offer.property.postal_code }} {{ offer.property.city }}</h4>
-                <a class="px-2" href="{% url 'real-estate-by-id' id=offer.property.id %}">
-                    <button class="btn btn-primary mx-2" href="{% url 'real-estate-by-id' id=offer.property.id %}">Skoða</button>
-                </a>
+            <td class="d-flex align-middle text-start align-items-center justify-content-between px-3 fs-4" scope="row">
+                {{ offer.property.street_name }} - {{ offer.property.postal_code }} {{ offer.property.city }}
+                <button class="btn btn-primary mx-2" >Skoða</button>
                 
             </td>
-            <td class="align-middle text-center" scope="row">{{ offer.offer_date }}</td>
+            <td class="align-middle text-center py-2" scope="row">{{ offer.offer_date }}</td>
             <td class="align-middle text-center" scope="row">{{ offer.offer_expiry }}</td>
-            <td class="align-middle text-end" scope="row"><h4 class="mx-3">{{ offer.offer_amount }}</h4></td>
-            <td class="offer-button-cell justify-content-center" scope="row">
-
-                <button name="offer-accepted-button" class="btn btn-success bigger-btn" data-bs-toggle="modal" data-bs-target="#contact-info-modal" 
+            <td class="align-middle text-end" scope="row"><h4 class="mx-3">{{ offer.offer_amount }} kr.</h4></td>
+            <td class="offer-button-cell justify-content-evenly d-flex my-1" scope="row">
+                {% if offer.offer_status == "ACCEPTED" %}
+                <button name="offer-accepted-button" class="w-75 btn btn-success bigger-btn" data-bs-toggle="modal" data-bs-target="#contact-info-modal" 
                 data-button-status="ACCEPTED"
                 data-offer-status="{{ offer.offer_status }}"
-
                 data-id="{{ offer.id }}"
                 data-street-name="{{ offer.property.street_name }}"
                 data-offer-amount="{{ offer.offer_amount }}"
@@ -60,17 +57,23 @@
                 data-type="{{ offer.property.property_type }}"
                 data-image="{{ offer.property.image }}"
                 data-listing-price="{{ offer.property.listing_price }}">Afgreiða</button>
-                {% if offer.offer_status == "Accepted" %}
 
-                {% elif offer.offer_status == "Contingent" %}
-                <button class="btn btn-primary bigger-btn" 
+
+                {% elif offer.offer_status == "CONTINGENT" %}
+                <button name="offer-contingency-button" class="w-75 btn btn-primary bigger-btn" data-bs-toggle="modal" data-bs-target="#contingency-modal"
                 data-button-status="CONTINGENT" 
                 data-offer-status="{{ offer.offer_status }}" 
+                data-offer-message="{{ offer.offer_contingency_message }}"
+                data-id="{{ offer.id }}"
+                data-street-name="{{ offer.property.street_name }}"
+                data-offer-amount="{{ offer.offer_amount }}"
+                data-zip="{{ offer.property.postal_code }}"
+                data-city="{{ offer.property.city }}"
+                data-type="{{ offer.property.property_type }}"
+                data-listing-price="{{ offer.property.listing_price }}"
                 data-id="{{ offer.id }}">Skoða</button>
-                <!-- data-offer-message="{{ offer.offer_message }}"  VANTAR FYRIR CONTINGENCY -->
                 {% endif %}
-                <button name="delete-offer" class="btn btn-danger" data-id="{{ offer.id }}" data-bs-toggle="modal" data-bs-target="#delete-offer-modal">Eyða</button>
-                
+
             </td>
 
             <td class="align-middle text-center" scope="row"><h4><b>{{ offer.offer_status }}</b></h4></td>

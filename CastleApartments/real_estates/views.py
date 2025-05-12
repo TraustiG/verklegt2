@@ -179,16 +179,39 @@ def createOffer(request, id):
 @require_POST
 @fetchNotifications
 def deleteOffer(request, id):
+    try:
+        action = request.POST["action"]
+    except Exception:
+        return HttpResponse(403)
     offer = Offer.objects.get(id=id)
     if not offer:
         return HttpResponse(404)
-    if offer.buyer != request.user.buyer:
+    if request.user not in [offer.buyer.user, offer.property.seller.user]:
         return HttpResponse(403)
-    try:
-        offer.delete()
-    except Exception:
-        return HttpResponse(403)
+    
+    if action == "DELETE":
+        try:
+            offer.delete()
+        except Exception:
+            return HttpResponse(403)
+    if action in ["ACCEPT", "REJECT"]:
+        try:
+            offer.offer_status = f"{action}ED" 
+            notify(user=offer.buyer.user, offer=offer)
+            offer.save()
+        except Exception:
+            return HttpResponse(500)
+    if action == "CONTINGENT":
+        try:
+            offer.offer_status = "CONTINGENT"
+            offer.offer_contingency_message = request.POST["message"]
+            print(request.POST["message"])
+            notify(user=offer.buyer.user, offer=offer)
+            offer.save()
+        except Exception:
+            return HttpResponse(500)
     return HttpResponse(200)
+    
 
 
 
@@ -336,4 +359,5 @@ def notify(user, prop: Property = False, offer: Offer = False):
         notifUser.save()
     except Exception:
         kwargs["count"] = 1
-        Notification.objects.create(**kwargs)
+        notifUser = Notification.objects.create(**kwargs)
+    print(notifUser)
