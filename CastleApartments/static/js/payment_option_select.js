@@ -24,6 +24,7 @@
     
     optionContinueButton.addEventListener("click", () => {
         addPaymentInformation(paymentPicker.value)
+
     })
     
     paymentContactFields.forEach((element) => {

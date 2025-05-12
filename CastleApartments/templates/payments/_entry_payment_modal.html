@@ -9,12 +9,12 @@
 
                 <div class="mb-3">
                     <label for="street-name" class="form-label">Götuheiti</label>
-                    <input id="payment-contact-input-street-name" type="text" class="form-control payment-input" name="street-name" required pattern="[a-zA-Z0-9, \.\-]{3,}">
+                    <input id="payment-contact-input-street-name" type="text" class="form-control payment-input" name="street-name" required pattern="[\p{L} \d]{3,}">
                 </div>
 
                 <div class="mb-3">
                     <label for="city" class="form-label">Borg</label>
-                    <input id="payment-contact-city" type="text" class="form-control payment-input" name="city" required pattern="[a-zA-Z ]{4,}">
+                    <input id="payment-contact-city" type="text" class="form-control payment-input" name="city" required pattern="[\p{L} ]{4,}">
                 </div>
 
                 <div class="mb-3">

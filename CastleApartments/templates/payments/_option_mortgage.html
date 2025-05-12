@@ -1,7 +1,7 @@
 <div class="hidden-payment-option mortgage" style="display: none;">
     <div class="mb-3">
         <label for="loan-institution" class="form-label">Lánastofnun</label>
-        <input id="payment-option-mortgage-loan-institution" type="text" class="form-control payment-input" name="loan-institution" placeholder="T.d. Landsbankinn" required pattern="[a-zA-Z0-9,\. ]{3,}">
+        <input id="payment-option-mortgage-loan-institution" type="text" class="form-control payment-input" name="loan-institution" placeholder="T.d. Landsbankinn" required pattern="[\p{L},\. ]{3,}">
     </div>
     <div class="mb-3">
         <label for="loan-amount" class="form-label">Lánsupphæð</label>
@@ -9,6 +9,6 @@
     </div>
     <div class="mb-3">
         <label for="payer-name" class="form-label">Nafn greiðanda</label>
-        <input id="payment-option-mortgage-mortgage-payer" type="text" class="form-control payment-input" name="mortgage-payer" placeholder="Nafn greiðanda" required pattern="[a-zA-Z ]{4,}">
+        <input id="payment-option-mortgage-mortgage-payer" type="text" class="form-control payment-input" name="mortgage-payer" placeholder="Nafn greiðanda" required pattern="[\p{L} ]{4,}">
     </div>
 </div>
