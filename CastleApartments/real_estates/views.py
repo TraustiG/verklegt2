@@ -36,6 +36,10 @@ def index(request):
     # þarf að fa listings og tegundir og postnumer í boði
 
     listings = Property.objects.all()
+    for l in listings:
+        print((l.id, l.listing_date))
+    listings = Property.objects.all()
+    print(listings)
     areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
     types = sorted(list(set([f"{x.property_type}" for x in listings])))
     prices = getPrices()
@@ -220,7 +224,7 @@ def createProperty(request):
     newProperty.image = createImages(images, newProperty, 0)
     newProperty.save()
     
-    return redirect(f"real-estates/{newProperty.id}")
+    return redirect(f"/real-estates/{newProperty.id}")
 
 def createImages(images, property, main=False):
     front = "/none"
@@ -309,7 +313,6 @@ def getSimilarListings(prop: Property, level: int):
     sqmQ = Q(square_meters__gte=prop.square_meters-level*3, square_meters__lte=prop.square_meters+level*3)
 
     listings = Property.objects.filter(~Q(id=prop.id), postalQ|priceQ|sqmQ)
-    print(listings)
     
     return listings
 

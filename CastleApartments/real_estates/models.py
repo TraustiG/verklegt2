@@ -21,6 +21,7 @@ class PropertyStatus(models.TextChoices):
         PROCESSED = 'PROCESSED', 'Processed'
 
 class Property(models.Model):
+    ordering = ('listing_date', 'id')
 
     seller = models.ForeignKey(
         "users.Seller", on_delete=models.CASCADE, null=True, blank=True)

@@ -10,7 +10,7 @@
         </tr>
     </thead>
     <tbody id="seller-property-table-body" class="table-group-divider" style="border-top-color: black;">
-    {% for property, info in properties.items reversed %}
+    {% for property, info in properties.items %}
         <tr name="property-table-row" id="{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}">
             <th name="address-cell" class="align-middle text-start" scope="row"><h3 class="mx-5">{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}</h3></th>
             <td name="price-cell" class="align-middle text-end px-3" scope="row"><h4>{{ property.listing_price }} kr.</h4></td>
