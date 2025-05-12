@@ -199,17 +199,16 @@ def deleteOffer(request, id):
             offer.offer_status = f"{action}ED" 
             notify(user=offer.buyer.user, offer=offer)
             offer.save()
-        except Exception as e:
-            print(e)
+        except Exception:
             return HttpResponse(500)
     if action == "CONTINGENT":
         try:
             offer.offer_status = "CONTINGENT"
-            offer.offer_message = request.POST["message"]
+            offer.offer_contingency_message = request.POST["message"]
+            print(request.POST["message"])
             notify(user=offer.buyer.user, offer=offer)
             offer.save()
-        except Exception as e:
-            print(e)
+        except Exception:
             return HttpResponse(500)
     return HttpResponse(200)
     

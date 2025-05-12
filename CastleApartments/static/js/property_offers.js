@@ -473,10 +473,16 @@ const deletePropertyOnSubmit = (id, rowId) => {
             document.getElementById("contingent-offer-modal-body-prompt").appendChild(div)
             id = element.getAttribute("data-id")
 
-
-            submitButton.addEventListener("click", () => {
+            const submitter = () => {
                 contingentOfferOnSubmit(id, text)
+                return false
+            }
+
+            submitButton.addEventListener("click", () =>{
+                submitter()
+                submitButton.removeEventListener("click", submitter)
             })
+            return false
         })
     })
 
@@ -485,16 +491,23 @@ const deletePropertyOnSubmit = (id, rowId) => {
         $("#contingent-offer-form").submit( (e) => {
             
             e.preventDefault()
+            e.stopPropagation()
             
             $.ajax({
                 type: "POST",
                 url: `/offers/${id}`,
                 data: {
                     action: "CONTINGENT",
-                    message: textarea.innerHTML,
+                    message: textarea.value,
                     csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
                 },
             })
         })
+        console.log("preset")
+        console.log($("#contingent-offer-form")[0])
+        $("#contingent-offer-form")[0].reset()
+        console.log($("#contingent-offer-form")[0])
+        console.log("reset")
+
     }
 })();

@@ -88,6 +88,7 @@ def profile(request):
 
     if request.method == "GET":
         user = request.user
+        print(request.user.id)
         if user.is_seller:
             seller = Seller.objects.get(user=user)
 
@@ -98,15 +99,21 @@ def profile(request):
             seller.bio = seller.bio.splitlines()
 
             return render(request, 'users/profile.html', {'profile': seller.user, 'listings': listings })
-
         elif user.is_buyer:
+            load = {}
             buyer = Buyer.objects.get(user=user)
             offers = Offer.objects.filter(buyer=buyer)
             for offer in offers:
                 offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
                 offer.property.listing_price = format_currency(offer.property.listing_price, "", locale="is_is")[:-4]
+                notifs = Notification.objects.filter(user=request.user, offer=offer, count__gt=0)
+                load[offer] = len(notifs)
 
-            return render(request, 'users/profile.html', {'profile': request.user, 'offers':offers })
+                for notif in notifs:
+                    notif.count = 0
+                    notif.save()
+
+            return render(request, 'users/profile.html', {'profile': request.user, 'offers': offers })
     
     if request.method == "POST":
     
