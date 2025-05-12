@@ -84,6 +84,18 @@ dt.buyer-info {
     margin-right: 5px;
 }
 
+td {
+    min-height: 50px;
+}
+
+td h4 {
+    margin-bottom: 0;
+}
+
+th h4 {
+    margin-bottom: 0;
+}
+
 td .notification-pill {
     top:20%;
     right:20%;
@@ -92,6 +104,10 @@ td .notification-pill {
 .nav-item-notification span {
     top: 10%;
     right: -10%;
+}
+
+td button .bigger-btn {
+    width: 5.6rem;
 }
 
 .title-bar {

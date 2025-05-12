@@ -19,12 +19,14 @@ from users.models import Buyer, Seller, Notification
 
 def fetchNotifications(view_func):
     def _decorated(request, *args, **kwargs):
-        try:
-            notifs = Notification.objects.filter(user=request.user, count__gt=0)
-            request.user.notifications = notifs
-            return view_func(request, *args, **kwargs)
-        except Exception:
-            return view_func(request, *args, **kwargs)
+        if request.user.is_authenticated:
+            try:
+                notifs = Notification.objects.filter(user=request.user, count__gt=0)
+                request.user.notifications = notifs
+                return view_func(request, *args, **kwargs)
+            except Exception:
+                pass
+        return view_func(request, *args, **kwargs)
 
     return _decorated
 
@@ -34,6 +36,10 @@ def index(request):
     # þarf að fa listings og tegundir og postnumer í boði
 
     listings = Property.objects.all()
+    for l in listings:
+        print((l.id, l.listing_date))
+    listings = Property.objects.all()
+    print(listings)
     areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
     types = sorted(list(set([f"{x.property_type}" for x in listings])))
     prices = getPrices()
@@ -56,6 +62,7 @@ def getRealEstateById(request, id):
         for prop in similars:
             prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
         
+
         #making sure offer returns None for seller / unauthenticated users
         offer = None
         if request.user.is_authenticated:
@@ -69,9 +76,17 @@ def getRealEstateById(request, id):
         return render(request, "real_estates/real_estate.html", { "property": propertyObj, "images":images, "listings": similars, "offer": offer})
 
     if request.method == "POST":
+        propertyObj = Property.objects.get(id=id)
+        if not propertyObj:
+            return HttpResponse(404)
+        if propertyObj.seller != request.user.seller:
+            return HttpResponse(403)
+        
         if request.POST["action"] == "DELETE":
-            propertyObj = Property.objects.get(id=id)
-            propertyObj.delete()
+            try:
+                propertyObj.delete()
+            except Exception:
+                return HttpResponse(403)
         else:
             propertyObj = Property.objects.get(id=id)
             
@@ -87,8 +102,10 @@ def getRealEstateById(request, id):
             images = request.POST.get("hidden-images-list")
 
             createImages(images, propertyObj)
-            
-            propertyObj.save()
+            try:
+                propertyObj.save()
+            except Exception:
+                return HttpResponse(500)
             
         return HttpResponse(status=200)
 
@@ -156,9 +173,22 @@ def createOffer(request, id):
     notify(user=propertyObj.seller.user, prop=propertyObj)
 
     messages.success(request, "Tilboð hefur verið sent!")
-
     
     return redirect('real-estate-by-id', id=id)
+
+@require_POST
+@fetchNotifications
+def deleteOffer(request, id):
+    offer = Offer.objects.get(id=id)
+    if not offer:
+        return HttpResponse(404)
+    if offer.buyer != request.user.buyer:
+        return HttpResponse(403)
+    try:
+        offer.delete()
+    except Exception:
+        return HttpResponse(403)
+    return HttpResponse(200)
 
 
 
@@ -285,7 +315,6 @@ def getSimilarListings(prop: Property, level: int):
     sqmQ = Q(square_meters__gte=prop.square_meters-level*3, square_meters__lte=prop.square_meters+level*3)
 
     listings = Property.objects.filter(~Q(id=prop.id), postalQ|priceQ|sqmQ)
-    print(listings)
     
     return listings
 

@@ -89,7 +89,11 @@ def profile(request):
         user = request.user
         if user.is_seller:
             seller = Seller.objects.get(user=user)
+
             listings = Property.objects.filter(seller=seller)
+            for prop in listings:
+                prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
+
             seller.bio = seller.bio.splitlines()
 
             return render(request, 'users/profile.html', {'profile': seller.user, 'listings': listings })
@@ -148,7 +152,11 @@ def seller(request, id):
 
     seller = Seller.objects.get(user_id=id)
     seller.bio = seller.bio.splitlines()
+
     listings = Property.objects.filter(seller=seller)
+    for prop in listings:
+        prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
+
     return render(request, 'users/profile.html', {'profile': seller.user, 'listings': listings})
 
 

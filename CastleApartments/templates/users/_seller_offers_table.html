@@ -1,0 +1,30 @@
+<table id="offer-table" class="table table-bordered table-striped table-hover justify-content-center mt-1" style="display: none">
+    <thead>
+        <tr class="text-center">
+            <th scope="col"></th>
+            <th scope="col">Kaupandi</th>
+            <th scope="col">Upphæð</th>
+            <th scope="col">Gildistími</th>
+            <th scope="col">Aðgerðir</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prop, info in properties.items %}
+            {% for offer in info.offers reversed %}
+            <tr name="offer-table-row" class="{{ prop.street_name }} - {{ prop.postal_code }} {{ prop.city }}" style="display: none;">
+                <th scope="col"></th>
+                <th class="px-3" scope="col"><h3>{{ offer.buyer.user.full_name }}</h3></th>
+                <th class="text-end px-5" scope="col"><h3>{{ offer.offer_amount }} kr.</h3></th>
+                <th class="text-center" scope="col"><h3>{{ offer.offer_expiry }}</h3></th>
+                <th class="d-flex justify-content-evenly align-items-center gap-1" scope="col">
+                    <button class="btn btn-success">Accept</button>
+                    <button class="btn btn-primary">Contingent</button>
+                    <button class="btn btn-danger">Reject</button>
+                </th>
+                <th scope="col"></th>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
