@@ -165,7 +165,6 @@ const createRedCross = () => {
 editPropertyButtons.forEach((element) => {
     element.addEventListener("click", () => {
         document.getElementById("create-property-modal").innerHTML = "Breyta eign"
-        form.action = `/edit-property/${element.getAttribute("data-id")}/`
         
         setFormValue("streetname", element.getAttribute("data-street"))
         setFormValue("city_input", element.getAttribute("data-city"))
@@ -178,8 +177,16 @@ editPropertyButtons.forEach((element) => {
         setFormValue("desc", element.getAttribute("data-desc"))
         form["desc"].innerHTML = element.getAttribute("data-desc")
         form["desc"].value = element.getAttribute("data-desc")
+
+        let street = element.getAttribute("data-street")
+        let zip = element.getAttribute("data-zip")
+        let city = element.getAttribute("data-city")
+        let rowId = `${street} - ${zip} ${city}`
+
+        editPropertyOnSubmit(element.getAttribute("data-id"), rowId)
     })
 })
+
 
 const setFormValue = (formfield, val) => {
         form[formfield].setAttribute("value", val)
@@ -210,6 +217,74 @@ const clearFormImages = () => {
 deletePropertyButtons.forEach((element) => {
     element.addEventListener("click", () => {
         document.getElementById("delete-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir eyða ${element.getAttribute("data-street")}?`
-        deleteForm.action = `/delete-property/${element.getAttribute("data-id")}`
+        
+        let street = element.getAttribute("data-street")
+        let zip = element.getAttribute("data-zip")
+        let city = element.getAttribute("data-city")
+        let rowId = `${street} - ${zip} ${city}`
+
+        deletePropertyOnSubmit(element.getAttribute("data-id"), rowId)
     })
 })
+
+const deletePropertyOnSubmit = (id, rowId) => {
+    $("#delete-property-form").submit( function (e) {
+        e.preventDefault()
+
+        let rowElement = document.getElementById(rowId)
+        rowElement.remove()
+
+        $.ajax({
+            type: "POST",
+            url: `/real-estates/${id}`,
+            data: {
+                action: "DELETE",
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+
+        })
+    })
+}
+
+const editPropertyOnSubmit = (id, rowId) => {
+    console.log("preform")
+    let editForm = $("#create-new-property")
+    console.log("postform")
+    editForm.submit( function (e) {
+        e.preventDefault()
+
+        let rowElement = document.getElementById(rowId)
+        changeRow(rowElement, editForm)
+        document.getElementById("offer-table").style.display = "none"
+        document.getElementById("address-table-caller").innerHTML = ""
+
+        let data = editForm.serializeArray()
+        data.push({name: "action", value: "PATCH"})
+        console.log(data)
+
+        $.ajax({
+            type: "POST",
+            url: `/real-estates/${id}`,
+            data: 
+                data
+            ,
+
+        })
+    })
+}
+
+const changeRow = (element, information) => {
+    
+    let aCell = element.querySelector('th[name="address-cell"]')
+    let pCell = element.querySelector('td[name="price-cell"]')
+    information = information[0]
+    
+    let street = `${information.querySelector('input[id="streetname"]').value}`
+    let address = `${street} - ${information.querySelector('input[id="zip"]').value} ${information.querySelector('input[id="city_input"]').value}`
+    let price = `${information.querySelector('input[id="price"]').value}`
+
+    element.setAttribute("data-street", street)
+    element.setAttribute("data-price", price)
+    aCell.innerHTML = `<h4>${address}</h4>`
+    pCell.innerHTML = `<h4>${price}</h4>`
+}

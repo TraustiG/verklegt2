@@ -1,18 +1,20 @@
 {% load static %}
 {% block content %}
 <div class="h-100 bg-low pt-3 pb-5">
-    <div class="container">
-        <div class="row gx-2 row-cols-{{cols}}">
-            {% for property in listings %}
-                <div id="{{forloop.counter0}}" class="col pb-2 real-estate-card">
-                    {% include "real_estates/_real_estate_item.html" with property=property %}
+    <div class="container listings-container">
+        <div class="d-flex justify-content-center">
+            <div class="row gx-2 row-cols-{{cols}} d-flex justify-content-center">
+                {% for property in listings %}
+                    <div id="{{forloop.counter0}}" class="col pb-2 real-estate-card">
+                        {% include "real_estates/_real_estate_item.html" with property=property %}
+                    </div>
+                {% empty %}
                 </div>
-            {% empty %}
+                    <div class="py-5">
+                        <h1 class="text-center subtext">Engar eignir uppfylltu valda síu...</h1>
+                    </div>
+                {% endfor %}
             </div>
-                <div class="py-5">
-                    <h1 class="text-center subtext">Engar eignir uppfylltu valda síu...</h1>
-                </div>
-            {% endfor %}
         </div>
     </div>
 </div>
