@@ -13,12 +13,12 @@ dt.buyer-info {
     margin-bottom: 1rem;
 }
 
-.modal-dialog,
-.modal-content {
+.payment-modal-group,
+.payment-modal-group {
     height: 95%;
 }
 
-.modal-body {
+.payment-modal-group-body {
     /* 100% = dialog height, 120px = header + footer */
     max-height: calc(100% - 110px);
     overflow-y: scroll;
@@ -193,6 +193,12 @@ td .notification-pill {
     font-weight: bold;
 }
 
+.real-estate-card {
+    width: 281px;
+    height: 340px;
+}
+
+
 .hover-display-none:hover + div {
     display: block;
 }
@@ -205,6 +211,17 @@ td .notification-pill {
 .theme-icon-when-light {
     display: none;
 }
+
+.listings-container {
+    min-width: 700px;
+}
+
+@media only screen and (max-width: 700px) {
+    .listings-container {
+        min-width: 0px;
+    }
+}
+
 
 .theme-toggle {
     height: 1.5rem;
@@ -399,3 +416,4 @@ input[type=number] {
     border-color: var(--bs-danger);
     box-shadow: 0 0 5px 3px var(--bs-danger);
 }
+
