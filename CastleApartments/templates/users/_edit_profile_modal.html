@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{% url 'profile' %}">
+                <form method="POST" action="{% url 'profile' %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="fullname" class="form-label">Nafn</label>
@@ -14,7 +14,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="profile_image" class="form-label">Mynd</label>
-                        <input type="text" class="form-control" id="profile_image" name="profile_image" value="{{user.image}}" required>
+                        <input type="file" class="form-control" id="profile_image" name="profile_image" value="{{user.image}}" required>
                     </div>
 
                     {% if user.is_seller %}
@@ -40,7 +40,7 @@
 
                     <div class="mb-3">
                         <label for="logo_input" class="form-label">Logo URL</label>
-                        <input type="text" class="form-control" id="logo_input" name="logo_input" value="{{ user.seller.logo }}">
+                        <input type="file" class="form-control" id="logo_input" name="logo_input" value="{{ user.seller.logo }}">
                     </div>
 
                     <div class="mb-3">

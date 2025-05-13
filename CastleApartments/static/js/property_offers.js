@@ -529,33 +529,34 @@ const deletePropertyOnSubmit = (id, rowId) => {
 //});
 //});
 
-
-const propertyFields = document.querySelectorAll('[id^="property-input"]');
-const propertySubmitButton = document.getElementById("create-property-modal-submit");
-
+(() => {
+    const propertyFields = document.querySelectorAll('[id^="property-input"]');
+    const propertySubmitButton = document.getElementById("create-property-modal-submit");
+    
     propertyFields.forEach((element) => {
         element.addEventListener("change", () => {
-           
+            
             if (Array.from(propertyFields).map((el) => el.checkValidity()).reduce((f, s) => f && s)) {
                 propertySubmitButton.disabled = false;
             } else {
                 propertySubmitButton.disabled = true;
             }
-
+    
             if (!element.checkValidity()) {
                 element.setAttribute("isvalid", "true");
             } else {
                 element.removeAttribute("isvalid");
             }
         });
-
-
-      
+    
+    
+        
         });
-
+    
         //resetting modal when its closed
         document.querySelector('#property-modal').addEventListener("hidden.bs.modal", () => {
             propertyFields.forEach((el) => el.removeAttribute("isvalid"));
             propertySubmitButton.disabled = true;
     });
 
+})()

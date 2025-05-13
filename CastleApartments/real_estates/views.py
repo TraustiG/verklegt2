@@ -62,7 +62,7 @@ def getRealEstateById(request, id):
         offer = None
         if request.user.is_authenticated:
             if request.user.is_buyer:
-                offer = Offer.objects.filter(buyer=request.user.buyer, property=propertyObj).first()
+                offer = Offer.objects.filter(buyer=request.user.buyer, property=propertyObj)
                 request.user.has_offer = bool(offer)
 
         propertyObj.listing_price = format_currency(propertyObj.listing_price, "", locale="is_is")[:-4]
@@ -299,7 +299,7 @@ def filterListings(key: str, value: str, listings: list[Property]):
             if not min.isnumeric():
                 min = 0
             if not max.isnumeric():
-                max = 999999999999999
+                max = 9999999999999999999
             temp = [x for x in listings if int(getattr(x, key)) >= int(min) and int(getattr(x, key)) <= int(max)]
         
     else:
