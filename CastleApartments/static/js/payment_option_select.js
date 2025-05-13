@@ -23,10 +23,33 @@
         addPaymentInformation(paymentPicker.value)
         let submitterButton = document.querySelector('[id="information-overview-modal-continue-button"]')
         submitterButton.addEventListener("click", () => {
-            
+            const conf = new JSConfetti()
+            conf.addConfetti()
+
+            let id = document.querySelector('id=["payment-form-actual-offer-id"]').value
+
+            formSubmitter(id)
         })
     })
+
+    const formSubmitter = (id) => {
+        $("#offer-payment-form").submit( (e) => {
+            console.log("hmm")
+            
+            e.preventDefault()
+            
+            $.ajax({
+                type: "POST",
+                url: `/offers/${id}`,
+                data: {
+                    action: "PROCESS",
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+            })
+        })
+    }
     
+
     paymentContactFields.forEach((element) => {
         element.addEventListener("change", () => {
             if (Array.from(paymentContactFields).map((el) => el.checkValidity()).reduce((f, s) =>  f && s)) {

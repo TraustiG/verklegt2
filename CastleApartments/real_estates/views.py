@@ -270,6 +270,8 @@ def createImages(images, property, main=False):
 @require_POST
 @fetchNotifications
 def selectPayment(request, offer_id):
+    print(request)
+    print(offer_id)
     offer = Offer.objects.get(id=offer_id)
     
     payment_option = request.POST.get("payment_option")
