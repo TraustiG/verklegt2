@@ -1,9 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from django.urls import reverse
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
 from babel.numbers import format_currency
 import copy

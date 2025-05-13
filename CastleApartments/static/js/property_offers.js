@@ -432,7 +432,7 @@ const deletePropertyOnSubmit = (id, rowId) => {
 
     const deleteOfferOnSubmit = (id, rowId) => {
         $("#delete-offer-form").submit( (e) => {
-            console.log("deleteing offer")
+            
             e.preventDefault()
             let rowElement = document.getElementById(rowId)
             rowElement.remove()
@@ -451,7 +451,7 @@ const deletePropertyOnSubmit = (id, rowId) => {
 
 // Contingent offer
 (() => {
-
+    
     const contingentOfferButtons = document.getElementsByName("contingent-offer-button")
     let submitButton = document.getElementById("contingent-offer-submit-button")
 
@@ -474,15 +474,12 @@ const deletePropertyOnSubmit = (id, rowId) => {
             id = element.getAttribute("data-id")
 
             const submitter = () => {
+
                 contingentOfferOnSubmit(id, text)
-                return false
+                submitButton.removeEventListener("click", submitter)
             }
 
-            submitButton.addEventListener("click", () =>{
-                submitter()
-                submitButton.removeEventListener("click", submitter)
-            })
-            return false
+            console.log(submitButton.addEventListener("click", submitter))
         })
     })
 

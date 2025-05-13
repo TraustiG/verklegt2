@@ -2,8 +2,6 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect
 from django.core.files.storage import default_storage
 from django.db.models import Q
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
 from django.contrib import messages
 from babel.numbers import format_currency
@@ -36,10 +34,7 @@ def index(request):
     # þarf að fa listings og tegundir og postnumer í boði
 
     listings = Property.objects.all()
-    for l in listings:
-        print((l.id, l.listing_date))
-    listings = Property.objects.all()
-    print(listings)
+
     areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
     types = sorted(list(set([f"{x.property_type}" for x in listings])))
     prices = getPrices()
@@ -205,7 +200,6 @@ def deleteOffer(request, id):
         try:
             offer.offer_status = "CONTINGENT"
             offer.offer_contingency_message = request.POST["message"]
-            print(request.POST["message"])
             notify(user=offer.buyer.user, offer=offer)
             offer.save()
         except Exception:
@@ -360,4 +354,3 @@ def notify(user, prop: Property = False, offer: Offer = False):
     except Exception:
         kwargs["count"] = 1
         notifUser = Notification.objects.create(**kwargs)
-    print(notifUser)
