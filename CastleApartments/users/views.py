@@ -1,9 +1,6 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from django.urls import reverse
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
 from babel.numbers import format_currency
 import copy
@@ -17,13 +14,20 @@ from real_estates.views import index, fetchNotifications
 @require_http_methods(["GET", "POST"])
 @fetchNotifications
 def register(request):
+
+    # illegal = User.objects.filter(full_name="Jón Jónsson")
+    # for user in illegal:
+    #     user.delete()
+
     if request.method == 'POST':
         role = request.POST.get('role')
-        form = RegistrationForm(request.POST)
+        print(request.POST.get("role"))
+        form = RegistrationForm(request.POST, request.FILES)
         seller_form = SellerForm(request.POST, request.FILES) if role == 'seller' else SellerForm()
 
         if form.is_valid():
             user = form.save(commit=False)
+            user.image = f"/media/{user.image}"
             
             if role == 'buyer':
                 user.is_buyer = True
@@ -39,7 +43,8 @@ def register(request):
                     seller.street_name=seller_form.cleaned_data['street_name']
                     seller.city=seller_form.cleaned_data['city']
                     seller.postal_code=seller_form.cleaned_data['postal_code']
-                    seller.logo=seller_form.cleaned_data['logo']
+                    seller.logo = f"/media/{seller_form.cleaned_data['logo']}"
+                    print(seller.logo)
                     seller.bio=seller_form.cleaned_data['bio']
                     seller.save()
                 
@@ -88,7 +93,6 @@ def profile(request):
 
     if request.method == "GET":
         user = request.user
-        print(request.user.id)
         if user.is_seller:
             seller = Seller.objects.get(user=user)
 
@@ -121,10 +125,12 @@ def profile(request):
             
         #allow changes for fullname / image as they are shared , save user
         fullname = request.POST.get("fullname")
-        profile_image = request.POST.get("profile_image")
+        print(request.FILES.keys())
+        print(dir(request.FILES))
+        profile_image = request.FILES.get("profile_image")
 
         user.full_name = fullname
-        user.image = profile_image
+        user.image = f"/media/{profile_image}"
 
         user.save()
             
@@ -136,14 +142,14 @@ def profile(request):
             streetname = request.POST.get("streetname")
             city_input = request.POST.get("city_input")
             zip = request.POST.get("zip")
-            logo_input = request.POST.get("logo_input")
+            logo_input = request.FILES.get("logo_input")
             bio_input = request.POST.get("bio_input")
 
             seller.type= seller_type
             seller.street_name= streetname
             seller.city= city_input
             seller.postal_code= zip
-            seller.logo= logo_input
+            seller.logo= f"/media/{logo_input}"
             seller.bio= bio_input
 
             

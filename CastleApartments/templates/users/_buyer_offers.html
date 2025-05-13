@@ -26,6 +26,7 @@
     </thead>
     <tbody class="table-group-divider" style="border-top-color: black;">
     {% for offer in offers %}
+    {% if offer.offer_status != "PROCESSED" %}
     <tr id="offer-id-{{ offer.id }}-row">
     <!-- {% if offer.offer_status == "ACCEPTED" %}
     class="table-success"
@@ -45,8 +46,9 @@
             <td class="align-middle text-center" scope="row">{{ offer.offer_expiry }}</td>
             <td class="align-middle text-end" scope="row"><h4 class="mx-3">{{ offer.offer_amount }} kr.</h4></td>
             <td class="offer-button-cell justify-content-evenly d-flex my-1" scope="row">
-                {% if offer.offer_status == "ACCEPTED" %}
-                <button name="offer-accepted-button" class="w-75 btn btn-success bigger-btn" data-bs-toggle="modal" data-bs-target="#contact-info-modal" 
+                <button name="offer-accepted-button" class="w-75 btn  btn-success bigger-btn"
+                {% if offer.offer_status != 'ACCEPTED' %}style="display:none;"{% endif %}
+                data-bs-toggle="modal" data-bs-target="#contact-info-modal" 
                 data-button-status="ACCEPTED"
                 data-offer-status="{{ offer.offer_status }}"
                 data-id="{{ offer.id }}"
@@ -57,10 +59,10 @@
                 data-type="{{ offer.property.property_type }}"
                 data-image="{{ offer.property.image }}"
                 data-listing-price="{{ offer.property.listing_price }}">Afgreiða</button>
-
-
-                {% elif offer.offer_status == "CONTINGENT" %}
-                <button name="offer-contingency-button" class="w-75 btn btn-primary bigger-btn" data-bs-toggle="modal" data-bs-target="#contingency-modal"
+                
+                <button name="offer-contingency-button" class="w-75 btn btn-primary bigger-btn" 
+                {% if offer.offer_status != 'CONTINGENT' %}style="display:none;"{% endif %}
+                data-bs-toggle="modal" data-bs-target="#contingency-modal"
                 data-button-status="CONTINGENT" 
                 data-offer-status="{{ offer.offer_status }}" 
                 data-offer-message="{{ offer.offer_contingency_message }}"
@@ -72,13 +74,27 @@
                 data-type="{{ offer.property.property_type }}"
                 data-listing-price="{{ offer.property.listing_price }}"
                 data-id="{{ offer.id }}">Skoða</button>
-                {% endif %}
 
+                <button name="offer-deleted-button" class="w-75 btn btn-primary bigger-btn" 
+                {% if offer.offer_status != 'REJECTED' %}style="display:none;"{% endif %}
+                data-bs-toggle="modal" data-bs-target="#delete-offer-modal"
+                data-button-status="REJECTED" 
+                data-offer-status="{{ offer.offer_status }}" 
+                data-offer-message="{{ offer.offer_contingency_message }}"
+                data-id="{{ offer.id }}"
+                data-street-name="{{ offer.property.street_name }}"
+                data-offer-amount="{{ offer.offer_amount }}"
+                data-zip="{{ offer.property.postal_code }}"
+                data-city="{{ offer.property.city }}"
+                data-type="{{ offer.property.property_type }}"
+                data-listing-price="{{ offer.property.listing_price }}"
+                data-id="{{ offer.id }}">Eyða</button>
             </td>
 
             <td class="align-middle text-center" scope="row"><h4><b>{{ offer.offer_status }}</b></h4></td>
 
         </tr>
+        {% endif %}
         {% empty %}
     </tbody>
 </table>
