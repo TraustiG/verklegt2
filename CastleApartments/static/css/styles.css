@@ -433,3 +433,7 @@ input[type=number] {
     box-shadow: 0 0 5px 3px var(--bs-danger);
 }
 
+.property-input:invalid[isvalid="true"] {
+    border-color: var(--bs-danger) !important;
+    box-shadow: 0 0 5px 3px var(--bs-danger) !important;
+}
