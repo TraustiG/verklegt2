@@ -9,7 +9,7 @@
         <div class="col-6 text-center">
         </div>
     </div>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="row mb-2">
             <div class="col">
                 {% csrf_token %}
@@ -19,9 +19,7 @@
                 <div class="form-floating mb-3">
                     <input required name={{field.name}} 
                     type=
-                    "{% if field.label == 'Image' %}
-                    Text
-                    {% elif 'Password' in field.label %}Password{% else %}{{ field.label }}{% endif %}"
+                    "{% if field.label == 'Image' %}file{% elif 'Password' in field.label %}Password{% else %}{{ field.label }}{% endif %}"
                     class="form-control" id="id_{{ field.name }}">
                     <label for="id_{{ field.name }}">{{ field.label }}</label>
                     {% if field.help_text %}
@@ -58,13 +56,9 @@
                     {% if field.label == 'Bio' or field.label == "Type" %}
                     {% else %}
                     <div class="form-floating mb-3">
-                        <input required name="{{ field.name }}" type="
-                        {% if field.label == 'Image' %}
-                        Text
-                        {% else %}
-                        {{field.label}}
-                        {% endif %}
-                        " class="form-control" id="id_{{field.name}}">
+                        <input required name="{{ field.name }}" 
+                        type="{% if field.label == 'Logo' %}file{% else %}{{field.label}}{% endif %}"
+                        class="form-control" id="id_{{field.name}}">
                         <label for="id_{{field.name}}">{{ field.label }}</label>
                         {% if field.help_text %}
                         <div id="{{ field.label }}HelpBlock" class="form-sub-text">

@@ -1,11 +1,9 @@
 (() => {
 
-    /* <div id="hidden-payment-option hidden-credit-card-payment-option" style="visibility: hidden;"> /div> */
     const hiddenPaymentOptions = document.querySelectorAll(".hidden-payment-option")
     const hiddenPaymentInformation = document.querySelectorAll(".hidden-payment-information")
     const paymentPicker = document.getElementById("payment-option-select")
 
-    let finalPaymentOption;
     
     const entryContinueButton = document.querySelector("#entry-payment-modal-continue-button")
     const optionContinueButton = document.querySelector("#option-payment-modal-continue-button")
@@ -14,7 +12,6 @@
     let paymentOptionFields = new Set([])
     const paymentContactFields = document.querySelectorAll('[id^="payment-contact"]')
     let paymentContactCheck = Array(paymentContactFields.length).fill(false)
-    let realForm = Array.from(document.forms).filter((f) => f.id === "offer-payment-form")[0]
     let tempForm = Array.from(document.forms).filter((f) => f.id === "temp-input-form")[0]
     
     
@@ -24,7 +21,10 @@
     
     optionContinueButton.addEventListener("click", () => {
         addPaymentInformation(paymentPicker.value)
-
+        let submitterButton = document.querySelector('[id="information-overview-modal-continue-button"]')
+        submitterButton.addEventListener("click", () => {
+            
+        })
     })
     
     paymentContactFields.forEach((element) => {

@@ -5,7 +5,7 @@ class User(AbstractUser):
     
     is_seller = models.BooleanField(default = False)
     is_buyer = models.BooleanField(default = False)
-    image = models.URLField()
+    image = models.ImageField()
     full_name = models.CharField(max_length = 100)
 
     def makeInits(self):
@@ -35,7 +35,7 @@ class Seller(models.Model):
     city = models.CharField(max_length=100)
     postal_code = models.CharField(max_length=5)
 
-    logo = models.URLField() #gæti þurft ehv variable inní 
+    logo = models.ImageField() #gæti þurft ehv variable inní 
     bio = models.TextField()
 
     def __str__(self):

@@ -15,4 +15,12 @@ class Migration(migrations.Migration):
             name='offer_contingency_message',
             field=models.CharField(blank=True, max_length=100),
         ),
+        migrations.AlterModelOptions(
+            name='offer',
+            options={'ordering': ('-offer_date', '-id')},
+        ),
+        migrations.AlterModelOptions(
+            name='property',
+            options={'ordering': ('-listing_date', '-id')},
+        ),
     ]
