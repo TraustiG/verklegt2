@@ -230,7 +230,6 @@ const editPropertyOnSubmit = (id, rowId) => {
 
         let data = editForm.serializeArray()
         data.push({name: "action", value: "PATCH"})
-        console.log(data)
 
         $.ajax({
             type: "POST",
@@ -255,7 +254,7 @@ const changeRow = (element, information) => {
 
     element.setAttribute("data-street", street)
     element.setAttribute("data-price", price)
-    /* EFTIR Að BREYTA ÖLLUM HINUM DATA- ATTRIBUTES */
+    /* EFTIR Að BREYTA ÖLLUM HINUM DATA- ATTRIBUTES  #####*/
     aCell.innerHTML = `<h4>${address}</h4>`
     pCell.innerHTML = `<h4>${price}</h4>`
 }

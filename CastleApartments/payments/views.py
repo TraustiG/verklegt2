@@ -1,24 +1,24 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import HttpResponse
 from django.views.decorators.http import require_POST, require_http_methods
 
-from real_estates.views import fetchNotifications
+from real_estates.views import fetchNotifications, notify
 from .models import Payment
 from real_estates.models import Offer
 
 # Create your views here.
 
-# Create your views here.
-
-
-def payment(request):
-    offer = Offer.objects.get(id=request.POST.get("offer-id"))
-    
-    payment_option = request.POST.get("payment-option")
+      
+@require_POST
+@fetchNotifications
+def selectPayment(request, id):
+    offer = Offer.objects.get(id=id)
+    offer.offer_status = "PROCESSED" 
+    notify(user=offer.property.seller.user, offer=offer)
+    offer.save()
+    payment_option = request.POST["payment-option"]
 
     Payment.objects.create(
         offer = offer,
         payment_option = payment_option
     )
-    return redirect('profile')
-
-      
+    return HttpResponse(200)

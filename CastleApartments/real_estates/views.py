@@ -267,19 +267,6 @@ def createImages(images, property, main=False):
 
 
 
-@require_POST
-@fetchNotifications
-def selectPayment(request, offer_id):
-    offer = Offer.objects.get(id=offer_id)
-    
-    payment_option = request.POST.get("payment_option")
-
-    Payment.objects.create(
-        offer = offer,
-        payment_option = payment_option
-    )
-    return redirect('profile')
-
 def filterListings(key: str, value: str, listings: list[Property]):
     filters = {"areaSelect": "postal_code",
                "typeSelect": "property_type",
