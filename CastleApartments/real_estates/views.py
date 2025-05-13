@@ -62,7 +62,7 @@ def getRealEstateById(request, id):
         offer = None
         if request.user.is_authenticated:
             if request.user.is_buyer:
-                offer = Offer.objects.filter(buyer=request.user.buyer, property=propertyObj)
+                offer = Offer.objects.filter(buyer=request.user.buyer, property=propertyObj).first()
                 request.user.has_offer = bool(offer)
 
         propertyObj.listing_price = format_currency(propertyObj.listing_price, "", locale="is_is")[:-4]
