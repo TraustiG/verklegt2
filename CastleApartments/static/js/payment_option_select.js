@@ -26,25 +26,26 @@
             const conf = new JSConfetti()
             conf.addConfetti()
 
-            let id = document.querySelector('id=["payment-form-actual-offer-id"]').value
+            let id = document.querySelector('[id="payment-form-actual-offer-id"]').value
+            let rowElement = document.getElementById(`offer-id-${id}-row`)
+            rowElement.parentNode.removeChild(rowElement)
+
 
             formSubmitter(id)
         })
     })
 
     const formSubmitter = (id) => {
-        $("#offer-payment-form").submit( (e) => {
-            console.log("hmm")
+        let form = $("#offer-payment-form")
+        form.submit( (e) => {
             
             e.preventDefault()
+            let data = form.serialize()
             
             $.ajax({
                 type: "POST",
-                url: `/offers/${id}`,
-                data: {
-                    action: "PROCESS",
-                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-                },
+                url: `/payments/${id}`,
+                data: data,
             })
         })
     }
@@ -129,6 +130,12 @@
         element.addEventListener("click", () => {
             resetForm()
             let input = document.querySelector('[id="payment-form-actual-offer-id"]')
+            let imageDiv = document.querySelector('[id="payment-form-image"]')
+            let image = document.createElement("img")
+            image.src = element.getAttribute("data-image")
+            image.setAttribute("height", "250rem")
+            console.log(image)
+            imageDiv.appendChild(image)
 
             let contingencyMessage = document.querySelector('[id="contingency-modal-body-message"]')
             if (contingencyMessage) {

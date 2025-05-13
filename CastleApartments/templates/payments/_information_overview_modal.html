@@ -31,8 +31,7 @@
                             </dl>
                         </div>
                         <div class="col-4">
-                            <div id="payment-form-offer-property-image d-flex justify-content-center align-items-center">
-                                <span id="payment-form-offer-property-image">her er kannski mynd</span>
+                            <div id="payment-form-image" class="d-flex justify-content-center align-items-center">
                             </div>
                         </div>
                     </div>
@@ -135,9 +134,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-target="#payment-option-modal" data-bs-toggle="modal">Til baka</button>
-                    <form method="POST" id="offer-payment-form" action="{% url 'payment' %}">
+                    <form method="POST" id="offer-payment-form">
                     {% csrf_token %}
-                        <button id="information-overview-modal-continue-button" type="button" class="btn btn-success" data-bs-target="#payment-confirmation-modal" data-bs-toggle="modal">Staðfesta greiðslu</button>
+                        <button id="information-overview-modal-continue-button" type="submit" class="btn btn-success" data-bs-target="#payment-confirmation-modal" data-bs-toggle="modal">Staðfesta greiðslu</button>
                         <label for="payment-option" class="visually-hidden">Heimilisfang</label>
                         <input class="visually-hidden" type="text" name="payment-option" id="payment-form-actual-payment-option" readonly>
                         <label for="offer-id" class="visually-hidden">Heimilisfang</label>

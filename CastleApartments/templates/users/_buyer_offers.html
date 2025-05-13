@@ -26,6 +26,7 @@
     </thead>
     <tbody class="table-group-divider" style="border-top-color: black;">
     {% for offer in offers %}
+    {% if offer.offer_status != "PROCESSED" %}
     <tr id="offer-id-{{ offer.id }}-row">
     <!-- {% if offer.offer_status == "ACCEPTED" %}
     class="table-success"
@@ -93,6 +94,7 @@
             <td class="align-middle text-center" scope="row"><h4><b>{{ offer.offer_status }}</b></h4></td>
 
         </tr>
+        {% endif %}
         {% empty %}
     </tbody>
 </table>
