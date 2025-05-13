@@ -39,8 +39,9 @@
             <th class="align-middle text-center" scope="row">{{ offer.property.seller.user.full_name }}</th>
             <td class="d-flex align-middle text-start align-items-center justify-content-between px-3 fs-4" scope="row">
                 {{ offer.property.street_name }} - {{ offer.property.postal_code }} {{ offer.property.city }}
-                <button class="btn btn-primary mx-2" >Skoða</button>
-                
+                <a class="px-2" href="{% url 'real-estate-by-id' id=offer.property.id %}">
+                    <button class="btn btn-primary mx-2" >Skoða</button>
+                </a>
             </td>
             <td class="align-middle text-center py-2" scope="row">{{ offer.offer_date }}</td>
             <td class="align-middle text-center" scope="row">{{ offer.offer_expiry }}</td>
