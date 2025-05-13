@@ -547,8 +547,10 @@ const propertySubmitButton = document.getElementById("create-property-modal-subm
 
             if (!element.checkValidity()) {
                 element.setAttribute("isvalid", "true");
+                element.parentElement.querySelector(".invalid-text").style.display = "block"; 
             } else {
                 element.removeAttribute("isvalid");
+                element.parentElement.querySelector(".invalid-text").style.display = "none"; 
             }
         });
 
