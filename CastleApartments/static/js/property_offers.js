@@ -543,8 +543,10 @@ const deletePropertyOnSubmit = (id, rowId) => {
     
             if (!element.checkValidity()) {
                 element.setAttribute("isvalid", "true");
+                element.parentElement.querySelector(".invalid-text").style.display = "block"; 
             } else {
                 element.removeAttribute("isvalid");
+                element.parentElement.querySelector(".invalid-text").style.display = "none"; 
             }
         });
     
