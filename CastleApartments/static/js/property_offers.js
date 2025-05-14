@@ -23,6 +23,8 @@
         }
         activeRow = element
         activeRow.classList.toggle("table-active")
+        let imageElement = document.getElementById("chosen-row-property-image")
+        imageElement.src = element.getAttribute("data-image")
         document.getElementById("offer-table").style.display = ""
         offerTableRows.forEach((el) => {
             document.getElementById("address-table-caller").innerHTML = element.id

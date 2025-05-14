@@ -11,7 +11,7 @@
     </thead>
     <tbody id="seller-property-table-body" class="table-group-divider" style="border-top-color: black;">
     {% for property, info in properties.items %}
-        <tr name="property-table-row" id="{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}">
+        <tr name="property-table-row" id="{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}" data-image="{{ property.image }}">
             <th name="address-cell" class="address-cell align-middle text-start" scope="row"><h3 class="mx-5">{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}</h3></th>
             <td name="price-cell" class="listing-price-cell align-middle text-end px-3" scope="row"><h4>{{ property.listing_price }} kr.</h4></td>
             <td class="listing-date-cell align-middle text-center" scope="row">{{ property.listing_date }}</td>
@@ -35,7 +35,6 @@
                 data-bathrooms="{{ property.number_of_bathrooms }}"
                 data-sqm="{{ property.square_meters }}"
                 data-status="{{ property.status }}"
-                data-image="{{ property.image }}"
                 data-type="{{ property.property_type }}"
                 data-price="{{ property.raw_price }}"
                 {% if property.status == "SOLD" or property.status == "PROCESSED" %}
