@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.contrib.auth import login
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
+from django.contrib import messages
 from babel.numbers import format_currency
 import copy
 from .forms import RegistrationForm , SellerForm, SearchForm
@@ -183,7 +184,9 @@ def profile(request):
             
             else:
                 seller.save()
-        
+
+            messages.success(request, "Notendaupplýsingum hefur verið breytt!")
+
         return redirect('profile')
         
 @require_safe
