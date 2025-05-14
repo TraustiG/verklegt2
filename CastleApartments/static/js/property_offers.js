@@ -63,7 +63,7 @@
         return document.getElementById("seller-property-table-body").lastElementChild
     }
 
-})()
+})();
 
 
 //resets the edit property modal when its closed
@@ -96,11 +96,21 @@ submitButtons.forEach((el) => {
         imgDesc.value = ""
         imgInput.value = ""
     })
-})
+});
 
 const imgAdderButton = document.getElementById("image-adder-button")
 imgAdderButton.addEventListener("click", () => {
     const file = imgInput.files[0]
+    if (!file) {
+        imgInput.setAttribute("isvalid", "true")
+    } else {
+        imgInput.setAttribute("isvalid", "false")
+    }
+    if (!imgDesc.value) {
+        imgDesc.setAttribute("isvalid", "true")
+    } else {
+        imgDesc.setAttribute("isvalid", "false")
+    }
     if (file && imgDesc.value) {
         let desc = imgDesc.value
         let imgElement = newImageElement(file, desc)
@@ -108,11 +118,24 @@ imgAdderButton.addEventListener("click", () => {
         imgDesc.value = ""
         imgInput.value = ""
 
-    } else {
-        console.log("input??")
     }
-})
+});
 
+/*
+reyna eyða myndum ??
+
+const xSvg = "<svg fill='#e10000' height='64px' width='64px' version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 415.188 415.188' xml:space='preserve' stroke='#e10000'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'> <path d='M412.861,78.976c3.404-6.636,2.831-14.159-0.15-20.404c0.84-7.106-1.02-14.321-7.746-19.855 c-6.262-5.151-12.523-10.305-18.781-15.457c-11.005-9.055-28.237-11.913-38.941,0c-48.619,54.103-99.461,105.856-152.167,155.725 c-39.185-36.605-78.846-72.713-118.223-108.868c-13.82-12.693-33.824-8.71-42.519,6.411c-12.665,6.286-22.931,14.481-31.42,28.468 c-4.042,6.664-3.727,15.076,0,21.764c25.421,45.578,74.557,85.651,114.957,122.529c-5.406,4.839-10.772,9.724-16.287,14.461 c-54.43,46.742-91.144,76.399-23.029,124.325c0.919,0.647,1.856,0.504,2.789,0.882c1.305,0.602,2.557,1.026,4.004,1.264 c0.45,0.017,0.87,0.093,1.313,0.058c1.402,0.114,2.774,0.471,4.195,0.192c36.621-7.18,70.677-35.878,101.576-67.48 c30.1,29.669,62.151,58.013,97.395,74.831c8.391,4.005,18.395,1.671,24.855-3.931c10.832,0.818,20.708-5.913,25.665-15.586 c0.734-0.454,1.207-0.713,2.002-1.21c15.748-9.838,17.187-29.431,5.534-42.936c-26.313-30.492-54.284-59.478-82.798-87.95 C316.426,196.043,380.533,141.939,412.861,78.976z'></path> </g></svg>"
+const createRedCross = () => {
+let div = document.createElement("div")
+div.style.position = "absolute"
+let x = document.createElement("span")
+x.innerHTML = xSvg
+x.style.visibility = "hidden"
+x.style.position = "absolute"
+div.appendChild(x)
+return div
+}
+*/
 const newImageElement = (file, desc) => {
 
     let div = document.createElement("div")
@@ -145,9 +168,12 @@ const newImageElement = (file, desc) => {
     imageElements.push(div)
 
     return div
-}
+};
+
 
 const createPropertyButton = document.getElementById("create-property-button")
+const editPropertyButtons = document.getElementsByName("editProperty")
+const propertySubmitButton = document.getElementById("create-property-modal-submit");
 
 document.addEventListener("DOMContentLoaded", () => {
     const modal = document.querySelector('[id="property-modal"]');
@@ -157,6 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 createPropertyButton.addEventListener("click", () => {
+    propertySubmitButton.disabled = true
     document.getElementById("create-property-modal").innerHTML = "Skrá eign"
     form.action = "/real-estates/"
     setFormValue("streetname", "")
@@ -169,34 +196,19 @@ createPropertyButton.addEventListener("click", () => {
     setFormValue("sqm", "")
     setFormValue("desc", "")
     clearFormImages()
-})
+});
 
 const clearFormImages = () => {
     let images = form.querySelector('input[name="hidden-images-list"]')
     images.setAttribute("value", "")
     submittedImageRow.innerHTML = ""
-}
+};
 
-/*
-reyna eyða myndum ??
 
-const xSvg = "<svg fill='#e10000' height='64px' width='64px' version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 415.188 415.188' xml:space='preserve' stroke='#e10000'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'> <path d='M412.861,78.976c3.404-6.636,2.831-14.159-0.15-20.404c0.84-7.106-1.02-14.321-7.746-19.855 c-6.262-5.151-12.523-10.305-18.781-15.457c-11.005-9.055-28.237-11.913-38.941,0c-48.619,54.103-99.461,105.856-152.167,155.725 c-39.185-36.605-78.846-72.713-118.223-108.868c-13.82-12.693-33.824-8.71-42.519,6.411c-12.665,6.286-22.931,14.481-31.42,28.468 c-4.042,6.664-3.727,15.076,0,21.764c25.421,45.578,74.557,85.651,114.957,122.529c-5.406,4.839-10.772,9.724-16.287,14.461 c-54.43,46.742-91.144,76.399-23.029,124.325c0.919,0.647,1.856,0.504,2.789,0.882c1.305,0.602,2.557,1.026,4.004,1.264 c0.45,0.017,0.87,0.093,1.313,0.058c1.402,0.114,2.774,0.471,4.195,0.192c36.621-7.18,70.677-35.878,101.576-67.48 c30.1,29.669,62.151,58.013,97.395,74.831c8.391,4.005,18.395,1.671,24.855-3.931c10.832,0.818,20.708-5.913,25.665-15.586 c0.734-0.454,1.207-0.713,2.002-1.21c15.748-9.838,17.187-29.431,5.534-42.936c-26.313-30.492-54.284-59.478-82.798-87.95 C316.426,196.043,380.533,141.939,412.861,78.976z'></path> </g></svg>"
-const createRedCross = () => {
-let div = document.createElement("div")
-div.style.position = "absolute"
-let x = document.createElement("span")
-x.innerHTML = xSvg
-x.style.visibility = "hidden"
-x.style.position = "absolute"
-div.appendChild(x)
-return div
-}
-*/
-
-const editPropertyButtons = document.getElementsByName("editProperty")
 editPropertyButtons.forEach((element) => {
     
     const listener = () => {
+        propertySubmitButton.disabled = false
         document.getElementById("create-property-modal").innerHTML = "Breyta eign"
         setFormValue("streetname", element.getAttribute("data-street"))
         setFormValue("city_input", element.getAttribute("data-city"))
@@ -214,11 +226,12 @@ editPropertyButtons.forEach((element) => {
         let zip = element.getAttribute("data-zip")
         let city = element.getAttribute("data-city")
         let rowId = `${street} - ${zip} ${city}`
+        clearFormImages()
         editPropertyOnSubmit(element.getAttribute("data-id"), rowId)
         element.removeEventListener("click", listener)
     }
     element.addEventListener("click", listener)
-})
+});
 
 
 const editPropertyOnSubmit = (id, rowId) => {
@@ -243,7 +256,7 @@ const editPropertyOnSubmit = (id, rowId) => {
 
         })
     })
-}
+};
 
 const changeRow = (element, information) => {
     
@@ -275,12 +288,12 @@ const changeRow = (element, information) => {
     
     aCell.innerHTML = `<h4 class="mx-5">${address}</h4>`
     pCell.innerHTML = `<h4>${parseInt(price).toLocaleString().replace(/,/g,".")} kr.</h4>`
-}
+};
 
 const setFormValue = (formfield, val) => {
         form[formfield].setAttribute("value", val)
         form[formfield].value = val
-}
+};
 
 (() => {
     const deletePropertyButtons = document.getElementsByName("deleteProperty")
@@ -318,12 +331,51 @@ const setFormValue = (formfield, val) => {
             })
         })
     }
-})    
+})();
 
 
 // Accept offer 
 (() => {
     const accepterTextDiv = (element) => {
+        div = document.getElementById("accept-offer-modal-body-prompt")
+        let price = element.getAttribute("data-offer-amount")
+        let street = element.getAttribute("data-street")
+        let zip = element.getAttribute("data-zip")
+        let city = element.getAttribute("data-city")
+        let address = `${street} - ${zip} ${city}`
+        
+        let breaker = document.createElement("br")
+        let top = document.createElement("h4")
+        top.innerHTML = "Þú ert hér með að samþykkja sölu á "
+        top.classList.add("text-break")
+
+        let inner = document.createElement("h3")
+        inner.classList.add("text-center")
+        inner.classList.add("fw-semibold")
+        inner.classList.add("lh-lg")
+        inner.classList.add("text-decoration-underline")
+
+        inner.innerHTML = address
+
+        let bottom = document.createElement("h4")
+        bottom.classList.add("text-end")
+        bottom.classList.add("px-2")
+        bottom.innerHTML = `fyrir <u>${price}</u> kr.`
+
+        div.innerHTML = ""
+        div.appendChild(top)
+        div.appendChild(breaker)
+        div.appendChild(inner)
+        div.appendChild(breaker)
+        div.appendChild(bottom)
+    }
+    
+    const acceptOfferButtons = document.getElementsByName("accept-offer-button")
+    let acceptSubmitButton = document.getElementById("accept-offer-submit-button")
+    
+    acceptOfferButtons.forEach((element) => {
+        
+        const listener = () => {
             div = document.getElementById("accept-offer-modal-body-prompt")
             let price = element.getAttribute("data-offer-amount")
             let street = element.getAttribute("data-street")
@@ -335,38 +387,30 @@ const setFormValue = (formfield, val) => {
             let top = document.createElement("h4")
             top.innerHTML = "Þú ert hér með að samþykkja sölu á "
             top.classList.add("text-break")
-
+        
             let inner = document.createElement("h3")
             inner.classList.add("text-center")
             inner.classList.add("fw-semibold")
             inner.classList.add("lh-lg")
             inner.classList.add("text-decoration-underline")
-
+        
             inner.innerHTML = address
-
+        
             let bottom = document.createElement("h4")
             bottom.classList.add("text-end")
             bottom.classList.add("px-2")
             bottom.innerHTML = `fyrir <u>${price}</u> kr.`
-
+        
             div.innerHTML = ""
             div.appendChild(top)
             div.appendChild(breaker)
             div.appendChild(inner)
             div.appendChild(breaker)
             div.appendChild(bottom)
-    }
-
-    const acceptOfferButtons = document.getElementsByName("accept-offer-button")
-    let acceptSubmitButton = document.getElementById("accept-offer-submit-button")
-
-    acceptOfferButtons.forEach((element) => {
-        
-        const listener = () => {
             id = element.getAttribute("data-id")
             rowId = `offer-id-${id}-row`
-
             accepterTextDiv(element)
+
 
             acceptSubmitButton.addEventListener("click", () => {
                 acceptOfferRow(element)
@@ -410,7 +454,7 @@ const setFormValue = (formfield, val) => {
     
             rejectSubmitButton.addEventListener("click", () => {
                 rejectOfferOnSubmit(id, rowId)
-            element.removeEventListener("click", listener)
+                element.removeEventListener("click", listener)
             })
         }
         element.addEventListener("click", listener)
@@ -582,4 +626,4 @@ const setFormValue = (formfield, val) => {
         Array.from(allRows).forEach((row) => disableOfferRow(element, row))
     }
 
-})()
+})();

@@ -81,14 +81,14 @@ def register(request):
 @fetchNotifications
 def saveFilter(request):
     if request.method == "POST":
-        form = SearchForm()
         search = Filter()
-        search.area = form.area
-        search.monitor = form.monitor
-        search.name = form.name
-        search.re_type = form.re_type
-        search.desc = form.desc
-        search.price = form.price
+        search.area = request.POST["area"]
+        search.monitor = request.POST["monitor"]
+        search.name = request.POST["name"]
+        search.re_type = request.POST["re_type"]
+        search.desc = request.POST["desc"]
+        search.price = request.POST["price"]
+        print(search)
         search.user = request.user
         search.save()
 

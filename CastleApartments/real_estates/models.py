@@ -37,6 +37,7 @@ class Property(models.Model):
     number_of_bedrooms = models.IntegerField()
     number_of_bathrooms = models.IntegerField()
     square_meters = models.IntegerField()
+    looked_at = models.IntegerField(default=0)
     status = models.CharField(choices=PropertyStatus.choices, default=PropertyStatus.OPEN)
     image = models.TextField()
 

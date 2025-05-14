@@ -6,7 +6,7 @@
                 <div class="col-3">
                     <div class="form-floating">
                         <select class="form-select" name="areaSelect" id="id_areaSelect">
-                            <option selected></option>
+                            <option selected disabled></option>
                             {% for area in areas %}
                             <option value="{{ area }}">
                                 {{area}}
@@ -19,7 +19,7 @@
                 <div class="col-sm-2">
                     <div class="form-floating">
                         <select class="form-select" name="typeSelect" id="id_typeSelect">
-                            <option selected></option>
+                            <option selected disabled></option>
                             {% for type in types %}
                             <option value="{{ type }}">
                                 {{ type }}
@@ -91,27 +91,28 @@
                                     </span>
                                 </div>
                             </button>
+                            </form>
                             <div class="dropdown-center">
-                                <button id="saveFilterButton" type="button" 
-                                class="btn 
-                                {% if not user.is_buyer %}
-                                " disabled
-                                {% else %}
-                                btn-primary"
-                                {% endif %}
-                                data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <div class="d-flex justify-content-center gap-1">
-                                        <span class="d-flex align-items-center">
-                                            <svg class="align-self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-plus" viewBox="0 0 16 16">
-                                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
-                                                <path d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4"/>
-                                            </svg>
-                                        </span>
-                                        <span>
-                                            Vista
-                                        </span>
-                                    </div>
-                                </button>
+                                    <button id="open-filter-saver-button" type="button" 
+                                    class="btn 
+                                    {% if not user.is_buyer %}
+                                    " disabled
+                                    {% else %}
+                                    btn-primary"
+                                    {% endif %}
+                                    data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <div class="d-flex justify-content-center gap-1">
+                                            <span class="d-flex align-items-center">
+                                                <svg class="align-self-center" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-plus" viewBox="0 0 16 16">
+                                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                                                    <path d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4"/>
+                                                </svg>
+                                            </span>
+                                            <span>
+                                                Vista
+                                            </span>
+                                        </div>
+                                    </button>
                                 <div class="dropdown-menu mx-1 px-1">
                                     <div class="container">
                                         <label for="id_filterName">Nafn</label>
@@ -127,7 +128,10 @@
                                                     Vakta síu
                                                 </label>
                                             </div>
-                                            <button type="submit" class="btn btn-primary">Vista</button>
+                                            <form id="save-filter-form" action="/filters/" method="POST">
+                                                {% csrf_token %}
+                                                <button id="filter-saver-button" type="submit" class="btn btn-primary">Vista</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -153,8 +157,8 @@
                                     </div>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    {% for filter in user.filters %}
-                                    <li><a class="saved-filter dropdown-item" filter="{{ filter.filters }}">{{ filter.name }}</a></li>
+                                    {% for filter in filters %}
+                                    <li><a class="saved-filter dropdown-item" data-name="{{filter.name}}" data-area="{{filter.area}}" data-price="{{filter.price}}" data-desc="{{filter.desc}}" data-re_type="{{filter.re_type}}">{{ filter.name }}</a></li>
                                     {% endfor %}
                                 </ul>
                             </div>
@@ -162,6 +166,5 @@
                     </div>
                 </div>
             </div>
-        </form>
     </div>
 </div>
