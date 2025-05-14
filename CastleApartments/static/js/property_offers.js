@@ -97,6 +97,7 @@ submitButtons.forEach((el) => {
         imageRow.innerHTML = ""
         imgDesc.value = ""
         imgInput.value = ""
+
     })
 });
 
