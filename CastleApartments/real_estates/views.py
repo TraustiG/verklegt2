@@ -12,7 +12,7 @@ from io import BytesIO
 import base64
 import json
 import datetime
-from .models import Property, Offer, PropertyImages
+from .models import Property, Offer, PropertyImages, Extras
 from payments.models import Payment
 from users.models import Buyer, Seller, Notification, User, Filter
 
@@ -78,6 +78,8 @@ def getPropertiesByWatch(request):
     filters = Filter.objects.filter(user_id=request.user.id)
     filters = fixFilters(request.user, filters)
     listings = Property.objects.filter(*queries)
+    for item in listings:
+        item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
     
     return render(request, "users/watch.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
 
@@ -108,6 +110,8 @@ def getRealEstateById(request, id):
 
         propertyObj.listing_price = format_currency(propertyObj.listing_price, "", locale="is_is")[:-4]
         propertyObj.description = propertyObj.description.splitlines()
+        extras = Extras.objects.filter(property_id=propertyObj.id)
+        propertyObj.extras = extras
 
         return render(request, "real_estates/real_estate.html", { "property": propertyObj, "images":images, "listings": similars, "offer": offer})
 
@@ -121,26 +125,38 @@ def getRealEstateById(request, id):
         if request.POST["action"] == "DELETE":
             try:
                 propertyObj.delete()
-            except Exception:
+            except Exception as e:
+                print(e)
                 return HttpResponse(403)
         else:
-            propertyObj = Property.objects.get(id=id)
-            
-            propertyObj.street_name = request.POST.get("streetname")
-            propertyObj.city = request.POST.get("city_input")
-            propertyObj.postal_code = request.POST.get("zip")
-            propertyObj.description = request.POST.get("desc")
-            propertyObj.number_of_bedrooms = request.POST.get("bedrooms")
-            propertyObj.number_of_bathrooms = request.POST.get("bathrooms")
-            propertyObj.square_meters = request.POST.get("sqm")
-            propertyObj.property_type = request.POST.get("type")
-            propertyObj.listing_price = request.POST.get("price")
-            images = request.POST.get("hidden-images-list")
-
-            createImages(images, propertyObj)
             try:
+                propertyObj = Property.objects.get(id=id)
+                
+                extras = []
+                for item in ["garage", "elevator", "wheelchair", "electric", "view"]:
+                    extra = request.POST.get(item)
+                    if extra:
+                        extras.append(extra)
+                old = Extras.objects.filter(property_id=propertyObj.id)
+                old = [x.description for x in old]
+                for extra in extras:
+                    if extra not in old:
+                        Extras.objects.create(property_id=propertyObj.id, description=extra)
+                propertyObj.street_name = request.POST.get("streetname")
+                propertyObj.city = request.POST.get("city_input")
+                propertyObj.postal_code = request.POST.get("zip")
+                propertyObj.description = request.POST.get("desc")
+                propertyObj.number_of_bedrooms = request.POST.get("bedrooms")
+                propertyObj.number_of_bathrooms = request.POST.get("bathrooms")
+                propertyObj.square_meters = request.POST.get("sqm")
+                propertyObj.property_type = request.POST.get("type")
+                propertyObj.listing_price = request.POST.get("price")
+                images = request.POST.get("hidden-images-list")
+
+                createImages(images, propertyObj)
                 propertyObj.save()
-            except Exception:
+            except Exception as e:
+                print(e)
                 return HttpResponse(500)
             
         return HttpResponse(status=200)
@@ -286,7 +302,6 @@ def createProperty(request):
     type = request.POST.get("type")
     price = request.POST.get("price")
     images = request.POST.get("hidden-images-list")
-    area = f"{zip} {city_input}"
 
     seller_obj = Seller.objects.get(user=request.user)
     newProperty = Property.objects.create(
@@ -308,6 +323,13 @@ def createProperty(request):
     newProperty.image = createImages(images, newProperty, 0)
     newProperty.save()
     
+    for item in ["garage", "elevator", "wheelchair", "electric", "view"]:
+        extra = request.POST.get(item)
+        if extra:
+            new = Extras.objects.create(property_id=newProperty.id, description=extra)
+            new.save()
+
+    area = f"{zip} {city_input}"
     filters = Filter.objects.filter(monitor=True)
     for filter in filters:
         if filter.area not in ["", area]:

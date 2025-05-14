@@ -25,6 +25,8 @@
         activeRow.classList.toggle("table-active")
         let imageElement = document.getElementById("chosen-row-property-image")
         imageElement.src = element.getAttribute("data-image")
+        //imageElement.parentElement.setAttribute("href", `/real-estates/${element.getAttribute("data-id")}`)
+        imageElement.parentElement.innerHTML = element.getAttribute("data-card")
         document.getElementById("offer-table").style.display = ""
         offerTableRows.forEach((el) => {
             document.getElementById("address-table-caller").innerHTML = element.id
@@ -174,6 +176,9 @@ const newImageElement = (file, desc) => {
 const createPropertyButton = document.getElementById("create-property-button")
 const editPropertyButtons = document.getElementsByName("editProperty")
 const propertySubmitButton = document.getElementById("create-property-modal-submit");
+const extrasField = [...document.querySelectorAll('[id^="extra-option-"]')]
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const modal = document.querySelector('[id="property-modal"]');
@@ -195,6 +200,9 @@ createPropertyButton.addEventListener("click", () => {
     setFormValue("bathrooms", "")
     setFormValue("sqm", "")
     setFormValue("desc", "")
+    extrasField.forEach((field) => {
+        field.removeAttribute("checked")
+    })
     clearFormImages()
 });
 
@@ -205,9 +213,9 @@ const clearFormImages = () => {
 };
 
 
-editPropertyButtons.forEach((element) => {
-    
-    const listener = () => {
+Array.from(editPropertyButtons).forEach((element) => {
+    element.addEventListener("click", () => {
+
         propertySubmitButton.disabled = false
         document.getElementById("create-property-modal").innerHTML = "Breyta eign"
         setFormValue("streetname", element.getAttribute("data-street"))
@@ -221,31 +229,52 @@ editPropertyButtons.forEach((element) => {
         setFormValue("desc", element.getAttribute("data-desc"))
         form["desc"].innerHTML = element.getAttribute("data-desc")
         form["desc"].value = element.getAttribute("data-desc")
+        let extras = element.getAttribute("data-extras").split(",")
+        extrasField.forEach((field) => {
+            if (extras.includes(field.value)) {
+                field.checked = true
+            } else {
+                field.checked = false
+            }
+        })
+
+        const listener = () => {
         
-        let street = element.getAttribute("data-street")
-        let zip = element.getAttribute("data-zip")
-        let city = element.getAttribute("data-city")
-        let rowId = `${street} - ${zip} ${city}`
-        clearFormImages()
-        editPropertyOnSubmit(element.getAttribute("data-id"), rowId)
-        element.removeEventListener("click", listener)
-    }
-    element.addEventListener("click", listener)
+            let street = element.getAttribute("data-street")
+            let zip = element.getAttribute("data-zip")
+            let city = element.getAttribute("data-city")
+            let rowId = `${street} - ${zip} ${city}`
+            clearFormImages()
+            editPropertyOnSubmit(element.getAttribute("data-id"), rowId)
+            propertySubmitButton.removeEventListener("click", listener)
+        }
+        propertySubmitButton.addEventListener("click", listener)
+    })
 });
 
 
 const editPropertyOnSubmit = (id, rowId) => {
     let editForm = $("#create-new-property")
-    editForm.submit( function (e) {
+    $("#create-new-property").submit( function (e) {
         e.preventDefault()
 
         let rowElement = document.getElementById(rowId)
         changeRow(rowElement, editForm)
         document.getElementById("offer-table").style.display = "none"
         document.getElementById("address-table-caller").innerHTML = ""
+        })
 
+        newExtras = extrasField.map((field) => {
+            console.log(field.value)
+                if (field.checked) {
+            console.log(field.value)
+                    return field.value
+                }
+            })
+        console.log(newExtras)
         let data = editForm.serializeArray()
         data.push({name: "action", value: "PATCH"})
+        data.push({name: "extras", value: newExtras})
 
         $.ajax({
             type: "POST",
@@ -255,7 +284,6 @@ const editPropertyOnSubmit = (id, rowId) => {
             ,
 
         })
-    })
 };
 
 const changeRow = (element, information) => {
@@ -271,7 +299,7 @@ const changeRow = (element, information) => {
     let bedrooms = information.querySelector('input[id="property-input-bedrooms"]').value
     let bathrooms = information.querySelector('input[id="property-input-bathrooms"]').value
     let sqm = information.querySelector('input[id="property-input-sqm"]').value
-    let type = information.querySelector('input[id="property-input-type"]').value
+    let type = information.querySelector('select[id="property-input-type"]').value
     let desc = information.querySelector('textarea[id="property-input-desc"]').value
     let address = `${street} - ${zip} ${city}`
 
@@ -596,12 +624,6 @@ const setFormValue = (formfield, val) => {
         
         });
     
-        //resetting modal when its closed
-        document.querySelector('#property-modal').addEventListener("hidden.bs.modal", () => {
-            propertyFields.forEach((el) => el.removeAttribute("isvalid"));
-            propertySubmitButton.disabled = true;
-    });
-
     const disableOfferRow = (element, row) => {
         let buttons = row.getElementsByTagName("button")
         Array.from(buttons).forEach((button) => {
