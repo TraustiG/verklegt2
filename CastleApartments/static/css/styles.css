@@ -433,7 +433,9 @@ input[type=number] {
     appearance: none;
     -moz-appearance: textfield;
 }
-.payment-input:invalid[isvalid] {
+.payment-input:invalid[isvalid],
+.buyer-form-field:invalid[isvalid],
+.seller-form-field:invalid[isvalid] {
     border-color: var(--bs-danger);
     box-shadow: 0 0 5px 3px var(--bs-danger);
 }
