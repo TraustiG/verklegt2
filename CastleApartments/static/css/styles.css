@@ -7,6 +7,10 @@ dt.buyer-info {
     text-align: end;
 }
 
+.sortable-table-header:hover {
+    cursor: cell;
+}
+
 .offer-row-button {
     height: 3rem;
     width: 7rem;
@@ -433,6 +437,8 @@ input[type=number] {
     appearance: none;
     -moz-appearance: textfield;
 }
+
+.validation-field[isvalid],
 .payment-input:invalid[isvalid],
 .buyer-form-field:invalid[isvalid],
 .seller-form-field:invalid[isvalid] {

@@ -14,7 +14,7 @@ import json
 import datetime
 from .models import Property, Offer, PropertyImages
 from payments.models import Payment
-from users.models import Buyer, Seller, Notification, User
+from users.models import Buyer, Seller, Notification, User, Filter
 
 # Create your views here.
 
@@ -36,12 +36,16 @@ def fetchNotifications(view_func):
 def index(request):
     # þarf að fa listings og tegundir og postnumer í boði
 
+    popular = Property.objects.order_by("-looked_at")[:5]
+    newest = Property.objects.all()[:5]
+
     listings = Property.objects.all()
 
     areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
     types = sorted(list(set([f"{x.property_type}" for x in listings])))
+    
     prices = getPrices()
-    filters = []
+    filters = Filter.objects.filter(user_id=request.user.id)
     for item in listings:
         item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
     return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
@@ -56,6 +60,8 @@ def getRealEstateById(request, id):
         except Property.DoesNotExist:
             return redirect('real-estates')
         similars = getSimilars(propertyObj)
+        propertyObj.looked_at += 1
+        propertyObj.save()
         images = PropertyImages.objects.filter(property=propertyObj)
         for prop in similars:
             prop.listing_price = format_currency(prop.listing_price, "", locale="is_is")[:-4]
@@ -143,7 +149,7 @@ def search(request):
     for item in listings:
         item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
 
-    return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
+    return render(request, "real_estates/search.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
 
 @require_POST
 @fetchNotifications
@@ -177,7 +183,6 @@ def createOffer(request, id):
 @require_POST
 @fetchNotifications
 def deleteOffer(request, id):
-    print(id)
     try:
         action = request.POST["action"]
     except Exception:
@@ -287,7 +292,7 @@ def filterListings(key: str, value: str, listings: list[Property]):
         key = filters[key]
 
     if key == "postal_code":
-        value = value.split()[0]
+        value = int(value.split()[0])
     if key == "description":
         temp = [x for x in listings if checkDesc(value, x)]
     elif key == "listing_price":
@@ -412,7 +417,6 @@ def databaseFiller(request):
         htmlText = images.text
         matches = re.findall(r"<img src=\"https://api-beta.fasteignir.is/pictures/\d*/(.*)?\" title", htmlText)
         if not matches:
-            print(prop["id"])
             continue
         if i%50 == 0:
             print(i)
