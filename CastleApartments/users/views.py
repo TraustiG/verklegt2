@@ -27,7 +27,13 @@ def register(request):
 
         if form.is_valid():
             user = form.save(commit=False)
+            user.image = form.cleaned_data['image']
+            user.save()  
+
+           
             user.image = f"/media/{user.image}"
+            user.save()  
+
             
             if role == 'buyer':
                 user.is_buyer = True
@@ -43,9 +49,11 @@ def register(request):
                     seller.street_name=seller_form.cleaned_data['street_name']
                     seller.city=seller_form.cleaned_data['city']
                     seller.postal_code=seller_form.cleaned_data['postal_code']
-                    seller.logo = f"/media/{seller_form.cleaned_data['logo']}"
+                    seller.logo = seller_form.cleaned_data['logo']
                     print(seller.logo)
                     seller.bio=seller_form.cleaned_data['bio']
+                    seller.save()
+                    seller.logo = f"/media/{seller.logo}"
                     seller.save()
                 
                 else:
@@ -130,8 +138,15 @@ def profile(request):
         profile_image = request.FILES.get("profile_image")
 
         user.full_name = fullname
-        user.image = f"/media/{profile_image}"
+        user.image = profile_image
 
+        #saves the picture to media folder
+        user.save() 
+
+        
+        user.image = f"/media/{user.image}"
+
+        #saves correct path for user.image
         user.save()
             
         #check if user is a seller & edit / save seller object if those fields have been edited
@@ -149,10 +164,15 @@ def profile(request):
             seller.street_name= streetname
             seller.city= city_input
             seller.postal_code= zip
-            seller.logo= f"/media/{logo_input}"
+            seller.logo= logo_input
             seller.bio= bio_input
 
             
+            seller.save()
+
+            #save correct path to logo field
+            seller.logo= f"/media/{seller.logo}"
+
             seller.save()
         
         return redirect('profile')
