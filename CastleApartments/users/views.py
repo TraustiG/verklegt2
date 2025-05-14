@@ -6,7 +6,7 @@ from babel.numbers import format_currency
 import copy
 from .forms import RegistrationForm , SellerForm, SearchForm
 from .models import Seller, Buyer, Filter, User, Notification
-from real_estates.models import Offer,Property
+from real_estates.models import Offer,Property, Extras
 from real_estates.views import index, fetchNotifications
 
 # Create your views here.
@@ -144,8 +144,6 @@ def profile(request):
             
         #allow changes for fullname / image as they are shared , save user
         fullname = request.POST.get("fullname")
-        print(request.FILES.keys())
-        print(dir(request.FILES))
         profile_image = request.FILES.get("profile_image")
 
         user.full_name = fullname
@@ -213,8 +211,11 @@ def my_properties(request):
     properties = Property.objects.filter(seller=seller)
     property_offers = {}
     for property in properties:
+        extras = Extras.objects.filter(property_id=property.id)
+        extras = ",".join([x.description for x in extras])
         property.raw_price = property.listing_price  #this is for edit property, cant have it on decimal format there
         property.listing_price = format_currency(property.listing_price, "", locale="is_is")[:-4]
+        property.extras = extras
         property_offers[property] = {"notifs": 0, "offers": []}
 
     for prop, list in property_offers.items():

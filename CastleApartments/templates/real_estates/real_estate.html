@@ -27,7 +27,6 @@
                                     class="btn btn-big btn-primary">
                                     {% if user.has_offer %}Nýtt tilboð{% else %}Tilboð{% endif %}
                                 </button>
-                                
                                 {% include 'real_estates/_offer_modal.html' %}
                             {% else %}
                                 <button id="property-sold-offer-button" type="button" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#offer-modal" 
@@ -39,16 +38,14 @@
                             <button id="makeOffer-unavailable" type="button" style="height:6rem; width:16rem" class="btn btn-big btn-primary">
                                 Gera tilboð
                             </button>
-
-                            
                         {% endif %}
 
                     </div>
-                                {% if offer %}
-                                <div class="ms-3 d-flex align-items-center" style="height:6rem;">
-                                    Staða tilboðs: <strong class="ms-1">{{ offer.offer_status }}</strong>
-                                </div>
-                                 {% endif %}
+                {% if offer %}
+                <div class="ms-3 d-flex align-items-center" style="height:6rem;">
+                    Staða tilboðs: <strong class="ms-1">{{ offer.offer_status }}</strong>
+                </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -139,6 +136,13 @@
                     {{ property.square_meters }} m<sup>2</sup>
                 </h3>
             </div>
+        </div>
+    </div>
+    <div class="container py-2">
+        <div class="d-flex row justify-content-evenly">
+            {% for extra in property.extras %}
+            {% include 'real_estates/_extra_item.html' with item=extra %}
+            {% endfor %}
         </div>
     </div>
 </div>
