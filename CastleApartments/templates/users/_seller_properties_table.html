@@ -12,10 +12,10 @@
     <tbody id="seller-property-table-body" class="table-group-divider" style="border-top-color: black;">
     {% for property, info in properties.items %}
         <tr name="property-table-row" id="{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}">
-            <th name="address-cell" class="align-middle text-start" scope="row"><h3 class="mx-5">{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}</h3></th>
-            <td name="price-cell" class="align-middle text-end px-3" scope="row"><h4>{{ property.listing_price }} kr.</h4></td>
-            <td class="align-middle text-center" scope="row">{{ property.listing_date }}</td>
-            <td class="position-relative align-middle text-center" scope="row">
+            <th name="address-cell" class="address-cell align-middle text-start" scope="row"><h3 class="mx-5">{{ property.street_name }} - {{ property.postal_code }} {{ property.city }}</h3></th>
+            <td name="price-cell" class="listing-price-cell align-middle text-end px-3" scope="row"><h4>{{ property.listing_price }} kr.</h4></td>
+            <td class="listing-date-cell align-middle text-center" scope="row">{{ property.listing_date }}</td>
+            <td class="offer-count-cell position-relative align-middle text-center" scope="row">
                 <h4>{{ info.offers|length }}</h4>
                     {% if info.notifs != 0 %}
                     <span name="offer-notification" class="position-absolute translate-middle badge rounded-pill bg-danger user-select-none notification-pill">
@@ -23,8 +23,8 @@
                     <span class="visually-hidden">unread messages</span>
                     {% endif %}
             </td>
-            <td class="align-middle text-center" scope="row"><h4><b>{{ property.status}}</b></h4></td>
-            <th scope="row" class="d-flex justify-content-evenly">
+            <td class="status-cell align-middle text-center" scope="row"><h4><b>{{ property.status}}</b></h4></td>
+            <th scope="row" class="button-cell d-flex justify-content-evenly">
                 <button name="editProperty" type="button" class="btn btn-primary btn-small justify-content-center" style="height:4rem; width:8rem" data-bs-toggle="modal" data-bs-target="#property-modal" 
                 data-id="{{ property.id }}"
                 data-street="{{ property.street_name }}"
@@ -37,16 +37,26 @@
                 data-status="{{ property.status }}"
                 data-image="{{ property.image }}"
                 data-type="{{ property.property_type }}"
-                data-price="{{ property.raw_price }}">
+                data-price="{{ property.raw_price }}"
+                {% if property.status == "SOLD" or property.status == "PROCESSED" %}
+                disabled></button>
+                {% else %}
+                >
                     Breyta Eign
                 </button>
+                {% endif %}
                 <button name="deleteProperty" type="button" class="btn btn-danger btn-small" style="height:4rem; width:8rem" data-bs-toggle="modal" data-bs-target="#delete-property-modal"
                 data-id="{{ property.id }}"
                 data-zip="{{ property.postal_code }}"
                 data-city="{{ property.city }}"
-                data-street="{{ property.street_name }}">
+                data-street="{{ property.street_name }}"
+                {% if property.status == "SOLD" %}
+                disabled></button>
+                {% else %}
+                >
                     Eyða Eign
                 </button>
+                {% endif %}
             </th>
         </tr>
         {% endfor %}

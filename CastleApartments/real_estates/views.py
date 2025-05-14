@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect
 import requests
 import random
 import re
@@ -177,6 +177,7 @@ def createOffer(request, id):
 @require_POST
 @fetchNotifications
 def deleteOffer(request, id):
+    print(id)
     try:
         action = request.POST["action"]
     except Exception:
@@ -194,6 +195,10 @@ def deleteOffer(request, id):
             return HttpResponse(403)
     if action in ["ACCEPT", "REJECT"]:
         try:
+            if action == "ACCEPT":
+                property = Property.objects.get(id=offer.property_id)
+                property.status = "SOLD"
+                property.save()
             offer.offer_status = f"{action}ED" 
             notify(user=offer.buyer.user, offer=offer)
             offer.save()
@@ -203,6 +208,9 @@ def deleteOffer(request, id):
         try:
             offer.offer_status = "CONTINGENT"
             offer.offer_contingency_message = request.POST["message"]
+            property = Property.objects.get(id=offer.property_id)
+            property.status = "SOLD"
+            property.save()
             notify(user=offer.buyer.user, offer=offer)
             offer.save()
         except Exception:
@@ -344,6 +352,15 @@ def notify(user, prop: Property = False, offer: Offer = False):
     except Exception:
         kwargs["count"] = 1
         notifUser = Notification.objects.create(**kwargs)
+
+
+
+def tester(request):
+    offer = Offer.objects.get(id=74)
+    property = Property.objects.get(id=offer.property_id)
+    property.status = "SOLD"
+    property.save()
+    return redirect('profile')
 
 def databaseFiller(request):
     properties = Property.objects.filter(id__gt=58)

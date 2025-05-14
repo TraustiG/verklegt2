@@ -20,7 +20,8 @@
                     <input required name={{field.name}} 
                     type=
                     "{% if field.label == 'Image' %}file{% elif 'Password' in field.label %}Password{% else %}{{ field.label }}{% endif %}"
-                    class="form-control" id="id_{{ field.name }}">
+                    class="form-control" id="id_{{ field.name }}"
+                    pattern="{% if field.name == 'full_name' %}[\p{L} ]{% elif field.name == 'image' %}[.{90}\.png]{% endif %}">
                     <label for="id_{{ field.name }}">{{ field.label }}</label>
                     {% if field.help_text %}
                     <div id="{{ field.name }}HelpBlock" class="form-sub-text">
@@ -53,7 +54,7 @@
                         <label class="form-check-label" for="id_type_1">Real estate agency</label>
                     </div>
                     {% for field in seller_form %}
-                    {% if field.label == 'Bio' or field.label == "Type" %}
+                    {% if field.label == "Bio" or field.label == "Type" %}
                     {% else %}
                     <div class="form-floating mb-3">
                         <input required name="{{ field.name }}" 

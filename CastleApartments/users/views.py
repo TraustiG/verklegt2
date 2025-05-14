@@ -206,21 +206,20 @@ def my_properties(request):
         property.listing_price = format_currency(property.listing_price, "", locale="is_is")[:-4]
         property_offers[property] = {"notifs": 0, "offers": []}
 
-    offers = Offer.objects.filter(Q(property__seller = seller), ~Q(offer_status="ACCEPTED"))
-    for prop in property_offers.keys():
+    for prop, list in property_offers.items():
+        offers = Offer.objects.filter(property=prop)
         notifs = Notification.objects.filter(user=request.user, property=prop, count__gt=0)
-        property_offers[prop]["notifs"] = copy.deepcopy(len(notifs))
+        property_offers[prop]["notifs"] = sum([x.count for x in notifs])
         for notif in notifs:
             notif.count = 0
             notif.save()
+        for offer in offers:
+            if offer.offer_status == "PROCESSED":
+                list["offers"] = [offer]
+                break
+            offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
+            list["offers"].append(offer)
 
-    for offer in offers:
-        offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
-        for prop, list in property_offers.items():
-            notifs = Notification.objects.filter(user=request.user, property=prop, count__gt=0)
-
-            if offer.property == prop:
-                list["offers"].append(offer)
 
     return render(request, 'users/my_properties.html', {"properties": property_offers, })
 
