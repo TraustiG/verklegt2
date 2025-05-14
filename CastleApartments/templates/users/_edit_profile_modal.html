@@ -14,13 +14,16 @@
                     </div>
                     <div class="mb-3">
                         <label for="profile_image" class="form-label">Mynd</label>
-                        <input type="file" class="form-control" id="profile_image" name="profile_image" value="{{user.image}}" required>
+                        <input type="file" class="form-control" id="profile_image" name="profile_image" value="{{user.image}}">
                     </div>
 
                     {% if user.is_seller %}
                     <div class="mb-3">
                         <label for="seller_type" class="form-label">Tegund</label>
-                        <input type="text" class="form-control" id="seller_type" name="seller_type" value="{{ user.seller.type }}">
+                        <select type="text" class="form-control" id="seller_type" name="seller_type">
+                            <option value="Individual" {% if user.seller.type == "Individual" %}selected{% endif %}>Individual</option>
+                            <option value="Real estate agency" {% if user.seller.type == "Real estate agency" %}selected{% endif %}>Real estate agency</option>
+                        </select>
                     </div>
 
                     <div class="mb-3">
