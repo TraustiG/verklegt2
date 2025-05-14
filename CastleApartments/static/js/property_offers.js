@@ -195,9 +195,9 @@ return div
 
 const editPropertyButtons = document.getElementsByName("editProperty")
 editPropertyButtons.forEach((element) => {
-    element.addEventListener("click", () => {
+    
+    const listener = () => {
         document.getElementById("create-property-modal").innerHTML = "Breyta eign"
-        
         setFormValue("streetname", element.getAttribute("data-street"))
         setFormValue("city_input", element.getAttribute("data-city"))
         setFormValue("zip", element.getAttribute("data-zip"))
@@ -209,21 +209,20 @@ editPropertyButtons.forEach((element) => {
         setFormValue("desc", element.getAttribute("data-desc"))
         form["desc"].innerHTML = element.getAttribute("data-desc")
         form["desc"].value = element.getAttribute("data-desc")
-
+        
         let street = element.getAttribute("data-street")
         let zip = element.getAttribute("data-zip")
         let city = element.getAttribute("data-city")
         let rowId = `${street} - ${zip} ${city}`
-
         editPropertyOnSubmit(element.getAttribute("data-id"), rowId)
-    })
+        element.removeEventListener("click", listener)
+    }
+    element.addEventListener("click", listener)
 })
 
 
 const editPropertyOnSubmit = (id, rowId) => {
-    console.log("preform")
     let editForm = $("#create-new-property")
-    console.log("postform")
     editForm.submit( function (e) {
         e.preventDefault()
 
@@ -252,15 +251,30 @@ const changeRow = (element, information) => {
     let pCell = element.querySelector('td[name="price-cell"]')
     information = information[0]
     
-    let street = `${information.querySelector('input[id="streetname"]').value}`
-    let address = `${street} - ${information.querySelector('input[id="zip"]').value} ${information.querySelector('input[id="city_input"]').value}`
-    let price = `${information.querySelector('input[id="price"]').value}`
+    let street = information.querySelector('input[id="property-input-streetname"]').value
+    let city = information.querySelector('input[id="property-input-city-input"]').value
+    let price = information.querySelector('input[id="property-input-price"]').value
+    let zip = information.querySelector('input[id="property-input-zip"]').value
+    let bedrooms = information.querySelector('input[id="property-input-bedrooms"]').value
+    let bathrooms = information.querySelector('input[id="property-input-bathrooms"]').value
+    let sqm = information.querySelector('input[id="property-input-sqm"]').value
+    let type = information.querySelector('input[id="property-input-type"]').value
+    let desc = information.querySelector('textarea[id="property-input-desc"]').value
+    let address = `${street} - ${zip} ${city}`
 
-    element.setAttribute("data-street", street)
+    element.setAttribute("data-streetname", street)
     element.setAttribute("data-price", price)
-    /* EFTIR Að BREYTA ÖLLUM HINUM DATA- ATTRIBUTES  #####*/
-    aCell.innerHTML = `<h4>${address}</h4>`
-    pCell.innerHTML = `<h4>${price}</h4>`
+    element.setAttribute("data-city_input", city)
+    element.setAttribute("data-zip", zip)
+    element.setAttribute("data-desc", desc)
+    element.setAttribute("data-bedrooms", bedrooms)
+    element.setAttribute("data-bathrooms", bathrooms)
+    element.setAttribute("data-sqm", sqm)
+    element.setAttribute("data-type", type)
+    
+    
+    aCell.innerHTML = `<h4 class="mx-5">${address}</h4>`
+    pCell.innerHTML = `<h4>${parseInt(price).toLocaleString().replace(/,/g,".")} kr.</h4>`
 }
 
 const setFormValue = (formfield, val) => {
@@ -268,40 +282,43 @@ const setFormValue = (formfield, val) => {
         form[formfield].value = val
 }
 
-
-const deletePropertyButtons = document.getElementsByName("deleteProperty")
-
-deletePropertyButtons.forEach((element) => {
-    element.addEventListener("click", () => {
-        document.getElementById("delete-property-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir eyða ${element.getAttribute("data-street")}?`
+(() => {
+    const deletePropertyButtons = document.getElementsByName("deleteProperty")
+    
+    deletePropertyButtons.forEach((element) => {
         
-        let street = element.getAttribute("data-street")
-        let zip = element.getAttribute("data-zip")
-        let city = element.getAttribute("data-city")
-        let rowId = `${street} - ${zip} ${city}`
-
-        deletePropertyOnSubmit(element.getAttribute("data-id"), rowId)
+        const listener = () => {
+            document.getElementById("delete-property-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir eyða ${element.getAttribute("data-street")}?`
+            let street = element.getAttribute("data-street")
+            let zip = element.getAttribute("data-zip")
+            let city = element.getAttribute("data-city")
+            let rowId = `${street} - ${zip} ${city}`
+    
+            deletePropertyOnSubmit(element.getAttribute("data-id"), rowId)
+            element.removeEventListener("click", listener)
+        }
+        element.addEventListener("click", listener)
     })
-})
-
-const deletePropertyOnSubmit = (id, rowId) => {
-    $("#delete-property-form").submit( function (e) {
-        e.preventDefault()
-
-        let rowElement = document.getElementById(rowId)
-        rowElement.remove()
-
-        $.ajax({
-            type: "POST",
-            url: `/real-estates/${id}`,
-            data: {
-                action: "DELETE",
-                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-            },
-
+    
+    const deletePropertyOnSubmit = (id, rowId) => {
+        $("#delete-property-form").submit( function (e) {
+            e.preventDefault()
+    
+            let rowElement = document.getElementById(rowId)
+            rowElement.remove()
+    
+            $.ajax({
+                type: "POST",
+                url: `/real-estates/${id}`,
+                data: {
+                    action: "DELETE",
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+    
+            })
         })
-    })
-}
+    }
+})    
 
 
 // Accept offer 
@@ -383,17 +400,20 @@ const deletePropertyOnSubmit = (id, rowId) => {
     let rejectSubmitButton = document.getElementById("reject-offer-submit-button")
 
     rejectOfferButtons.forEach((element) => {
-        element.addEventListener("click", () => {
+        
+        const listener = () => {
             let price = element.getAttribute("data-offer-amount")
             document.getElementById("reject-offer-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir hafna þessu einstaka tækifæri til að græða ${price} kr.?`
-
+    
             id = element.getAttribute("data-id")
             rowId = `offer-id-${id}-row`
-
+    
             rejectSubmitButton.addEventListener("click", () => {
                 rejectOfferOnSubmit(id, rowId)
+            element.removeEventListener("click", listener)
             })
-        })
+        }
+        element.addEventListener("click", listener)
     })
 
 
@@ -421,16 +441,18 @@ const deletePropertyOnSubmit = (id, rowId) => {
     let deleteSubmitButton = document.getElementById("delete-offer-submit-button")
 
     deleteOfferButtons.forEach((element) => {
-        element.addEventListener("click", () => {
-            document.getElementById("delete-offer-modal-body-prompt").innerHTML = `Þangað til næst! ;)`
-
-            id = element.getAttribute("data-id")
-            rowId = `offer-id-${id}-row`
-
-            deleteSubmitButton.addEventListener("click", () => {
-                deleteOfferOnSubmit(id, rowId)
-            })
-        })
+        const listener = () => {
+            document.getElementById("delete-offer-modal-body-prompt").innerHTML = `Þangað til næst! ;`
+    
+                id = element.getAttribute("data-id")
+                rowId = `offer-id-${id}-row`
+    
+                deleteSubmitButton.addEventListener("click", () => {
+                    deleteOfferOnSubmit(id, rowId)
+                })
+                element.removeEventListener("click", listener)
+        }
+            element.addEventListener("click", listener)
     })
 
 
@@ -501,11 +523,7 @@ const deletePropertyOnSubmit = (id, rowId) => {
                 },
             })
         })
-        console.log("preset")
-        console.log($("#contingent-offer-form")[0])
         $("#contingent-offer-form")[0].reset()
-        console.log($("#contingent-offer-form")[0])
-        console.log("reset")
 
     }
 

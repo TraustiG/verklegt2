@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Signup{% endblock %}
+{% block scripts %}
+<script defer src="{% static 'js/seller_form.js' %}"></script>
+{% endblock %}
 {% block content %}
 <div class="container justify-content-center">
     <div class="row justify-content-center">
@@ -20,8 +23,8 @@
                     <input required name={{field.name}} 
                     type=
                     "{% if field.label == 'Image' %}file{% elif 'Password' in field.label %}Password{% else %}{{ field.label }}{% endif %}"
-                    class="form-control" id="id_{{ field.name }}"
-                    pattern="{% if field.name == 'full_name' %}[\p{L} ]{% elif field.name == 'image' %}[.{90}\.png]{% endif %}">
+                    class="form-control buyer-form-field" id="id_{{ field.name }}"
+                    pattern="{% if field.name == 'full_name' %}[\p{L} ]*{% elif field.name == 'image' %}.{,90}\.(png|jpg|jpeg){% else %}.*{% endif %}">
                     <label for="id_{{ field.name }}">{{ field.label }}</label>
                     {% if field.help_text %}
                     <div id="{{ field.name }}HelpBlock" class="form-sub-text">
@@ -40,7 +43,7 @@
                     <label class="form-check-label" for="id_role_1">Seller</label>
                 </div>
                 <div class="col-12 text-center pt-3">
-                    <button class="btn btn-primary" type="submit">Register</button>
+                    <button id="register-form-submit-button" class="btn btn-primary" type="submit">Register</button>
                 </div>
             </div>
             <div class="h-50 col overflow-clip">
@@ -59,7 +62,8 @@
                     <div class="form-floating mb-3">
                         <input required name="{{ field.name }}" 
                         type="{% if field.label == 'Logo' %}file{% else %}{{field.label}}{% endif %}"
-                        class="form-control" id="id_{{field.name}}">
+                        pattern="{% if field.name == 'city' %}[\p{L} ]*{% elif field.name == 'logo' %}.{,90}\.(png|jpg|jpeg){% elif field.name == 'postal_code' %}\d{2,5}{% else %}.*{% endif %}"
+                        class="form-control seller-form-field" id="id_{{field.name}}">
                         <label for="id_{{field.name}}">{{ field.label }}</label>
                         {% if field.help_text %}
                         <div id="{{ field.label }}HelpBlock" class="form-sub-text">
@@ -70,7 +74,7 @@
                     {% endif %}
                     {% endfor %}
                     <div class="form-floating">
-                        <textarea id="id_bio" name="bio" class="form-control" placeholder="Description of seller" style="height: 13rem"></textarea>
+                        <textarea id="id_bio" name="bio" class="form-control seller-form-field" placeholder="Description of seller" style="height: 13rem"></textarea>
                         <label for="id_bio">Bio</label>
                     </div>
                 </div>

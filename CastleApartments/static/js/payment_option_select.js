@@ -11,7 +11,6 @@
     
     let paymentOptionFields = new Set([])
     const paymentContactFields = document.querySelectorAll('[id^="payment-contact"]')
-    let paymentContactCheck = Array(paymentContactFields.length).fill(false)
     let tempForm = Array.from(document.forms).filter((f) => f.id === "temp-input-form")[0]
     
     
@@ -22,7 +21,7 @@
     optionContinueButton.addEventListener("click", () => {
         addPaymentInformation(paymentPicker.value)
         let submitterButton = document.querySelector('[id="information-overview-modal-continue-button"]')
-        submitterButton.addEventListener("click", () => {
+        const listener = () => {
             const conf = new JSConfetti()
             conf.addConfetti()
 
@@ -30,9 +29,10 @@
             let rowElement = document.getElementById(`offer-id-${id}-row`)
             rowElement.parentNode.removeChild(rowElement)
 
-
             formSubmitter(id)
-        })
+            submitterButton.removeEventListener("click", listener)
+        }
+        submitterButton.addEventListener("click", listener)
     })
 
     const formSubmitter = (id) => {
@@ -198,7 +198,6 @@
     }
     
     const resetForm = () => {
-        paymentContactCheck = Array(paymentContactFields.length).fill(false)
         paymentPicker.value = ""
         paymentPicker.setAttribute("value", "")
         entryContinueButton.disabled = true
