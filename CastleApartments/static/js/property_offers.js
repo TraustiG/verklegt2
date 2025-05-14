@@ -15,8 +15,10 @@
         if (activeRow) {
             activeRow.classList.toggle("table-active")
             try {
-                notification = element.getElementsByClassName("notification-pill")[0]
-                notification.remove()
+                notifications = element.getElementsByClassName("notification-pill")
+                notifications.forEach((notification) => {
+                    notification.remove()
+                })
             } catch (err) {}
         }
         activeRow = element
@@ -302,12 +304,8 @@ const deletePropertyOnSubmit = (id, rowId) => {
 
 // Accept offer 
 (() => {
-
-    const acceptOfferButtons = document.getElementsByName("accept-offer-button")
-    let submitButton = document.getElementById("accept-offer-submit-button")
-
-    acceptOfferButtons.forEach((element) => {
-        element.addEventListener("click", () => {
+    const accepterTextDiv = (element) => {
+            div = document.getElementById("accept-offer-modal-body-prompt")
             let price = element.getAttribute("data-offer-amount")
             let street = element.getAttribute("data-street")
             let zip = element.getAttribute("data-zip")
@@ -318,8 +316,6 @@ const deletePropertyOnSubmit = (id, rowId) => {
             let top = document.createElement("h4")
             top.innerHTML = "Þú ert hér með að samþykkja sölu á "
             top.classList.add("text-break")
-
-            //.innerHTML = `<h4 class="text-break">Þú ert hér með að samþykkja kaup á </h4><br/><h3 class="text-center">${address}</h3> <br/><h4 class="text-end px-2">uppá ${price} kr.</h4>`
 
             let inner = document.createElement("h3")
             inner.classList.add("text-center")
@@ -334,21 +330,33 @@ const deletePropertyOnSubmit = (id, rowId) => {
             bottom.classList.add("px-2")
             bottom.innerHTML = `fyrir <u>${price}</u> kr.`
 
-            div = document.getElementById("accept-offer-modal-body-prompt")
             div.innerHTML = ""
             div.appendChild(top)
             div.appendChild(breaker)
             div.appendChild(inner)
             div.appendChild(breaker)
             div.appendChild(bottom)
+    }
 
+    const acceptOfferButtons = document.getElementsByName("accept-offer-button")
+    let acceptSubmitButton = document.getElementById("accept-offer-submit-button")
+
+    acceptOfferButtons.forEach((element) => {
+        
+        const listener = () => {
             id = element.getAttribute("data-id")
             rowId = `offer-id-${id}-row`
 
-            submitButton.addEventListener("click", () => {
+            accepterTextDiv(element)
+
+            acceptSubmitButton.addEventListener("click", () => {
+                acceptOfferRow(element)
                 acceptOfferOnSubmit(id)
-            })
-        })
+                })
+            element.removeEventListener("click", listener)
+            }
+                
+        element.addEventListener("click", listener)
     })
 
 
@@ -367,13 +375,10 @@ const deletePropertyOnSubmit = (id, rowId) => {
             })
         })
     }
-})();
 
 // Reject offer
-(() => {
     const rejectOfferButtons = document.getElementsByName("reject-offer-button")
-    console.log(rejectOfferButtons)
-    let submitButton = document.getElementById("reject-offer-submit-button")
+    let rejectSubmitButton = document.getElementById("reject-offer-submit-button")
 
     rejectOfferButtons.forEach((element) => {
         element.addEventListener("click", () => {
@@ -383,7 +388,7 @@ const deletePropertyOnSubmit = (id, rowId) => {
             id = element.getAttribute("data-id")
             rowId = `offer-id-${id}-row`
 
-            submitButton.addEventListener("click", () => {
+            rejectSubmitButton.addEventListener("click", () => {
                 rejectOfferOnSubmit(id, rowId)
             })
         })
@@ -406,14 +411,12 @@ const deletePropertyOnSubmit = (id, rowId) => {
             })
         })
     }
-})();
 
 
 // Delete offer
-(() => {
 
     const deleteOfferButtons = document.getElementsByName("delete-offer-button")
-    let submitButton = document.getElementById("delete-offer-submit-button")
+    let deleteSubmitButton = document.getElementById("delete-offer-submit-button")
 
     deleteOfferButtons.forEach((element) => {
         element.addEventListener("click", () => {
@@ -422,7 +425,7 @@ const deletePropertyOnSubmit = (id, rowId) => {
             id = element.getAttribute("data-id")
             rowId = `offer-id-${id}-row`
 
-            submitButton.addEventListener("click", () => {
+            deleteSubmitButton.addEventListener("click", () => {
                 deleteOfferOnSubmit(id, rowId)
             })
         })
@@ -445,17 +448,16 @@ const deletePropertyOnSubmit = (id, rowId) => {
             })
         })
     }
-})();
 
 
 // Contingent offer
-(() => {
     
     const contingentOfferButtons = document.getElementsByName("contingent-offer-button")
-    let submitButton = document.getElementById("contingent-offer-submit-button")
+    let contingentSubmitButton = document.getElementById("contingent-offer-submit-button")
 
     contingentOfferButtons.forEach((element) => {
-        element.addEventListener("click", () => {
+        
+        const listener = () => {
             let div = document.createElement("div")
             div.classList.add("form-floating")
             let text = document.createElement("textarea")
@@ -472,16 +474,14 @@ const deletePropertyOnSubmit = (id, rowId) => {
             document.getElementById("contingent-offer-modal-body-prompt").appendChild(div)
             id = element.getAttribute("data-id")
 
-            const submitter = () => {
-
+            contingentSubmitButton.addEventListener("click", () => {
+                acceptOfferRow(element)
                 contingentOfferOnSubmit(id, text)
-                submitButton.removeEventListener("click", submitter)
-            }
-
-            console.log(submitButton.addEventListener("click", submitter))
-        })
+            })
+        element.removeEventListener("click", listener)
+        }    
+    element.addEventListener("click", listener)
     })
-
 
     const contingentOfferOnSubmit = (id, textarea) => {
         $("#contingent-offer-form").submit( (e) => {
@@ -506,29 +506,7 @@ const deletePropertyOnSubmit = (id, rowId) => {
         console.log("reset")
 
     }
-})();
 
-//
-//document.addEventListener("DOMContentLoaded", () => {
-
-//const propertyFields = document.querySelectorAll('[id^="property-input"]');
-//const propertySubmitButton = document.getElementById("create-property-modal-submit");
-
-//propertyFields.forEach((element) => {
- //   element.addEventListener("change", () => {
-
-   //     if (Array.from(propertyFields).map((el) => el.checkValidity()).reduce((f, s) => f && s)) {
-   //         propertySubmitButton.disabled = false;
-   //         element.setAttribute("isvalid", false); 
-   //     } else {
-   //         propertySubmitButton.disabled = true;
-   //         element.setAttribute("isvalid", true);
-   //     }
-   /// });
-//});
-//});
-
-(() => {
     const propertyFields = document.querySelectorAll('[id^="property-input"]');
     const propertySubmitButton = document.getElementById("create-property-modal-submit");
     
@@ -557,5 +535,29 @@ const deletePropertyOnSubmit = (id, rowId) => {
             propertyFields.forEach((el) => el.removeAttribute("isvalid"));
             propertySubmitButton.disabled = true;
     });
+
+    const disableOfferRow = (element, row) => {
+        let buttons = row.getElementsByTagName("button")
+        Array.from(buttons).forEach((button) => {
+            if (!(button.parentElement == element.parentElement) || button.innerHTML != "Samþykkja" || element.innerHTML == "Samþykkja") {
+                button.setAttribute("disabled", true)
+                button.innerHTML = ""
+            }
+        })
+    }
+
+    const acceptOfferRow = (element) => {
+        address = document.getElementById("address-table-caller").innerHTML
+        propRow = document.getElementById(address)
+        console.log(propRow)
+        allRows = document.getElementsByClassName(address)
+        propRow.getElementsByClassName("status-cell")[0].innerHTML = "<h4><b>SOLD</b></h4></td>"
+        let propButtons = propRow.getElementsByTagName("button")
+        Array.from(propButtons).forEach((button) => {
+            button.innerHTML = ""
+            button.setAttribute("disabled", true)
+        })
+        Array.from(allRows).forEach((row) => disableOfferRow(element, row))
+    }
 
 })()

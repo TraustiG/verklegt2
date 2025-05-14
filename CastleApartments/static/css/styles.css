@@ -7,6 +7,11 @@ dt.buyer-info {
     text-align: end;
 }
 
+.offer-row-button {
+    height: 3rem;
+    width: 7rem;
+}
+
 .payment-modal-sub-header {
     border-bottom: 1px solid black;
     box-shadow: 0 8px 6px -6px #04a5e5, 0 -8px 6px -6px #04a5e5;
