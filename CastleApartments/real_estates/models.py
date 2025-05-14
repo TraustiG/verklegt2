@@ -43,6 +43,14 @@ class Property(models.Model):
 
     def __str__(self):
         return f"{self.street_name}"
+
+
+class Extras(models.Model):
+     
+    property = models.ForeignKey(
+        "property", on_delete=models.CASCADE, null=True, blank=True)
+    
+    description = models.CharField(max_length=50)
     
 
 class OfferStatus(models.TextChoices):

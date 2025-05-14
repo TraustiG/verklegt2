@@ -91,9 +91,7 @@ let saveFilterButton = document.getElementById("filter-saver-button")
 openFilterSaverButton.addEventListener("click", () => {
     const listener = () => {
         saveFilter()
-        console.log("saved")
         saveFilterButton.removeEventListener("click", listener)
-        openFilterSaverButton.click()
     }
     saveFilterButton.addEventListener("click", listener)
 })
@@ -105,10 +103,11 @@ const saveFilter = () => {
     const desc = document.getElementById("id_descInput").value
     const name = document.getElementById("id_filterName").value
     let dropdown = document.getElementById("dropdownCheck").value
+    let dropdownMenu = document.getElementById("save-filter-dropdown-menu")
+    dropdownMenu.classList.remove("show")
     dropdown = "on" ? "True" : "False"
-    let form = $("#save-filter-form")
-    console.log(area, type, price, desc, name, dropdown)
-    form.submit( function (e) {
+    $("#save-filter-form").submit( function (e) {
+        e.stopPropagation()
         e.preventDefault()
         $.ajax({
             type: "POST",
@@ -154,15 +153,14 @@ const useFilter = (element) => {
     let price = element.getAttribute("data-price")
     let desc = element.getAttribute("data-desc")
     let name = element.getAttribute("data-name")
-    const filter = JSON.parse(element.getAttribute("filter"))
-    let query = "/search/?"
-    for (let [key, value] of Object.entries(filter)) {
-        if (value) {
-            let field = document.getElementById(`id_${key}`)
-            field.value = value
-            query = query.concat(`${key}=${value}&`)
-        }
+    if (price) {
+        document.getElementById("search-price-value-indicator").innerHTML = price
     }
-    element.setAttribute("href", query)
+    document.getElementById("id_areaSelect").value = area
+    document.getElementById("id_typeSelect").value = type
+    document.getElementById("id_descInput").value = desc
+    document.getElementById("dropdownCheck").value = dropdown
+    document.getElementById("id_filterName").value = name
+
     //element.click()
 }

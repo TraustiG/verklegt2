@@ -36,8 +36,8 @@ def fetchNotifications(view_func):
 def index(request):
     # þarf að fa listings og tegundir og postnumer í boði
 
-    popular = Property.objects.order_by("-looked_at")[:5]
-    newest = Property.objects.all()[:5]
+    popular = Property.objects.order_by("-looked_at")[:8]
+    newest = Property.objects.all()[:8]
 
     listings = Property.objects.all()
 
@@ -46,9 +46,41 @@ def index(request):
     
     prices = getPrices()
     filters = Filter.objects.filter(user_id=request.user.id)
-    for item in listings:
+    filters = fixFilters(request.user, filters)
+    for item in popular:
         item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
-    return render(request, "home.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
+    for item in newest:
+        item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
+    return render(request, "home.html", {"newest": newest, "popular": popular, "areas": areas, "types": types, "prices": prices, "filters": filters})
+
+def getPropertiesByWatch(request):
+    filter = Filter.objects.get(user_id=request.user, monitor=True)
+    postal = filter.area.split(" ")[0]
+    type = filter.re_type
+    desc = filter.desc
+    min, max = filter.price.split("-")
+    queries = []
+    if postal:
+        queries.append(Q(postal_code=postal))
+    if type:
+        queries.append(Q(property_type=type))
+    if desc:
+        queries.append(Q(description__icontains=desc))
+    if min:
+        queries.append(Q(listing_price__gt=min))
+    if max:
+        queries.append(Q(listing_price__lt=max))
+    
+    listings = Property.objects.all()
+    areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
+    types = sorted(list(set([f"{x.property_type}" for x in listings])))
+    prices = getPrices()
+    filters = Filter.objects.filter(user_id=request.user.id)
+    filters = fixFilters(request.user, filters)
+    listings = Property.objects.filter(*queries)
+    
+    return render(request, "users/watch.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
+
 
 
 @require_http_methods(["GET", "POST"])
@@ -134,12 +166,6 @@ def search(request):
     areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
     types = sorted(list(set([f"{x.property_type}" for x in listings])))
     prices = getPrices()
-    filter = {"areaSelect": 300,
-            "typeSelect": "Fjölbýlishús",
-            "priceInput": "80000000-110000000",
-            "descInput": "bjark"}
-    filters = [{"name": "Bjarkissssssss", "filters": json.dumps(filter)}]
-
     for key in request.GET.keys():
         value = request.GET.get(key)
         if not value:
@@ -148,6 +174,28 @@ def search(request):
 
     for item in listings:
         item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
+    filters = Filter.objects.filter(user_id=request.user.id)
+    for filter in filters:
+        try:
+            min, max = filter.price.split("-")
+            try: 
+                min = int(min)//1000000
+                min = f"{str(min)}"
+            except Exception as e:
+                min = f"0-"
+            try: 
+                max = str(int(max)//1000000)
+            except Exception as e:
+                max = "+"
+            if min != "0-":
+                if max != "+":
+                    filter.price = f"{min} mkr. - {max} mkr."
+                else:
+                    filter.price = f"{min} mkr. +"
+            else:
+                filter.price = f"0-{max} mkr."
+        except Exception:
+            pass
 
     return render(request, "real_estates/search.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
 
@@ -213,11 +261,11 @@ def deleteOffer(request, id):
         try:
             offer.offer_status = "CONTINGENT"
             offer.offer_contingency_message = request.POST["message"]
+            offer.save()
             property = Property.objects.get(id=offer.property_id)
             property.status = "SOLD"
             property.save()
             notify(user=offer.buyer.user, offer=offer)
-            offer.save()
         except Exception:
             return HttpResponse(500)
     return HttpResponse(200)
@@ -238,7 +286,8 @@ def createProperty(request):
     type = request.POST.get("type")
     price = request.POST.get("price")
     images = request.POST.get("hidden-images-list")
-        
+    area = f"{zip} {city_input}"
+
     seller_obj = Seller.objects.get(user=request.user)
     newProperty = Property.objects.create(
         seller = seller_obj,
@@ -259,6 +308,28 @@ def createProperty(request):
     newProperty.image = createImages(images, newProperty, 0)
     newProperty.save()
     
+    filters = Filter.objects.filter(monitor=True)
+    for filter in filters:
+        if filter.area not in ["", area]:
+            continue
+        if filter.re_type not in ["", type]:
+            continue
+        if filter.desc not in ["", desc]:
+            continue
+        if filter.price:
+            min, max = price.split("-")
+            try:
+                if int(min) > price:
+                    continue
+            except Exception:
+                pass
+            try:
+                if int(max) < price:
+                    continue
+            except Exception:
+                pass
+        notify(filter.user, prop=newProperty)
+
     return redirect(f"/real-estates/{newProperty.id}")
 
 def createImages(images, property, main=False):
@@ -358,14 +429,36 @@ def notify(user, prop: Property = False, offer: Offer = False):
         kwargs["count"] = 1
         notifUser = Notification.objects.create(**kwargs)
 
-
+def fixFilters(user, filters):
+    filters = Filter.objects.filter(user_id=user.id)
+    for filter in filters:
+        try:
+            min, max = filter.price.split("-")
+            try: 
+                min = int(min)//1000000
+                min = f"{str(min)}"
+            except Exception:
+                min = f"0-"
+            try: 
+                max = str(int(max)//1000000)
+            except Exception:
+                max = "+"
+            if min != "0-":
+                if max != "+":
+                    filter.price = f"{min} mkr. - {max} mkr."
+                else:
+                    filter.price = f"{min} mkr. +"
+            else:
+                filter.price = f"0-{max} mkr."
+        except Exception:
+            pass
+    return filters
 
 def tester(request):
-    offer = Offer.objects.get(id=74)
-    property = Property.objects.get(id=offer.property_id)
-    property.status = "SOLD"
-    property.save()
+
+        
     return redirect('profile')
+
 
 def databaseFiller(request):
     properties = Property.objects.filter(id__gt=58)

@@ -11,5 +11,6 @@ urlpatterns  = [
     path("offers/<int:id>", views.deleteOffer, name="delete-offer"),
     path("search/", views.search, name="search"),
     path("fill-database/", views.databaseFiller, name="fill-database"),
-    path("test/", views.tester, name="tester")
+    path("test/", views.tester, name="tester"),
+    path("watch/", views.getPropertiesByWatch, name="watch")
 ]

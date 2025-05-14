@@ -7,5 +7,8 @@
 
 {% block content %}
     {% include "_search_form.html" with areas=areas types=types %}
-    {% include "real_estates/_listings.html" with cols=4 %}
+    {% include "_title_bar.html" with title="Nýjustu eignirnar" %}
+    {% include "real_estates/_listings.html" with cols=5 itemlist=newest %}
+    {% include "_title_bar.html" with title="Vinsælustu eignirnar" %}
+    {% include "real_estates/_listings.html" with cols=5 itemlist=popular %}
 {% endblock %}

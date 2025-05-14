@@ -84,13 +84,24 @@ def saveFilter(request):
         search = Filter()
         search.area = request.POST["area"]
         search.monitor = request.POST["monitor"]
+        if search.monitor == "true":
+            old = Filter.objects.get(user=request.user, monitor=True)
+            old.monitor = False
+            old.save()
+            search.monitor = True
+        else:
+            search.monitor = False
         search.name = request.POST["name"]
         search.re_type = request.POST["re_type"]
         search.desc = request.POST["desc"]
         search.price = request.POST["price"]
-        print(search)
         search.user = request.user
+        filters = Filter.objects.filter(user=request.user, name=search.name)
+        if filters:
+            for filter in filters:
+                filter.delete()
         search.save()
+
 
     return redirect('search')
 
