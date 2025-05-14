@@ -567,7 +567,7 @@ const setFormValue = (formfield, val) => {
                 },
             })
         })
-        $("#contingent-offer-form")[0].reset()
+        //$("#contingent-offer-form")[0].reset()
 
     }
 

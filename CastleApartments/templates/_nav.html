@@ -11,7 +11,7 @@
             <ul class="navbar-nav">
                 <li class="position-relative nav-item nav-item-notification">
                     {% if user.is_buyer %}
-                    <a class="nav-link" href="#">Vaktin mín</a>
+                    <a class="nav-link" href="{% url 'watch' %}">Vaktin mín</a>
                     {% else %}
                     <a class="nav-link" href="{% url 'my-properties' %}">Fasteignirnar mínar</a>
                     {% endif %}

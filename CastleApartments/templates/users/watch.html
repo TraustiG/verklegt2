@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Castle Apartments{% endblock %}
+{% block scripts %}
+<script defer src="{% static 'js/search.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    {% include "_search_form.html" with areas=areas types=types %}
+    {% include "_title_bar.html" with title="Vaktin mín" %}
+    {% include "real_estates/_listings.html" with cols=4 %}
+{% endblock %}

@@ -3,6 +3,7 @@
         <tr class="text-center">
             <th scope="col"></th>
             <th scope="col">Kaupandi</th>
+            <th scope="col">Dags. tilboðs</th>
             <th scope="col">Upphæð</th>
             <th scope="col">Gildistími</th>
             <th scope="col">Aðgerðir</th>
@@ -16,6 +17,7 @@
             <tr id="offer-id-{{ offer.id }}-row" name="offer-table-row" class="{{ prop.street_name }} - {{ prop.postal_code }} {{ prop.city }}" style="display: none;">
                 <th scope="col"></th>
                 <th class="px-3" scope="col"><h3>{{ offer.buyer.user.full_name }}</h3></th>
+                <th class="text-center" scope="col"><h3>{{ offer.offer_date }}</h3></th>
                 <th class="text-end px-5" scope="col"><h3>{{ offer.offer_amount }} kr.</h3></th>
                 <th class="text-center" scope="col"><h3>{{ offer.offer_expiry }}</h3></th>
                 <th class="d-flex justify-content-evenly align-items-center gap-1" scope="col">
@@ -26,9 +28,15 @@
                     data-city="{{ prop.city }}"
                     data-zip="{{ prop.postal_code }}"
                     data-offer-amount="{{ offer.offer_amount }}"
-                    {% if prop.status == "SOLD" or offer.offer_status != 'OPEN' and offer.offer_status != 'CONTINGENT' %}
+                    {% if prop.status == "SOLD" %}
+                    {% if offer.offer_status != "CONTINGENT" %}
                     disabled></button>
                     {% else %}
+                    >Samþykkja</button>
+                    {% endif %}
+                    {% elif prop.status == "PROC" %}
+                    disabled></button>
+                    {% elif prop.status == "OPEN" %}
                     >Samþykkja</button>
                     {% endif %}
                     <button name="contingent-offer-button" class="btn btn-primary offer-row-button" type="button" data-bs-toggle="modal" data-bs-target="#contingent-offer-modal"

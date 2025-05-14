@@ -33,6 +33,15 @@
             })
         })
     }
-})()
+})();
 
-
+(() => {
+    const contingencyButtons = document.getElementByName("offer-contingency-button")
+    Array.from(contingencyButtons).forEach((button) => {
+        const listener = () => {
+            
+            button.removeEventListener("click", listener)
+        }
+        button.addEventListener("click", listener)
+    })
+})
