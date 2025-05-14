@@ -1,4 +1,7 @@
 from django.http import HttpResponse, JsonResponse
+import requests
+import random
+import re
 from django.shortcuts import render,redirect
 from django.core.files.storage import default_storage
 from django.db.models import Q
@@ -11,7 +14,7 @@ import json
 import datetime
 from .models import Property, Offer, PropertyImages
 from payments.models import Payment
-from users.models import Buyer, Seller, Notification
+from users.models import Buyer, Seller, Notification, User
 
 # Create your views here.
 
@@ -341,3 +344,100 @@ def notify(user, prop: Property = False, offer: Offer = False):
     except Exception:
         kwargs["count"] = 1
         notifUser = Notification.objects.create(**kwargs)
+
+def databaseFiller(request):
+    properties = Property.objects.filter(id__gt=58)
+    for property in properties:
+        url = property.image.split("/")[2]
+        property.image = f"/media/visir/{url}"
+        property.save()
+
+    users = [ 
+        {"address": "Húnavatn 42", "type": "Individual", "city": "Ísafjörður", "postal_code": "400", "bio": "Ég vill leiða þig heim.", "username": "jonjons", "is_seller": True, "is_buyer": False, "image": "/media/jonjons.jpg", "full_name": "Jón Jónsson", "logo": "/media/jonjonslogo.jpg", "password": "pbkdf2_sha256$1000000$LMIDRhZNh70LlXa5BEIT2B$KHJphkLgtw8i69XVMDlySa8lR8/Amd+22DtKyIgzv0Q=" },
+        {"address": "Blábrigði 67", "type": "Individual", "city": "Akureyri", "postal_code": "600", "bio": "Rauður blómajakki getur ekki stöðvað mig\ní að veita þér draumaheimilið þitt.", "username": "kallibjarni", "is_seller": True, "is_buyer": False, "image": "/media/kallibjarni.png", "full_name": "Kalli Bjarni", "logo": "/media/bjarniklogo.png", "password": "pbkdf2_sha256$1000000$LMIDRhZNh70LlXa5BEIT2B$KHJphkLgtw8i69XVMDlySa8lR8/Amd+22DtKyIgzv0Q="},
+        {"address": "Asparskógar 104", "type": "Individual", "city": "Reykjavík", "postal_code": "101", "bio": "Þitt draumaheimilið þér veita að í\nMig stöðvað ekki getur blómajakki rauður.", "username": "bjarnikalli", "is_seller": True, "is_buyer": False, "image": "/media/bjarnikalli.png", "full_name": "Bjarni Kalli", "logo": "/media/bjarniklogo.png", "password": "pbkdf2_sha256$1000000$LMIDRhZNh70LlXa5BEIT2B$KHJphkLgtw8i69XVMDlySa8lR8/Amd+22DtKyIgzv0Q="},
+        {"address": "Vallarbraut 49", "type": "Individual", "city": "Ísafjörður", "postal_code": "400", "bio": "Saman stöndum vér allir.", "username": "jonsi", "is_seller": True, "is_buyer": False, "image": "/media/jonsi.avif", "full_name": "Jón Sigurðsson", "logo": "/media/Althing_Logo.png", "password": "pbkdf2_sha256$1000000$LMIDRhZNh70LlXa5BEIT2B$KHJphkLgtw8i69XVMDlySa8lR8/Amd+22DtKyIgzv0Q=" },
+        {"address": "Húnaflói 1", "type": "Individual", "city": "Reykjavík", "postal_code": "101", "bio": "Gætum við staðið, hlið við hlið.\nHeima hjá þér\nMögulega að borða smákökur.", "username": "fridrikdor", "is_seller": True, "is_buyer": False, "image": "/media/fridrikdor.jpg", "full_name": "Friðrik Dór Jónsson", "logo": "/media/realtor1.jpg" , "password": "pbkdf2_sha256$1000000$LMIDRhZNh70LlXa5BEIT2B$KHJphkLgtw8i69XVMDlySa8lR8/Amd+22DtKyIgzv0Q=" },
+        {"address": "Vatnagata 14", "type": "Real estate agency", "city": "Ísafjörður", "postal_code": "300", "bio": "Bleikt hár í Bónus, hvað er ekki að elska?", "username": "brothers", "is_seller": True, "is_buyer": False, "image": "/media/brothers.jpg", "full_name": "Bræðraveldi", "logo": "/media/realtor2.jpeg" , "password": "pbkdf2_sha256$1000000$LMIDRhZNh70LlXa5BEIT2B$KHJphkLgtw8i69XVMDlySa8lR8/Amd+22DtKyIgzv0Q=" },
+        {"address": "Breiðaflöt 9", "type": "Individual", "city": "Reykjavík", "postal_code": "101", "bio": "Help me help you, fly to the moon.", "username": "aroncan", "is_seller": True, "is_buyer": False, "image": "/media/aroncan.jpg", "full_name": "Aron Can", "logo": "/media/iceguysice.png" , "password": "pbkdf2_sha256$1000000$LMIDRhZNh70LlXa5BEIT2B$KHJphkLgtw8i69XVMDlySa8lR8/Amd+22DtKyIgzv0Q=" },
+        {"address": "Akragata 64", "type": "Individual", "city": "Akureyri", "postal_code": "600", "bio": "Það er alltaf hægt að ná í mig í smíðakofanum.", "username": "emil", "is_seller": True, "is_buyer": False, "image": "/media/emil.png", "full_name": "Emil Can", "logo": "/media/realtor4.png" , "password": "pbkdf2_sha256$1000000$LMIDRhZNh70LlXa5BEIT2B$KHJphkLgtw8i69XVMDlySa8lR8/Amd+22DtKyIgzv0Q=" },
+        {"address": "Korpustaðir", "type": "Real estate agency", "city": "Akranes", "postal_code": "300", "bio": "Eru ekki allir SEXÝ??", "username": "helgibjorns", "is_seller": True, "is_buyer": False, "image": "/media/helgibjorns.jpg", "full_name": "Reiðmenn vindanna", "logo": "/media/hbrm.jpg" , "password": "pbkdf2_sha256$1000000$LMIDRhZNh70LlXa5BEIT2B$KHJphkLgtw8i69XVMDlySa8lR8/Amd+22DtKyIgzv0Q=" },
+        {"address": "Grettisganga 22", "type": "Individual", "city": "Ísafjörður", "postal_code": "400", "bio": "Hvenær byrjaðir þú að selja fasteignir heyri ég þig spyrja.", "username": "laddi", "is_seller": True, "is_buyer": False, "image": "/media/laddi.png", "full_name": "Og Halli", "logo": "/media/ogladdi.jpg" , "password": "pbkdf2_sha256$1000000$LMIDRhZNh70LlXa5BEIT2B$KHJphkLgtw8i69XVMDlySa8lR8/Amd+22DtKyIgzv0Q=" },
+         ]
+    newSellers = []
+    try:
+        for user in users:
+            logo = user.pop("logo")
+            type = user.pop("type")
+            city = user.pop("city")
+            postal_code = user.pop("postal_code")
+            address = user.pop("address")
+            bio = user.pop("bio")
+            newUser = User(**user)
+            seller = Seller(user=newUser, logo=logo, type=type, city=city, postal_code=postal_code, bio=bio, street_name=address)
+            newUser.save()
+            seller.save()
+            newSellers.append(seller)
+    except Exception:
+        pass
+    visir = requests.get("https://fasteignir.visir.is/api/search?onpage=300&page=1").json()
+    i = 0
+    addresses = []
+    for prop in visir:
+        if prop["category"] not in ["Fjölbýlishús", "Einbýlishús", "Parhús", "Raðhús"]:
+            continue
+        address = (prop["zip"]["zip"], prop["street_name"], prop["street_number"])
+        if address in addresses:
+            continue
+        if i == 150:
+            break
+        images = requests.get(f"https://fasteignir.visir.is/property/{prop['id']}/imagelist")
+        htmlText = images.text
+        matches = re.findall(r"<img src=\"https://api-beta.fasteignir.is/pictures/\d*/(.*)?\" title", htmlText)
+        if not matches:
+            print(prop["id"])
+            continue
+        if i%50 == 0:
+            print(i)
+        i += 1
+        newProp = {}
+        try:
+            addresses.append(address)
+            newProp["seller"] = newSellers[random.randint(0,len(newSellers)-1)]
+            newProp["street_name"] = f"{prop['street_name']} {prop['street_number']}"
+            newProp["city"] = prop["zip"]["town"]
+            newProp["postal_code"] = prop["zip"]["zip"]
+            newProp["description"] = "edit"
+            newProp["property_type"] = prop["category"]
+            newProp["listing_date"] = datetime.date.today() - datetime.timedelta(random.randint(0,20))
+            newProp["listing_price"] = prop["price"]
+            newProp["number_of_bedrooms"] = prop["bedrooms"]
+            newProp["number_of_bathrooms"] = prop["bathrooms"]
+            newProp["square_meters"] = int(prop["size"].replace(",",".").split(".")[0])
+            newProp["status"] = "OPEN"
+            newProp["image"] = prop["image"]
+        except Exception as e:
+            print(e)
+            continue
+        propertyObj = Property(**newProp)
+        for i in range(min(len(matches),6)):
+            try:
+                match = matches[i]
+                if i == 0:
+                    propertyObj.image = f"/media/visir/{match}"
+                    propertyObj.save()
+                url = f"https://api-beta.fasteignir.is/pictures/{prop['id']}/{match}"
+                imageText = requests.get(url)
+                with open(f"D:\\forritun\HR Tölvunarfræði\\verklegt2\\CastleApartments\\media\\visir\\{match}", "wb") as file:
+                    file.write(imageText.content)
+                image = {"property": propertyObj, "image_url": f"/media/visir/{match}", "image_description": ""}
+                newImage = PropertyImages(**image)
+                newImage.save()
+            except Exception as e:
+                print(e)
+                pass
+    return redirect("profile")
+        
+
+
+
