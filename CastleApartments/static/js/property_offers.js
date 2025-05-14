@@ -95,6 +95,7 @@ submitButtons.forEach((el) => {
         imageRow.innerHTML = ""
         imgDesc.value = ""
         imgInput.value = ""
+
     })
 });
 
@@ -594,13 +595,10 @@ const setFormValue = (formfield, val) => {
     
     
         
-        });
-    
-        //resetting modal when its closed
-        document.querySelector('#property-modal').addEventListener("hidden.bs.modal", () => {
-            propertyFields.forEach((el) => el.removeAttribute("isvalid"));
-            propertySubmitButton.disabled = true;
     });
+    
+
+    
 
     const disableOfferRow = (element, row) => {
         let buttons = row.getElementsByTagName("button")
