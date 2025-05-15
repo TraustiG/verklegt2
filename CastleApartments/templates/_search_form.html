@@ -1,7 +1,7 @@
 {% load static %}
 <div class="bg-mid d-flex justify-content-center search-form">
     <div class="bg-mid container pb-4">
-        <form action="/search" method="GET">
+        <form id="search-form" action="/search" method="GET">
             <div class="row justify-content-evenly mb-4 pt-4">
                 <div class="col-3">
                     <div class="form-floating">
@@ -64,8 +64,7 @@
                         <label for="id_descInput">Götuheiti eða textalýsing</label>
                     </div>
                 </div>
-                <div class="col-sm-2"
-                >
+                <div class="col-sm-2">
                     <div class="form-floating">
                         <select class="form-select" id="orderBySelect">
                             <option value="0" selected>Nýjast efst</option>
@@ -145,6 +144,7 @@
                                 {% else %}
                                 btn-primary"
                                 {% endif %}
+                                data-bs-auto-close="outside"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="display-inline">
                                         <span class="">
@@ -158,9 +158,40 @@
                                     </div>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    {% for filter in filters %}
-                                    <li><a class="saved-filter dropdown-item" data-name="{{filter.name}}" data-area="{{filter.area}}" data-price="{{filter.price}}" data-desc="{{filter.desc}}" data-re_type="{{filter.re_type}}">{{ filter.name }}</a></li>
-                                    {% endfor %}
+                                    <form id="edit-filter-form" method="POST">
+                                        {% csrf_token %}
+                                        {% for filter in filters %}
+                                        <li class="position-relative text-truncate">
+                                            <span class="saved-search-filter-line{% if filter.monitor %}-watched{% endif %}">
+                                                <button id="filter-watch-{{filter.user_id}}-{{filter.id}}" type="submit" class="filter-watch-binox position-absolute theme-toggle" data-user-id="{{filter.user_id}}" data-filter-id="{{filter.id}}">
+                                                    <span class="">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#04A5E5" class="bi bi-binoculars" viewBox="0 0 16 16">
+                                                            <path d="M3 2.5A1.5 1.5 0 0 1 4.5 1h1A1.5 1.5 0 0 1 7 2.5V5h2V2.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5v2.382a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V14.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 14.5v-3a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5v3A1.5 1.5 0 0 1 5.5 16h-3A1.5 1.5 0 0 1 1 14.5V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882zM4.5 2a.5.5 0 0 0-.5.5V3h2v-.5a.5.5 0 0 0-.5-.5zM6 4H4v.882a1.5 1.5 0 0 1-.83 1.342l-.894.447A.5.5 0 0 0 2 7.118V13h4v-1.293l-.854-.853A.5.5 0 0 1 5 10.5v-1A1.5 1.5 0 0 1 6.5 8h3A1.5 1.5 0 0 1 11 9.5v1a.5.5 0 0 1-.146.354l-.854.853V13h4V7.118a.5.5 0 0 0-.276-.447l-.895-.447A1.5 1.5 0 0 1 12 4.882V4h-2v1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5zm4-1h2v-.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5zm4 11h-4v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5zm-8 0H2v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5z"/>
+                                                        </svg>
+                                                    </span>
+                                                </button>
+                                                <button id="filter-delete-{{filter.user_id}}-{{filter.id}}" type="submit" class="filter-delete-x position-absolute theme-toggle" data-user-id="{{filter.user_id}}" data-filter-id="{{filter.id}}">
+                                                    <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#B10000">
+                                                        <g id="SVGRepo_bgCarrier" stroke-width="0">
+                                                        </g>
+                                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                                        </g>
+                                                        <g id="SVGRepo_iconCarrier">
+                                                        <rect width="16" height="16" id="icon-bound" fill="none">
+                                                        </rect>
+                                                        <path d="M10.294,4.294L8,6.584L5.706,4.291L4.291,5.706L6.584,8l-2.294,2.294l1.416,1.416L8,9.416l2.294,2.294l1.416-1.416L9.416,8 l2.294-2.294L10.294,4.294z M8,0C3.581,0,0,3.581,0,8s3.581,8,8,8s8-3.581,8-8S12.419,0,8,0z M12.244,12.244 C11.109,13.375,9.603,14,8,14s-3.109-0.625-4.244-1.756C2.625,11.109,2,9.603,2,8s0.625-3.109,1.756-4.244C4.891,2.625,6.397,2,8,2 s3.109,0.625,4.244,1.756C13.375,4.891,14,6.397,14,8S13.375,11.109,12.244,12.244z">
+                                                        </path>
+                                                        </g>
+                                                    </svg>
+                                                </button>
+                                                <a class="text-truncate saved-filter dropdown-item user-select-none" 
+                                                data-name="{{filter.name}}" data-area="{{filter.area}}" data-price="{{filter.price}}" data-desc="{{filter.desc}}" data-re_type="{{filter.re_type}}">
+                                                    {{ filter.name }}
+                                                </a>
+                                            </span>
+                                        </li>
+                                        {% endfor %}
+                                    </form>
                                 </ul>
                             </div>
                         </div>

@@ -7,6 +7,36 @@ dt.buyer-info {
     text-align: end;
 }
 
+.filter-delete-x {
+    top: -25%;
+    right: 5%;
+}
+
+.filter-watch-binox {
+    top: -25%;
+    right: 25%;
+}
+
+.saved-filter {
+    width: 100%;
+}
+
+.saved-search-filter-line a {
+    color: var(--bs-card-title-color);
+}
+
+.saved-search-filter-line li {
+    cursor:crosshair;
+}
+
+.saved-search-filter-line-watched a {
+    color:#04A5E5;
+}
+
+.saved-search-filter-line-watched .filter-watch-binox {
+    visibility: hidden;
+}
+
 .sortable-table-header:hover {
     cursor: cell;
 }
@@ -409,6 +439,14 @@ html[data-theme="dark"] .bg-high {
     box-shadow: 0 8px 14px 5px rgba(0,0,0,0.44);
 }
 
+
+.card .bi-binoculars {
+    top: 40%;
+    right: 0%;
+    transform-origin: top left;
+    transform: rotate(20deg);
+    fill: #FE640B;
+}
 
 /* Test drasl, remova seinna */
 .testerbtn {

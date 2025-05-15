@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
 from django.contrib.auth import login
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
@@ -80,31 +80,49 @@ def register(request):
 @require_POST
 @fetchNotifications
 def saveFilter(request):
-    if request.method == "POST":
-        search = Filter()
-        search.area = request.POST["area"]
-        search.monitor = request.POST["monitor"]
-        if search.monitor == "true":
-            old = Filter.objects.get(user=request.user, monitor=True)
-            old.monitor = False
-            old.save()
-            search.monitor = True
-        else:
-            search.monitor = False
-        search.name = request.POST["name"]
-        search.re_type = request.POST["re_type"]
-        search.desc = request.POST["desc"]
-        search.price = request.POST["price"]
-        search.user = request.user
-        filters = Filter.objects.filter(user=request.user, name=search.name)
-        if filters:
-            for filter in filters:
-                filter.delete()
-        search.save()
+    search = Filter()
+    search.area = request.POST["area"]
+    search.monitor = request.POST["monitor"]
+    if search.monitor == "true":
+        old = Filter.objects.get(user=request.user, monitor=True)
+        old.monitor = False
+        old.save()
+        search.monitor = True
+    else:
+        search.monitor = False
+    search.name = request.POST["name"]
+    search.re_type = request.POST["re_type"]
+    search.desc = request.POST["desc"]
+    search.price = request.POST["price"]
+    search.user = request.user
+    filters = Filter.objects.filter(user=request.user, name=search.name)
+    if filters:
+        for filter in filters:
+            filter.delete()
+    search.save()
 
 
     return redirect('search')
 
+@require_POST
+@fetchNotifications
+def editFilter(request, id):
+    filter = Filter.objects.get(id=id)
+    action = request.POST["action"]
+    if action == "DELETE":
+        filter.delete()
+    if action == "WATCH":
+        try:
+            old = Filter.objects.filter(user=request.user, monitor=True)
+        except Exception:
+            pass
+        else:
+            for f in old:
+                f.monitor = False
+                f.save()
+        filter.monitor = True
+        filter.save()
+    return HttpResponse(200)
 
 @require_http_methods(["GET", "POST"])
 @fetchNotifications
@@ -231,7 +249,6 @@ def my_properties(request):
                 break
             offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
             list["offers"].append(offer)
-
 
     return render(request, 'users/my_properties.html', {"properties": property_offers, })
 
