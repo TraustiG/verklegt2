@@ -10,51 +10,106 @@
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="fullname" class="form-label">Nafn</label>
-                        <input type="text" class="form-control" id="fullname" name="fullname" value="{{user.full_name}}" required> 
+                        <input type="text" class="form-control profile-input" id="profile-input-fullname" name="fullname" value="{{user.full_name}}" required pattern="[\p{L} ]{2,100}"> 
+                        <div class="invalid-text" style="display: none">
+                            Verður að vera á milli 2-100 stafir og má aðeins innihalda bókstafi
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="profile_image" class="form-label">Mynd</label>
-                        <input type="file" class="form-control" id="profile_image" name="profile_image" value="{{user.image}}" required>
+                        <input type="file" class="form-control" id="profile-input-profile_image" name="profile_image" value="{{user.image}}">
                     </div>
 
                     {% if user.is_seller %}
                     <div class="mb-3">
                         <label for="seller_type" class="form-label">Tegund</label>
-                        <input type="text" class="form-control" id="seller_type" name="seller_type" value="{{ user.seller.type }}">
+                        <select type="text" class="form-control" id="seller_type" name="seller_type">
+                            <option value="Individual" {% if user.seller.type == "Individual" %}selected{% endif %}>Individual</option>
+                            <option value="Real estate agency" {% if user.seller.type == "Real estate agency" %}selected{% endif %}>Real estate agency</option>
+                        </select>
                     </div>
 
                     <div class="mb-3">
-                        <label for="streetname" class="form-label">Heimilisfang</label>
-                        <input type="text" class="form-control" id="streetname" name="streetname" value="{{ user.seller.street_name }}">
+                        <label for="streetname" class="form-label profile-input">Heimilisfang</label>
+                        <input type="text" class="form-control profile-input" id="profile-input-streetname" name="streetname" value="{{ user.seller.street_name }}" required pattern="[\p{L}\d ]{2,100}">
+                        <div class="invalid-text" style="display: none">
+                            Verður að vera á milli 2-100 stafir og má aðeins innihalda bókstafi eða tölur
+                           </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="city_input" class="form-label">Borg</label>
-                        <input type="text" class="form-control" id="city_input" name="city_input" value="{{ user.seller.city }}">
+                        <input type="text" class="form-control profile-input" id="profile-input-city_input" name="city_input" value="{{ user.seller.city }}" required pattern="[\p{L} ]{2,100}">
+                        <div class="invalid-text" style="display: none">
+                            Verður að vera á milli 2-100 stafir og má aðeins innihalda bókstafi
+                           </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="zip" class="form-label">Póstnúmer</label>
-                        <input type="text" class="form-control" id="zip" name="zip" value="{{ user.seller.postal_code }}">
+                        <input type="text" class="form-control profile-input" id="profile-input-zip" name="zip" value="{{ user.seller.postal_code }}" required pattern="[0-9]{1,5}">
+                        <div class="invalid-text" style="display: none">
+                            Verður að vera á milli 2-5 stafir og má aðeins innihalda tölur
+                           </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="logo_input" class="form-label">Logo URL</label>
+                        <label for="logo_input" class="form-label">Logo</label>
                         <input type="file" class="form-control" id="logo_input" name="logo_input" value="{{ user.seller.logo }}">
                     </div>
 
                     <div class="mb-3">
                         <label for="bio_input" class="form-label">Lýsing</label>
-                        <textarea class="form-control" id="bio_input" name="bio_input">{{ user.seller.bio }}</textarea>
+                        <textarea class="form-control" id="bio_input" name="bio_input" maxlength= "500">{{ user.seller.bio }}</textarea>
                     </div>
                 {% endif %}
             
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Loka</button>
-                        <button type="submit" class="btn btn-primary">Staðfesta</button>
+                        <button type="submit" class="btn btn-primary" id="edit-profile-modal-submit" name="edit-profile-modal-submit">Staðfesta</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+<script> 
+    
+    console.log("profile.js");
+
+    document.addEventListener("DOMContentLoaded", () => {
+        
+
+
+        const profileFields = document.querySelectorAll('[id^="profile-input"]');
+        const profileSubmitButton = document.getElementById("edit-profile-modal-submit");
+        
+        profileFields.forEach((element) => {
+            element.addEventListener("change", () => {
+                
+                if (Array.from(profileFields).map((el) => el.checkValidity()).reduce((f, s) => f && s)) {
+                    profileSubmitButton.disabled = false;
+                } else {
+                    profileSubmitButton.disabled = true;
+                }
+        
+                if (!element.checkValidity()) {
+                    element.setAttribute("isvalid", "true");
+                    element.parentElement.querySelector(".invalid-text").style.display = "block"; 
+                } else {
+                    element.removeAttribute("isvalid");
+                    element.parentElement.querySelector(".invalid-text").style.display = "none"; 
+                }
+            });
+        });
+
+        
+        const modal = document.querySelector('[id="edit-profile-modal"]');
+    
+        modal.addEventListener("hidden.bs.modal", () => {
+                modal.querySelector("form").reset();
+            });
+        
+
+    });
+</script>

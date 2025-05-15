@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" id="create-new-property" action="">
+                <form method="POST" id="create-new-property" enctype="multipart/form-data" action="">
                     {% csrf_token %}
                     <div class="container d-flex gap-3 justify-content-evenly">
                         <div class="col-6">
@@ -40,16 +40,13 @@
                             </div>
                             <div class="mb-3">
                                 <label for="type" class="form-label">Týpa</label>
-                                <select id="property-input-type" type="text" class="form-control property-input" name="type" required>
-                                    <option value="" selected disabled>Veldu týpu</option>
+                                <select id="type" type="text" class="form-control type" name="type" required>
+                                    <option value="" disabled hidden>Veldu týpu</option>
                                     <option value="Einbýlishús">Einbýlishús</option>
                                     <option value="Fjölbýlishús">Fjölbýlishús</option>
                                     <option value="Parhús">Parhús</option>
                                     <option value="Raðhús">Raðhús</option>
                                 </select>
-                                <div class="invalid-text" style="display: none">
-                                    Þú verður að velja týpu
-                                </div>
                             </div>
                         </div>
                         <div class="col-6">
