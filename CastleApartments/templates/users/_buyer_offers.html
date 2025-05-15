@@ -47,6 +47,7 @@
             <td class="align-middle text-center" scope="row">{{ offer.offer_expiry }}</td>
             <td class="align-middle text-end" scope="row"><h4 class="mx-3">{{ offer.offer_amount }} kr.</h4></td>
             <td class="offer-button-cell justify-content-evenly d-flex my-1" scope="row">
+                {% if not offer.expired %}
                 <button name="offer-accepted-button" class="w-75 btn  btn-success bigger-btn"
                 {% if offer.offer_status != 'ACCEPTED' %}style="display:none;"{% endif %}
                 data-bs-toggle="modal" data-bs-target="#contact-info-modal" 
@@ -74,10 +75,12 @@
                 data-city="{{ offer.property.city }}"
                 data-type="{{ offer.property.property_type }}"
                 data-listing-price="{{ offer.property.listing_price }}"
+                data-image="{{ offer.property.image }}"
                 data-id="{{ offer.id }}">Skoða</button>
+                {% endif %}
 
-                <button name="offer-deleted-button" class="w-75 btn btn-primary bigger-btn" 
-                {% if offer.offer_status != 'REJECTED' %}style="display:none;"{% endif %}
+                <button name="offer-deleted-button" class="w-75 btn btn-danger bigger-btn" 
+                {% if offer.offer_status != 'REJECTED' and not offer.expired %}style="display:none;"{% endif %}
                 data-bs-toggle="modal" data-bs-target="#delete-offer-modal"
                 data-button-status="REJECTED" 
                 data-offer-status="{{ offer.offer_status }}" 
@@ -92,7 +95,7 @@
                 data-id="{{ offer.id }}">Eyða</button>
             </td>
 
-            <td class="align-middle text-center" scope="row"><h4><b>{{ offer.offer_status }}</b></h4></td>
+            <td class="align-middle text-center" scope="row"><h4><b>{%if offer.expired %}EXPIRED{% else %}{{ offer.offer_status }}{% endif %}</b></h4></td>
 
         </tr>
         {% endif %}

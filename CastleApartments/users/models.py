@@ -8,11 +8,7 @@ class User(AbstractUser):
     image = models.ImageField()
     full_name = models.CharField(max_length = 100)
 
-    def makeInits(self):
-        print("makeInits")
-
     def __str__(self):
-        #self.makeInits()
         names = self.full_name.split()
         inits = "".join([x[0] for x in names])
         return inits

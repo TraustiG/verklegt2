@@ -288,10 +288,12 @@ const editPropertyOnSubmit = (id, rowId) => {
 };
 
 const changeRow = (element, information) => {
+    console.log("changing")
     
     let aCell = element.querySelector('th[name="address-cell"]')
     let pCell = element.querySelector('td[name="price-cell"]')
     information = information[0]
+    let editButton = element.querySelector('button[name="editProperty"]')
     
     let street = information.querySelector('input[id="property-input-streetname"]').value
     let city = information.querySelector('input[id="property-input-city-input"]').value
@@ -304,15 +306,15 @@ const changeRow = (element, information) => {
     let desc = information.querySelector('textarea[id="property-input-desc"]').value
     let address = `${street} - ${zip} ${city}`
 
-    element.setAttribute("data-streetname", street)
-    element.setAttribute("data-price", price)
-    element.setAttribute("data-city_input", city)
-    element.setAttribute("data-zip", zip)
-    element.setAttribute("data-desc", desc)
-    element.setAttribute("data-bedrooms", bedrooms)
-    element.setAttribute("data-bathrooms", bathrooms)
-    element.setAttribute("data-sqm", sqm)
-    element.setAttribute("data-type", type)
+    editButton.setAttribute("data-street", street)
+    editButton.setAttribute("data-price", price)
+    editButton.setAttribute("data-city", city)
+    editButton.setAttribute("data-zip", zip)
+    editButton.setAttribute("data-desc", desc)
+    editButton.setAttribute("data-bedrooms", bedrooms)
+    editButton.setAttribute("data-bathrooms", bathrooms)
+    editButton.setAttribute("data-sqm", sqm)
+    editButton.setAttribute("data-type", type)
     
     
     aCell.innerHTML = `<h4 class="mx-5">${address}</h4>`

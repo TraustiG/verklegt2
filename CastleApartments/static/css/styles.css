@@ -46,6 +46,17 @@ dt.buyer-info {
     width: 7rem;
 }
 
+#offer-table {
+    width: 98%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+#seller-properties-table {
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
 .payment-modal-sub-header {
     border-bottom: 1px solid black;
     box-shadow: 0 8px 6px -6px #04a5e5, 0 -8px 6px -6px #04a5e5;
@@ -439,6 +450,14 @@ html[data-theme="dark"] .bg-high {
     box-shadow: 0 8px 14px 5px rgba(0,0,0,0.44);
 }
 
+.user-top-icon {
+    width:2.5rem;
+    height:2.5rem;
+}
+
+button:disabled {
+    cursor: progress;
+}
 
 .card .bi-binoculars {
     top: 40%;

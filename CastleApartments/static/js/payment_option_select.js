@@ -131,9 +131,11 @@
             resetForm()
             let input = document.querySelector('[id="payment-form-actual-offer-id"]')
             let imageDiv = document.querySelector('[id="payment-form-image"]')
+            imageDiv.innerHTML = ""
             let image = document.createElement("img")
             image.src = element.getAttribute("data-image")
             image.setAttribute("height", "250rem")
+            console.log(element.getAttribute("data-image"))
             console.log(image)
             imageDiv.appendChild(image)
 

@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 import requests
 import random
 import re
@@ -13,8 +13,8 @@ import base64
 import json
 import datetime
 from .models import Property, Offer, PropertyImages, Extras
-from payments.models import Payment
 from users.models import Buyer, Seller, Notification, User, Filter
+from typing import List
 
 # Create your views here.
 
@@ -34,10 +34,9 @@ def fetchNotifications(view_func):
 @require_safe
 @fetchNotifications
 def index(request):
-    # þarf að fa listings og tegundir og postnumer í boði
 
-    popular = Property.objects.filter(~Q(status="SOLD")).order_by("-looked_at")[:8]
-    newest = Property.objects.all().filter(~Q(status="SOLD"))[:8]
+    popular = Property.objects.filter(~Q(status="SOLD"),~Q(status="PROCESSED")).order_by("-looked_at")[:8]
+    newest = Property.objects.all().filter(~Q(status="SOLD"),~Q(status="PROCESSED"))[:8]
 
     listings = Property.objects.all()
 
@@ -68,7 +67,10 @@ def getPropertiesByWatch(request):
     postal = filter.area.split(" ")[0]
     type = filter.re_type
     desc = filter.desc
-    min, max = filter.price.split("-")
+    try:
+        min, max = filter.price.split("-")
+    except Exception:
+        min,  max = "", ""
     queries = []
     if postal:
         queries.append(Q(postal_code=postal))
@@ -99,7 +101,7 @@ def getPropertiesByWatch(request):
 
 @require_http_methods(["GET", "POST"])
 @fetchNotifications
-def getRealEstateById(request, id):
+def getRealEstateById(request, id: int):
     if request.method == "GET":
         try:
             propertyObj = Property.objects.get(id=id)
@@ -175,8 +177,7 @@ def getRealEstateById(request, id):
 
 @require_safe
 @fetchNotifications
-def imageGallery(request, id):
-    # get realestate from database - make object to send in render
+def imageGallery(request, id: int):
     try:
         propertyObj = Property.objects.get(id=id)
     except Property.DoesNotExist:
@@ -211,7 +212,7 @@ def search(request):
 
 @require_POST
 @fetchNotifications
-def createOffer(request, id):
+def createOffer(request, id: int):
     
     amount = request.POST.get("amount")
     expiry = request.POST.get("expiry")
@@ -240,7 +241,7 @@ def createOffer(request, id):
 
 @require_POST
 @fetchNotifications
-def deleteOffer(request, id):
+def deleteOffer(request, id: int):
     try:
         action = request.POST["action"]
     except Exception:
@@ -330,7 +331,7 @@ def createProperty(request):
 
     return redirect(f"/real-estates/{newProperty.id}")
 
-def comparePropToFilter(property: Property, filter):
+def comparePropToFilter(property: Property, filter: Filter):
     area = f"{property.postal_code} {property.city}"
     if filter.area not in ["", area]:
         return False
@@ -352,7 +353,7 @@ def comparePropToFilter(property: Property, filter):
             pass
     return True
 
-def createImages(images, property, main=False):
+def createImages(images: List[str], property: Property, main: bool=False):
     front = "/none"
     if not images:
         return front
@@ -410,7 +411,7 @@ def checkDesc(search: str, listing: Property):
             return True
     return False
 
-def getSimilars(prop):
+def getSimilars(prop: Property):
     listings = Property.objects.all()
     i = 10
     while len(listings) > 3 and i > 0:
@@ -449,7 +450,7 @@ def notify(user, prop: Property = False, offer: Offer = False):
         kwargs["count"] = 1
         notifUser = Notification.objects.create(**kwargs)
 
-def fixFilters(filters):
+def fixFilters(filters: List[Filter]):
     for filter in filters:
         try:
             min, max = filter.price.split("-")
@@ -474,11 +475,9 @@ def fixFilters(filters):
     return filters
 
 def tester(request):
-    old = Filter.objects.filter(user=request.user, monitor=True)
-    print(old)
-    for f in old:
-        f.monitor = False
-        f.save()
+    offer = Offer.objects.get(id=79)
+    offer.offer_expiry = datetime.date(2025,5,12)
+    offer.save()
         
     return redirect('profile')
 

@@ -1,24 +1,20 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.db.models import Q
 from django.contrib.auth import login
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
 from django.contrib import messages
+from django.db.models import Q
 from babel.numbers import format_currency
-import copy
-from .forms import RegistrationForm , SellerForm, SearchForm
-from .models import Seller, Buyer, Filter, User, Notification
+from .forms import RegistrationForm , SellerForm
+from .models import Seller, Buyer, Filter, Notification
 from real_estates.models import Offer,Property, Extras
 from real_estates.views import index, fetchNotifications
+import datetime
 
 # Create your views here.
 
 @require_http_methods(["GET", "POST"])
 @fetchNotifications
 def register(request):
-
-    # illegal = User.objects.filter(full_name="Jón Jónsson")
-    # for user in illegal:
-    #     user.delete()
 
     if request.method == 'POST':
         role = request.POST.get('role')
@@ -107,7 +103,7 @@ def saveFilter(request):
 
 @require_POST
 @fetchNotifications
-def editFilter(request, id):
+def editFilter(request, id: int):
     filter = Filter.objects.get(id=id)
     action = request.POST["action"]
     if action == "DELETE":
@@ -146,6 +142,7 @@ def profile(request):
             buyer = Buyer.objects.get(user=user)
             offers = Offer.objects.filter(buyer=buyer)
             for offer in offers:
+                offer.expired = (offer.offer_expiry < datetime.date.today())
                 offer.offer_amount = format_currency(offer.offer_amount, "", locale="is_is")[:-4]
                 offer.property.listing_price = format_currency(offer.property.listing_price, "", locale="is_is")[:-4]
                 notifs = Notification.objects.filter(user=request.user, offer=offer, count__gt=0)
@@ -209,7 +206,7 @@ def profile(request):
         
 @require_safe
 @fetchNotifications
-def seller(request, id):
+def seller(request, id: int):
     
     if request.user.id == id:
         return redirect('profile')
@@ -240,13 +237,14 @@ def my_properties(request):
         property_offers[property] = {"notifs": 0, "offers": []}
 
     for prop, list in property_offers.items():
-        offers = Offer.objects.filter(property=prop)
+        offers = Offer.objects.filter(~Q(offer_status="REJECTED"), property=prop)
         notifs = Notification.objects.filter(user=request.user, property=prop, count__gt=0)
         property_offers[prop]["notifs"] = sum([x.count for x in notifs])
         for notif in notifs:
             notif.count = 0
             notif.save()
         for offer in offers:
+            offer.expired = (offer.offer_expiry < datetime.date.today())
             if offer.offer_status == "PROCESSED":
                 list["offers"] = [offer]
                 break
@@ -254,8 +252,3 @@ def my_properties(request):
             list["offers"].append(offer)
 
     return render(request, 'users/my_properties.html', {"properties": property_offers, })
-
-@require_safe
-@fetchNotifications
-def property_offers(request):
-    return render(request, 'users/seller_property_offers.html')

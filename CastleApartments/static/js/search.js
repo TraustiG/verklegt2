@@ -2,6 +2,14 @@
     priceButtons = document.getElementsByName("search-price-value-item")
     searchPriceIndicator = document.getElementById("search-price-value-indicator")
     searchPriceInput = document.getElementById("id_priceInput")
+    searchInputFields = [...document.getElementsByClassName("search-form-input-field")]
+
+    searchInputFields.forEach((field) => {
+        field.addEventListener(("change"), () => {
+            document.getElementById("id_filterName").value = ""
+            document.getElementById("dropdownCheck").checked = false
+        })
+    })
     
     const visualToVal = (text) => text = text.split(" ")[0]*1000000
     
@@ -41,7 +49,6 @@
             }
         })
     })
-    
     
     searchPriceIndicator.addEventListener("click", () => {
         searchPriceIndicator.toggleAttribute("disabled")
@@ -147,27 +154,31 @@
         let price = element.getAttribute("data-price")
         let desc = element.getAttribute("data-desc")
         let name = element.getAttribute("data-name")
-        console.log(price)
+        let dropdown = element.getAttribute("data-monitor")
+        console.log(dropdown)
+        dropdown = (dropdown === "True")
+        console.log(dropdown)
         if (price) {
             document.getElementById("search-price-value-indicator").innerHTML = price
+        } else {
+            document.getElementById("search-price-value-indicator").innerHTML = "Verð"
         }
         document.getElementById("id_areaSelect").value = area
         document.getElementById("id_typeSelect").value = type
         document.getElementById("id_descInput").value = desc
-        document.getElementById("dropdownCheck").value = dropdown
         document.getElementById("id_filterName").value = name
-    
+        document.getElementById("dropdownCheck").value = dropdown
+        document.getElementById("dropdownCheck").checked = dropdown
     }
 
     const watchFilterButtons = [...document.querySelectorAll('[id^="filter-watch-"]')]
     const deleteFilterButtons = [...document.querySelectorAll('[id^="filter-delete-"]')]
     const savedFilterSpans = [...document.querySelectorAll('span[class^="saved-search-filter-line"]')]
-    console.log(savedFilterSpans)
 
-    watchFilterButtons.forEach((button) => {
+    watchFilterButtons.forEach( async (button) => {
         const listener = () => {
             
-            savedFilterSpans.forEach((element) => {
+            savedFilterSpans.forEach( async (element) => {
                 if (element.contains(button)) {
                     element.classList.replace("saved-search-filter-line", "saved-search-filter-line-watched")
                 } else {
@@ -176,17 +187,18 @@
             })
 
             let id = button.getAttribute("data-filter-id")
-            // let user = button.getAttribute("data-user-id")
             formSubmitter("WATCH", id)
+            setTimeout(() => restartButtons(), 10)
             button.removeEventListener("click", listener)
-            
+            console.log("done")
         }
         button.addEventListener("click", listener)
     })
     
-    const formSubmitter = (action, id, callback) => {
+    const formSubmitter = (action, id) => {
         $("#edit-filter-form").submit( function (e) {
             e.preventDefault()
+            e.stopPropagation()
 
             $.ajax({
                 type: "POST",
@@ -198,17 +210,34 @@
     
             })
         })
-        try {callback()} catch (e) {}
+    }
+
+    // database can´t keep up with spam changing watched filter
+    const restartButtons = async () => {
+        const reset = async (button) => {
+            button.disabled = true
+            setTimeout(() => button.disabled = false, 1000)
+        }
+
+        console.log(watchFilterButtons)
+        console.log(deleteFilterButtons)
+        watchFilterButtons.forEach((button) => {
+            reset(button)
+        })
+        deleteFilterButtons.forEach((button) => {
+            reset(button)
+        })
     }
 
     deleteFilterButtons.forEach((button) => {
         const removeParent = () => {
             button.parentElement.remove()
         }
-        const listener = () => {
+        const listener = async () => {
             
             let id = button.getAttribute("data-filter-id")
-            formSubmitter("DELETE", id, removeParent)
+            formSubmitter("DELETE", id)
+            setTimeout(() => {removeParent(); restartButtons()}, 100)
         }
         button.addEventListener("click", listener)
     })

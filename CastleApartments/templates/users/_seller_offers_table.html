@@ -7,7 +7,7 @@
             <th scope="col">Upphæð</th>
             <th scope="col">Gildistími</th>
             <th scope="col">Aðgerðir</th>
-            <th scope="col"></th>
+            <th scope="col">Staða</th>
         </tr>
     </thead>
     <tbody>
@@ -28,6 +28,9 @@
                     data-city="{{ prop.city }}"
                     data-zip="{{ prop.postal_code }}"
                     data-offer-amount="{{ offer.offer_amount }}"
+                    {% if offer.expired %}
+                    disabled></button>
+                    {% else %}
                     {% if prop.status == "SOLD" %}
                     {% if offer.offer_status != "CONTINGENT" %}
                     disabled></button>
@@ -39,23 +42,28 @@
                     {% elif prop.status == "OPEN" %}
                     >Samþykkja</button>
                     {% endif %}
+                    {% endif %}
                     <button name="contingent-offer-button" class="btn btn-primary offer-row-button" type="button" data-bs-toggle="modal" data-bs-target="#contingent-offer-modal"
                     data-id="{{ offer.id }}"
-                    {% if prop.status == "SOLD" or offer.offer_status != 'OPEN' and offer.offer_status != 'CONTINGENT' %}
+                    {% if offer.expired %}
                     disabled></button>
                     {% else %}
-                    >Skilyrði</button>
+                        {% if prop.status == "SOLD" or offer.offer_status != 'OPEN' and offer.offer_status != 'CONTINGENT' %}
+                        disabled></button>
+                        {% else %}
+                        >Skilyrði</button>
+                        {% endif %}
                     {% endif %}
                     <button name="reject-offer-button" class="btn btn-danger offer-row-button" type="button" data-bs-toggle="modal" data-bs-target="#reject-offer-modal"
                     data-id="{{ offer.id }}"
                     data-offer-amount="{{ offer.offer_amount }}"
-                    {% if offer.offer_status != 'OPEN' %}
+                    {% if offer.offer_status != 'OPEN' and not offer.expired %}
                     disabled></button>
                     {% else %}
-                    >Hafna</button>
+                    >{% if offer.expired %}Eyða{% else %}Hafna{% endif %}</button>
                     {% endif %}
                 </th>
-                <th scope="col"></th>
+                <th scope="col" class="align-middle text-center"><h3><b>{{ offer.offer_status }}</b></h3></th>
             </tr>
             {% endfor %}
             {% endif %}

@@ -1,10 +1,9 @@
 from django.shortcuts import HttpResponse
-from django.views.decorators.http import require_POST, require_http_methods
-from django.db.models import Q
+from django.views.decorators.http import require_POST
 
 from real_estates.views import fetchNotifications, notify
 from .models import Payment
-from real_estates.models import Offer, Property
+from real_estates.models import Offer
 
 
 # Create your views here.
@@ -12,7 +11,7 @@ from real_estates.models import Offer, Property
       
 @require_POST
 @fetchNotifications
-def selectPayment(request, id):
+def selectPayment(request, id: int):
     offer = Offer.objects.get(id=id)
 
     property = offer.property

@@ -36,13 +36,6 @@
                 {% endif %}
                 {% endif %}
             </div>
-            {% if user.id == 20 and profile.id == 20 %}
-            <div class="col-4 align-items-center">
-                <a class="px-2" href="{% url 'fill-database' %}">
-                    <button type="button" class="btn btn-primary mx-2" >Fill database</button>
-                </a>
-            </div>
-            {% endif %}
             <div class="col-4">
                 {% if profile.is_seller %}
                     <img class="border border-black border-4 rounded rounded-5" src="{{ profile.seller.logo }}" style="height: auto; width:100%;" />

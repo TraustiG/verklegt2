@@ -5,7 +5,7 @@
             <div class="row justify-content-evenly mb-4 pt-4">
                 <div class="col-3">
                     <div class="form-floating">
-                        <select class="form-select" name="areaSelect" id="id_areaSelect">
+                        <select class="form-select search-form-input-field" name="areaSelect" id="id_areaSelect">
                             <option selected disabled></option>
                             {% for area in areas %}
                             <option value="{{ area }}">
@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="form-floating">
-                        <select class="form-select" name="typeSelect" id="id_typeSelect">
+                        <select class="form-select search-form-input-field" name="typeSelect" id="id_typeSelect">
                             <option selected disabled></option>
                             {% for type in types %}
                             <option value="{{ type }}">
@@ -43,7 +43,7 @@
                             Verð
                         </button>
                         <div class="visually-hidden">
-                            <input type="text" class="form-control" name="priceInput" id="id_priceInput" placeholder="">
+                            <input type="text" class="form-control search-form-input-field" name="priceInput" id="id_priceInput" placeholder="">
                             <label for="id_priceInput">Verð</label>
                         </div>
                         <button type="button" class="btn form-control search-price-value dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
@@ -60,7 +60,7 @@
             <div class="row justify-content-evenly">
                 <div class="col-sm-6">
                     <div class="form-floating">
-                        <input class="form-control" name="descInput" id="id_descInput" placeholder="">
+                        <input class="form-control search-form-input-field" name="descInput" id="id_descInput" placeholder="">
                         <label for="id_descInput">Götuheiti eða textalýsing</label>
                     </div>
                 </div>
@@ -185,7 +185,7 @@
                                                     </svg>
                                                 </button>
                                                 <a class="text-truncate saved-filter dropdown-item user-select-none" 
-                                                data-name="{{filter.name}}" data-area="{{filter.area}}" data-price="{{filter.price}}" data-desc="{{filter.desc}}" data-re_type="{{filter.re_type}}">
+                                                data-name="{{filter.name}}" data-area="{{filter.area}}" data-price="{{filter.price}}" data-desc="{{filter.desc}}" data-re_type="{{filter.re_type}}" data-monitor="{{filter.monitor}}">
                                                     {{ filter.name }}
                                                 </a>
                                             </span>

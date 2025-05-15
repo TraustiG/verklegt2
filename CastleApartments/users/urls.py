@@ -8,5 +8,4 @@ urlpatterns = [
     path("filters/", views.saveFilter, name="filter"),
     path("filters/<int:id>", views.editFilter, name="filter"),
     path("my-properties/", views.my_properties, name="my-properties"),
-    path("my-properties/<int:id>/offers", views.property_offers, name="seller_property_offers"),
 ]
