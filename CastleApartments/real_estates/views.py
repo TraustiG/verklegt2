@@ -36,8 +36,8 @@ def fetchNotifications(view_func):
 def index(request):
     # þarf að fa listings og tegundir og postnumer í boði
 
-    popular = Property.objects.order_by("-looked_at")[:8]
-    newest = Property.objects.all()[:8]
+    popular = Property.objects.filter(~Q(status="SOLD")).order_by("-looked_at")[:8]
+    newest = Property.objects.all().filter(~Q(status="SOLD"))[:8]
 
     listings = Property.objects.all()
 
@@ -46,11 +46,21 @@ def index(request):
     
     prices = getPrices()
     filters = Filter.objects.filter(user_id=request.user.id)
-    filters = fixFilters(request.user, filters)
+    filter = filters.filter(monitor=True)
+    filters = fixFilters(filters)
+
     for item in popular:
         item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
+        if not filter:
+            continue
+        if comparePropToFilter(item, filter[0]):
+            item.monitor = True
     for item in newest:
         item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
+        if not filter:
+            continue
+        if comparePropToFilter(item, filter[0]):
+            item.monitor = True
     return render(request, "home.html", {"newest": newest, "popular": popular, "areas": areas, "types": types, "prices": prices, "filters": filters})
 
 def getPropertiesByWatch(request):
@@ -75,8 +85,10 @@ def getPropertiesByWatch(request):
     areas = sorted(list(set([f"{x.postal_code} {x.city}" for x in listings])))
     types = sorted(list(set([f"{x.property_type}" for x in listings])))
     prices = getPrices()
+
     filters = Filter.objects.filter(user_id=request.user.id)
-    filters = fixFilters(request.user, filters)
+    filters = fixFilters(filters)
+
     listings = Property.objects.filter(*queries)
     for item in listings:
         item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
@@ -188,30 +200,12 @@ def search(request):
             continue
         listings = filterListings(key, value, listings)
 
+    filters = Filter.objects.filter(user_id=request.user.id)
+    filters = fixFilters(filters)
+
     for item in listings:
         item.listing_price = format_currency(item.listing_price, "", locale="is_is")[:-4]
-    filters = Filter.objects.filter(user_id=request.user.id)
-    for filter in filters:
-        try:
-            min, max = filter.price.split("-")
-            try: 
-                min = int(min)//1000000
-                min = f"{str(min)}"
-            except Exception as e:
-                min = f"0-"
-            try: 
-                max = str(int(max)//1000000)
-            except Exception as e:
-                max = "+"
-            if min != "0-":
-                if max != "+":
-                    filter.price = f"{min} mkr. - {max} mkr."
-                else:
-                    filter.price = f"{min} mkr. +"
-            else:
-                filter.price = f"0-{max} mkr."
-        except Exception:
-            pass
+
 
     return render(request, "real_estates/search.html", {"listings": listings, "areas": areas, "types": types, "prices": prices, "filters": filters})
 
@@ -329,30 +323,34 @@ def createProperty(request):
             new = Extras.objects.create(property_id=newProperty.id, description=extra)
             new.save()
 
-    area = f"{zip} {city_input}"
     filters = Filter.objects.filter(monitor=True)
     for filter in filters:
-        if filter.area not in ["", area]:
-            continue
-        if filter.re_type not in ["", type]:
-            continue
-        if filter.desc not in ["", desc]:
-            continue
-        if filter.price:
-            min, max = price.split("-")
-            try:
-                if int(min) > price:
-                    continue
-            except Exception:
-                pass
-            try:
-                if int(max) < price:
-                    continue
-            except Exception:
-                pass
-        notify(filter.user, prop=newProperty)
+        if comparePropToFilter(newProperty, filter):
+            notify(filter.user, prop=newProperty)
 
     return redirect(f"/real-estates/{newProperty.id}")
+
+def comparePropToFilter(property: Property, filter):
+    area = f"{property.postal_code} {property.city}"
+    if filter.area not in ["", area]:
+        return False
+    if filter.re_type not in ["", property.property_type]:
+        return False
+    if filter.desc not in ["", property.description]:
+        return False
+    if filter.price:
+        min, max = filter.price.split("-")
+        try:
+            if int(min) > property.listing_price:
+                return False
+        except Exception:
+            pass
+        try:
+            if int(max) < property.listing_price:
+                return False
+        except Exception:
+            pass
+    return True
 
 def createImages(images, property, main=False):
     front = "/none"
@@ -451,8 +449,7 @@ def notify(user, prop: Property = False, offer: Offer = False):
         kwargs["count"] = 1
         notifUser = Notification.objects.create(**kwargs)
 
-def fixFilters(user, filters):
-    filters = Filter.objects.filter(user_id=user.id)
+def fixFilters(filters):
     for filter in filters:
         try:
             min, max = filter.price.split("-")
@@ -477,7 +474,11 @@ def fixFilters(user, filters):
     return filters
 
 def tester(request):
-
+    old = Filter.objects.filter(user=request.user, monitor=True)
+    print(old)
+    for f in old:
+        f.monitor = False
+        f.save()
         
     return redirect('profile')
 

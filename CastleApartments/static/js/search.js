@@ -51,7 +51,6 @@
     const sorter = () => {
         document.getElementById("orderBySelect")
             .addEventListener("change", (event) => {
-                console.log("sorter")
                 sortItems(event)
         })
         
@@ -89,12 +88,10 @@
         }
     }
     
-    sorter()
     
-    
-    let openFilterSaverButton = document.getElementById("open-filter-saver-button")
-    let saveFilterButton = document.getElementById("filter-saver-button")
-    
+    const openFilterSaverButton = document.getElementById("open-filter-saver-button")
+    const saveFilterButton = document.getElementById("filter-saver-button")
+
     openFilterSaverButton.addEventListener("click", () => {
         const listener = () => {
             saveFilter()
@@ -161,4 +158,58 @@
         document.getElementById("id_filterName").value = name
     
     }
+
+    const watchFilterButtons = [...document.querySelectorAll('[id^="filter-watch-"]')]
+    const deleteFilterButtons = [...document.querySelectorAll('[id^="filter-delete-"]')]
+    const savedFilterSpans = [...document.querySelectorAll('span[class^="saved-search-filter-line"]')]
+    console.log(savedFilterSpans)
+
+    watchFilterButtons.forEach((button) => {
+        const listener = () => {
+            
+            savedFilterSpans.forEach((element) => {
+                if (element.contains(button)) {
+                    element.classList.replace("saved-search-filter-line", "saved-search-filter-line-watched")
+                } else {
+                    element.classList.replace("saved-search-filter-line-watched", "saved-search-filter-line")
+                }
+            })
+
+            let id = button.getAttribute("data-filter-id")
+            // let user = button.getAttribute("data-user-id")
+            formSubmitter("WATCH", id)
+            button.removeEventListener("click", listener)
+            
+        }
+        button.addEventListener("click", listener)
+    })
+    
+    const formSubmitter = (action, id, callback) => {
+        $("#edit-filter-form").submit( function (e) {
+            e.preventDefault()
+
+            $.ajax({
+                type: "POST",
+                url: `/filters/${id}`,
+                data: {
+                    action: action,
+                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+                },
+    
+            })
+        })
+        try {callback()} catch (e) {}
+    }
+
+    deleteFilterButtons.forEach((button) => {
+        const removeParent = () => {
+            button.parentElement.remove()
+        }
+        const listener = () => {
+            
+            let id = button.getAttribute("data-filter-id")
+            formSubmitter("DELETE", id, removeParent)
+        }
+        button.addEventListener("click", listener)
+    })
 })()

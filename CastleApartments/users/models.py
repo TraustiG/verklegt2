@@ -42,6 +42,8 @@ class Seller(models.Model):
         return "XX"
 
 class Filter(models.Model):
+    class Meta:
+        ordering = ('-id', '-monitor')
 
     user = models.ForeignKey(
         "User", on_delete=models.CASCADE, null=True, blank=True)
