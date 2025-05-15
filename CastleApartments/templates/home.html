@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    {% include "_search_form.html" with areas=areas types=types %}
+    {% include "_search_form.html" with areas=areas types=types order_by=False %}
     {% include "_title_bar.html" with title="Nýjustu eignirnar" %}
     {% include "real_estates/_listings.html" with cols=5 itemlist=newest %}
     {% include "_title_bar.html" with title="Vinsælustu eignirnar" %}
