@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
 from django.contrib.auth import login
 from django.views.decorators.http import require_http_methods, require_safe, require_POST
+from django.contrib import messages
 from babel.numbers import format_currency
 import copy
 from .forms import RegistrationForm , SellerForm, SearchForm
@@ -165,16 +166,15 @@ def profile(request):
         profile_image = request.FILES.get("profile_image")
 
         user.full_name = fullname
-        user.image = profile_image
 
-        #saves the picture to media folder
-        user.save() 
+        if profile_image:
+            user.image = profile_image
+            user.save()  # this saves the file and updates the `image` field
+            user.image = f"/media/{user.image}"  # optional: if you store it as a string path
+            user.save()
+        else:
+            user.save()  # just save the updated name
 
-        
-        user.image = f"/media/{user.image}"
-
-        #saves correct path for user.image
-        user.save()
             
         #check if user is a seller & edit / save seller object if those fields have been edited
         if user.is_seller:
@@ -191,17 +191,20 @@ def profile(request):
             seller.street_name= streetname
             seller.city= city_input
             seller.postal_code= zip
-            seller.logo= logo_input
             seller.bio= bio_input
 
             
-            seller.save()
+            if logo_input:
+                seller.logo = logo_input
+                seller.save()
+                seller.logo = f"/media/{seller.logo}"
+                seller.save()
+            
+            else:
+                seller.save()
 
-            #save correct path to logo field
-            seller.logo= f"/media/{seller.logo}"
+            messages.success(request, "Notendaupplýsingum hefur verið breytt!")
 
-            seller.save()
-        
         return redirect('profile')
         
 @require_safe

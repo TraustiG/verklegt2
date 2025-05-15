@@ -3,7 +3,7 @@
     <a class="stretched-link" href="{% url 'real-estate-by-id' id=property.id %}">
     </a>
     <img height="180rem" src="{{property.image}}" class="card-img-top" alt="A beautiful home">
-    {% if property.status == "SOLD" %}
+    {% if property.status == "SOLD" or property.status == "PROCESSED" %}
         {% include "real_estates/_card_banner.html" with text="SELD" %}
     {% endif %}
     </img>

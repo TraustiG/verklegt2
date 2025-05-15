@@ -488,3 +488,10 @@ input[type=number] {
     border-color: var(--bs-danger) !important;
     box-shadow: 0 0 5px 3px var(--bs-danger) !important;
 }
+
+.profile-input:invalid[isvalid="true"] {
+    border-color: var(--bs-danger) !important;
+    box-shadow: 0 0 5px 3px var(--bs-danger) !important;
+}
+
+
