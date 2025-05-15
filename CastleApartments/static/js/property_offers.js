@@ -1,4 +1,5 @@
 
+
 // property-line to offer-table
 (() => {
     const offerTableRows = document.getElementsByName("offer-table-row")
@@ -25,8 +26,7 @@
         activeRow.classList.toggle("table-active")
         let imageElement = document.getElementById("chosen-row-property-image")
         imageElement.src = element.getAttribute("data-image")
-        //imageElement.parentElement.setAttribute("href", `/real-estates/${element.getAttribute("data-id")}`)
-        imageElement.parentElement.innerHTML = element.getAttribute("data-card")
+        imageElement.parentElement.setAttribute("href", `/real-estates/${element.getAttribute("data-id")}`)
         document.getElementById("offer-table").style.display = ""
         offerTableRows.forEach((el) => {
             document.getElementById("address-table-caller").innerHTML = element.id
