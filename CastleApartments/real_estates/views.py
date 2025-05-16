@@ -120,6 +120,7 @@ def getRealEstateById(request, id: int):
         if request.user.is_authenticated:
             if request.user.is_buyer:
                 offer = Offer.objects.filter(buyer=request.user.buyer, property=propertyObj).first()
+                offer.expired = (offer.offer_expiry < datetime.date.today())
                 request.user.has_offer = bool(offer)
 
         propertyObj.listing_price = format_currency(propertyObj.listing_price, "", locale="is_is")[:-4]

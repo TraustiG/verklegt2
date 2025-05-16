@@ -518,7 +518,9 @@ const setFormValue = (formfield, val) => {
     deleteOfferButtons.forEach((element) => {
         const listener = () => {
             document.getElementById("delete-offer-modal-body-prompt").innerHTML = `Þangað til næst! ;`
-    
+            
+            //document.getElementById("delete-offer-form").setAttribute("action", `/offers/${id}`);
+
                 id = element.getAttribute("data-id")
                 rowId = `offer-id-${id}-row`
     
@@ -532,7 +534,7 @@ const setFormValue = (formfield, val) => {
 
 
     const deleteOfferOnSubmit = (id, rowId) => {
-        $("#delete-offer-form").submit( (e) => {
+      $("#delete-offer-form").submit( (e) => {
             
             e.preventDefault()
             let rowElement = document.getElementById(rowId)
@@ -545,7 +547,7 @@ const setFormValue = (formfield, val) => {
                     csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
                 },
             })
-        })
+       })
     }
 
 
