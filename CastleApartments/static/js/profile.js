@@ -2,6 +2,8 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         
+
+
         const profileFields = document.querySelectorAll('[id^="profile-input"]');
         const profileSubmitButton = document.getElementById("edit-profile-modal-submit");
         
@@ -14,7 +16,7 @@
                     profileSubmitButton.disabled = true;
                 }
         
-                if (element.checkValidity()) {
+                if (!element.checkValidity()) {
                     element.setAttribute("isvalid", "true");
                     element.parentElement.querySelector(".invalid-text").style.display = "block"; 
                 } else {

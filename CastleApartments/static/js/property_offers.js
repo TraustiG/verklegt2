@@ -449,7 +449,8 @@
 
 
     const acceptOfferOnSubmit = (id) => {
-        const editForm = ("#accept-offer-form")
+        const editForm = $('#accept-offer-form')
+        editForm.unbind()
         editForm.submit( (e) => {
             
             e.preventDefault()
@@ -489,7 +490,8 @@
 
 
     const rejectOfferOnSubmit = (id, rowId) => {
-        const editForm = ("#reject-offer-form")
+        const editForm = $('#reject-offer-form')
+        editForm.unbind()
         editForm.submit( (e) => {
             e.preventDefault()
             let rowElement = document.getElementById(rowId)
@@ -503,7 +505,7 @@
                 },
             })
         })
-        editForm.unbind()
+        
     };
 
 
@@ -529,10 +531,13 @@
 
 
     const deleteOfferOnSubmit = (id, rowId) => {
-        const editForm = ("#delete-offer-form")
+        const editForm = $('#delete-offer-form')
+        editForm.unbind()
         editForm.submit( (e) => {
             
             e.preventDefault()
+            e.stopPropagation()
+
             let rowElement = document.getElementById(rowId)
             rowElement.remove()
             $.ajax({
@@ -544,7 +549,7 @@
                 },
             })
         })
-        editForm.unbind()
+    
     };
 
 
@@ -582,7 +587,8 @@
     });
 
     const contingentOfferOnSubmit = (id, textarea) => {
-        const editForm = ("#contingent-offer-form")
+        const editForm = $('#contingent-offer-form')
+        editForm.unbind()
         editForm.submit( (e) => {
             
             e.preventDefault()
@@ -598,7 +604,7 @@
                 },
             })
         })
-        editForm.unbind()
+    
 
     };
 
