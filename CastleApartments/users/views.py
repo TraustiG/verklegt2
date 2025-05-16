@@ -82,10 +82,13 @@ def saveFilter(request):
     search.area = request.POST["area"]
     search.monitor = request.POST["monitor"]
     if search.monitor == "True":
-        old = Filter.objects.get(user=request.user, monitor=True)
-        old.monitor = False
-        old.save()
-        search.monitor = True
+        try:
+            old = Filter.objects.get(user=request.user, monitor=True)
+            old.monitor = False
+            old.save()
+            search.monitor = True
+        except Exception:
+            search.monitor = False
     else:
         search.monitor = False
     search.name = request.POST["name"]
@@ -102,6 +105,7 @@ def saveFilter(request):
 
     return redirect('search')
 
+@require_POST
 @fetchNotifications
 def editFilter(request, id: int):
     filter = Filter.objects.get(id=id)

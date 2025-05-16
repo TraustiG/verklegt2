@@ -531,6 +531,7 @@
 
 
     const deleteOfferOnSubmit = (id, rowId) => {
+
         const editForm = $('#delete-offer-form')
         editForm.unbind()
         editForm.submit( (e) => {
@@ -549,7 +550,6 @@
                 },
             })
         })
-    
     };
 
 
