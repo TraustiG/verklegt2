@@ -43,7 +43,7 @@
                     </div>
                 {% if offer %}
                 <div class="ms-3 d-flex align-items-center" style="height:6rem;">
-                    Staða tilboðs: <strong class="ms-1">{%if offer.expired %}EXPIRED{% else %}{{ offer.offer_status }}{% endif %}</strong>
+                    Staða tilboðs: <strong class="ms-1">{{ offer.offer_status }}</strong>
                 </div>
                     {% endif %}
                 </div>
