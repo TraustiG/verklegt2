@@ -191,7 +191,7 @@
 
             let id = button.getAttribute("data-filter-id")
             formSubmitter("WATCH", id)
-            setTimeout(() => restartButtons(), 10)
+            // setTimeout(() => restartButtons(), 10)
             button.removeEventListener("click", listener)
             console.log("done")
         }
@@ -199,11 +199,12 @@
     })
     
     const formSubmitter = (action, id) => {
-        const editForm = $("#edit-filter-form")
+        const editForm = $('#edit-filter-form')
+        editForm.unbind()
         editForm.submit( function (e) {
             e.preventDefault()
             e.stopPropagation()
-
+    
             $.ajax({
                 type: "POST",
                 url: `/filters/${id}`,
@@ -213,7 +214,6 @@
                 },
     
             })
-            editForm.unbind()
         })
     }
 

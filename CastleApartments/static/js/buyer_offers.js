@@ -1,25 +1,30 @@
 (() => {
 
-    const deletePropertyButtons = document.getElementsByName("delete-offer")
+    const deletePropertyButtons = document.getElementsByName("offer-deleted-button")
+    console.log(deletePropertyButtons)
     let submitButton = document.getElementById("delete-offer-submit-button")
 
     deletePropertyButtons.forEach((element) => {
-        const listener = () => {
-            document.getElementById("delete-offer-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir eyða þessu tilboði?`
-    
-            id = element.getAttribute("data-id")
-            rowId = `offer-id-${id}-row`
-    
-            submitButton.addEventListener("click", () => {
+
+        element.addEventListener("click", () => {
+            let k = document.getElementById("delete-offer-modal-body-prompt")
+            console.log(k)
+            k.innerHTML = `Ertu viss um að þú viljir eyða þessu tilboði?`
+        
+            const listener = () => {
+                id = element.getAttribute("data-id")
+                rowId = `offer-id-${id}-row`
                 deleteOfferOnSubmit(id, rowId)
-            })
-            element.removeEventListener("click", listener)
-        }
-        element.addEventListener("click", listener)
+        
+                submitButton.removeEventListener("click", listener)
+            }
+            submitButton.addEventListener("click", listener)
+        })
     })
     
     const deleteOfferOnSubmit = (id, rowId) => {
         const editForm = $("#delete-offer-form")
+        editForm.unbind()
         editForm.submit( (e) => {
             e.preventDefault()
             let rowElement = document.getElementById(rowId)
@@ -33,7 +38,6 @@
                 },
             })
         })
-        editForm.unbind()
     }
 })();
 
@@ -46,4 +50,6 @@
         }
         button.addEventListener("click", listener)
     })
+
+    
 })
