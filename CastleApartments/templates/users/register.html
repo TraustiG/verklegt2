@@ -25,7 +25,7 @@
                     type=
                     "{% if field.label == 'Image' %}file{% elif 'Password' in field.label %}Password{% else %}{{ field.label }}{% endif %}"
                     class="form-control buyer-form-field" id="id_{{ field.name }}"
-                    pattern="{% if field.name == 'full_name' %}[\p{L} ]*{% elif field.name == 'image' %}.{,90}\.(png|jpg|jpeg){% else %}.*{% endif %}">
+                    pattern="{% if field.name == 'full_name' %}[\p{L} ]*"{% elif field.name == 'image' %}.{,90}\.(png|jpg|jpeg)" accept='.png, .jpg, .jpeg'{% else %}.*"{% endif %}>
                     <label for="id_{{ field.name }}">{{ field.label }}</label>
                     {% if field.help_text %}
                     <div id="{{ field.name }}HelpBlock" class="form-sub-text">

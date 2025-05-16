@@ -53,12 +53,11 @@
 
     paymentContactFields.forEach((element) => {
         element.addEventListener("change", () => {
+            element.setAttribute("isvalid", element.checkValidity())
             if (Array.from(paymentContactFields).map((el) => el.checkValidity()).reduce((f, s) =>  f && s)) {
                 entryContinueButton.disabled = false
-                element.setAttribute("isvalid", false)
             } else {
                 entryContinueButton.disabled = true
-                element.setAttribute("isvalid", true)
             }
         })
     })
@@ -103,20 +102,15 @@
         optionFields.forEach((element, i) => {
             paymentOptionFields.add(element)
             element.addEventListener("change", (event) => {
+                element.setAttribute("isvalid", element.checkValidity())
                 if (Array.from(optionFields).map((el) => el.checkValidity()).reduce((f, s) =>  f && s)) {
                     let confirmElName = `[id="payment-form-offer-property-${event.target.name}"]`
                     try {
                         document.querySelector(confirmElName).innerHTML = event.target.value
-                    } catch (err) {
-                        console.log(err)
-                        console.log(element)
-                        console.log(confirmElName)
-                    }
+                    } catch (err) { }
                     optionContinueButton.disabled = false
-                    element.setAttribute("isvalid", false)
                 } else {
                     optionContinueButton.disabled = true
-                    element.setAttribute("isvalid", true)
                 }
             })
         })

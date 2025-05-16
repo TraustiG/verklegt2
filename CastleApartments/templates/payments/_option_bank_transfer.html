@@ -5,8 +5,8 @@
             <input id="payment-option-bank-transfer-payer-name" type="text" class="form-control payment-input" name="payer-name" required pattern="[\p{L} ]{4,}">
         </div>
         <div class="mb-3">
-            <label for="bank-number" class="form-label">Bankanúmer</label>
-            <input id="payment-option-bank-transfer-bank-number" type="text" class="form-control payment-input" name="bank-number" required pattern="[0-9\-]{6,}">
+            <label for="bank-number" class="form-label">IBAN Bankanúmer</label>
+            <input id="payment-option-bank-transfer-bank-number" type="text" class="form-control payment-input" name="bank-number" required pattern="[\d]{2}[0-9]{24}">
         </div>
         <div class="mb-3">
             <label for="payment-date" class="form-label">Dagsetning greiðslu</label>

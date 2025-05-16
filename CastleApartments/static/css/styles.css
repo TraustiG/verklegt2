@@ -509,12 +509,15 @@ input[type=number] {
 }
 
 .validation-field[isvalid],
+.buyer-form-field[isvalid="false"],
 .payment-input:invalid[isvalid],
 .buyer-form-field:invalid[isvalid],
 .seller-form-field:invalid[isvalid] {
     border-color: var(--bs-danger);
     box-shadow: 0 0 5px 3px var(--bs-danger);
 }
+
+
 
 .property-input:invalid[isvalid="true"] {
     border-color: var(--bs-danger) !important;
