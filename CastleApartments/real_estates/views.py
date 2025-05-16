@@ -255,7 +255,7 @@ def createOffer(request, id: int):
 
 @require_POST
 @fetchNotifications
-def deleteOffer(request, id: int):
+def offerHandler(request, id: int):
     try:
         action = request.POST["action"]
     except Exception:

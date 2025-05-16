@@ -79,7 +79,7 @@
                 data-id="{{ offer.id }}">Skoða</button>
                 {% endif %}
 
-                <button name="offer-deleted-button" class="w-75 btn btn-danger bigger-btn" 
+                <!--button name="offer-deleted-button" class="w-75 btn btn-danger bigger-btn" 
                 {% if offer.offer_status != 'REJECTED' and not offer.expired %}style="display:none;"{% endif %}
                 data-bs-toggle="modal" data-bs-target="#delete-offer-modal"
                 data-button-status="REJECTED" 
@@ -93,7 +93,7 @@
                 data-type="{{ offer.property.property_type }}"
                 data-listing-price="{{ offer.property.listing_price }}"
                 data-id="{{ offer.id }}">Eyða</button>
-            </td>
+            </td-->
 
             <td class="align-middle text-center" scope="row"><h4><b>{%if offer.expired %}EXPIRED{% else %}{{ offer.offer_status }}{% endif %}</b></h4></td>
 
