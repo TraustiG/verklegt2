@@ -57,10 +57,10 @@
                     data-id="{{ offer.id }}"
                     data-property-id="{{ prop.id }}"
                     data-offer-amount="{{ offer.offer_amount }}"
-                    {% if offer.offer_status != 'OPEN' and not offer.expired %}
+                    {% if offer.offer_status != 'OPEN' %}
                     disabled></button>
                     {% else %}
-                    >{% if offer.expired %}Eyða{% else %}Hafna{% endif %}</button>
+                    >Hafna</button>
                     {% endif %}
                 </th>
             </tr>
