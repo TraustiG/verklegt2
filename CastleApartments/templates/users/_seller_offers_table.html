@@ -1,13 +1,11 @@
 <table id="offer-table" class="table table-bordered table-striped table-hover justify-content-center mt-1" style="display: none">
     <thead>
         <tr class="text-center">
-            <th scope="col"></th>
             <th scope="col">Kaupandi</th>
             <th scope="col">Dags. tilboðs</th>
             <th scope="col">Upphæð</th>
             <th scope="col">Gildistími</th>
             <th scope="col">Aðgerðir</th>
-            <th scope="col">Staða</th>
         </tr>
     </thead>
     <tbody>
@@ -15,11 +13,10 @@
         {% if prop.status != "PROCESSED" %}
             {% for offer in info.offers %}
             <tr id="offer-id-{{ offer.id }}-row" name="offer-table-row" class="{{ prop.street_name }} - {{ prop.postal_code }} {{ prop.city }}" style="display: none;">
-                <th scope="col"></th>
-                <th class="px-3" scope="col"><h3>{{ offer.buyer.user.full_name }}</h3></th>
-                <th class="text-center" scope="col"><h3>{{ offer.offer_date }}</h3></th>
-                <th class="text-end px-5" scope="col"><h3>{{ offer.offer_amount }} kr.</h3></th>
-                <th class="text-center" scope="col"><h3>{{ offer.offer_expiry }}</h3></th>
+                <th class="px-3" scope="col"><h6>{{ offer.buyer.user.full_name }}</h6></th>
+                <th class="text-center" scope="col"><h6>{{ offer.offer_date }}</h6></th>
+                <th class="text-end px-5" scope="col"><h6>{{ offer.offer_amount }} kr.</h6></th>
+                <th class="text-center" scope="col"><h6>{{ offer.offer_expiry }}</h6></th>
                 <th class="d-flex justify-content-evenly align-items-center gap-1" scope="col">
                     <button name="accept-offer-button" type="button" class="btn btn-success offer-row-button" data-bs-toggle="modal" data-bs-target="#accept-offer-modal"
                     data-id="{{ offer.id }}"
@@ -63,7 +60,6 @@
                     >{% if offer.expired %}Eyða{% else %}Hafna{% endif %}</button>
                     {% endif %}
                 </th>
-                <th scope="col" class="align-middle text-center"><h3><b>{{ offer.offer_status }}</b></h3></th>
             </tr>
             {% endfor %}
             {% endif %}

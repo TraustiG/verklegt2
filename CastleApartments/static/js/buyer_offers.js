@@ -19,7 +19,8 @@
     })
     
     const deleteOfferOnSubmit = (id, rowId) => {
-        $("#delete-offer-form").submit( (e) => {
+        const editForm = $("#delete-offer-form")
+        editForm.submit( (e) => {
             e.preventDefault()
             let rowElement = document.getElementById(rowId)
             rowElement.remove()
@@ -32,6 +33,7 @@
                 },
             })
         })
+        editForm.unbind()
     }
 })();
 

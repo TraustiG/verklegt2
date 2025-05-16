@@ -1,4 +1,3 @@
-(() => {
     priceButtons = document.getElementsByName("search-price-value-item")
     searchPriceIndicator = document.getElementById("search-price-value-indicator")
     searchPriceInput = document.getElementById("id_priceInput")
@@ -94,6 +93,7 @@
             }).forEach(element => parentElement.appendChild(element))
         }
     }
+    sorter()
     
     
     const openFilterSaverButton = document.getElementById("open-filter-saver-button")
@@ -109,29 +109,32 @@
     
     
     const saveFilter = () => {
+        const editForm = $("#save-filter-form")
         const area = document.getElementById("id_areaSelect").value
         const type = document.getElementById("id_typeSelect").value
         const price = document.getElementById("id_priceInput").value
         const desc = document.getElementById("id_descInput").value
         const name = document.getElementById("id_filterName").value
-        let dropdown = document.getElementById("dropdownCheck").value
+        let dropdown = document.getElementById("dropdownCheck").checked
         let dropdownMenu = document.getElementById("save-filter-dropdown-menu")
         dropdownMenu.classList.remove("show")
-        dropdown = "on" ? "True" : "False"
-        $("#save-filter-form").submit( function (e) {
-            e.stopPropagation()
+        dropdown = dropdown ? "True" : "False"
+        editForm.unbind()
+        editForm.submit( function (e) {
             e.preventDefault()
+            e.stopPropagation()
+
             $.ajax({
                 type: "POST",
                 url: "/filters/",
                 data: {
                     csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
-                    monitor: dropdown,
-                    area: area,
-                    price: price,
-                    re_type: type,
-                    name: name,
-                    desc: desc,
+                    monitor: dropdown ? dropdown : "",
+                    area: area ? area : "",
+                    price: price ? price : "",
+                    re_type: type ? type : "",
+                    name: name ? name : "",
+                    desc: desc ? desc : ""
                 }
             })
         })
@@ -163,12 +166,12 @@
         } else {
             document.getElementById("search-price-value-indicator").innerHTML = "Verð"
         }
-        document.getElementById("id_areaSelect").value = area
-        document.getElementById("id_typeSelect").value = type
-        document.getElementById("id_descInput").value = desc
-        document.getElementById("id_filterName").value = name
-        document.getElementById("dropdownCheck").value = dropdown
-        document.getElementById("dropdownCheck").checked = dropdown
+        document.getElementById("id_areaSelect").value = area ? area : ""
+        document.getElementById("id_typeSelect").value = type ? type : ""
+        document.getElementById("id_descInput").value = desc ? desc : ""
+        document.getElementById("id_filterName").value = name ? name : ""
+        document.getElementById("dropdownCheck").value = dropdown ? dropdown : ""
+        document.getElementById("dropdownCheck").checked = dropdown ? dropdown : ""
     }
 
     const watchFilterButtons = [...document.querySelectorAll('[id^="filter-watch-"]')]
@@ -196,7 +199,8 @@
     })
     
     const formSubmitter = (action, id) => {
-        $("#edit-filter-form").submit( function (e) {
+        const editForm = $("#edit-filter-form")
+        editForm.submit( function (e) {
             e.preventDefault()
             e.stopPropagation()
 
@@ -209,6 +213,7 @@
                 },
     
             })
+            editForm.unbind()
         })
     }
 
@@ -216,11 +221,9 @@
     const restartButtons = async () => {
         const reset = async (button) => {
             button.disabled = true
-            setTimeout(() => button.disabled = false, 1000)
+            setTimeout(() => button.disabled = false, 500)
         }
 
-        console.log(watchFilterButtons)
-        console.log(deleteFilterButtons)
         watchFilterButtons.forEach((button) => {
             reset(button)
         })
@@ -241,4 +244,3 @@
         }
         button.addEventListener("click", listener)
     })
-})()

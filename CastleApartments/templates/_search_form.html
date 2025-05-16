@@ -6,7 +6,7 @@
                 <div class="col-3">
                     <div class="form-floating">
                         <select class="form-select search-form-input-field" name="areaSelect" id="id_areaSelect">
-                            <option selected disabled></option>
+                            <option selected></option>
                             {% for area in areas %}
                             <option value="{{ area }}">
                                 {{area}}
@@ -19,7 +19,7 @@
                 <div class="col-sm-2">
                     <div class="form-floating">
                         <select class="form-select search-form-input-field" name="typeSelect" id="id_typeSelect">
-                            <option selected disabled></option>
+                            <option selected></option>
                             {% for type in types %}
                             <option value="{{ type }}">
                                 {{ type }}
@@ -95,7 +95,7 @@
                             <div class="dropdown-center">
                                     <button id="open-filter-saver-button" type="button" 
                                     class="btn 
-                                    {% if not user.is_buyer %}
+                                    {% if not user.is_authenticated %}
                                     " disabled
                                     {% else %}
                                     btn-primary"
@@ -139,7 +139,7 @@
                             <div class="dropdown-center" style="width:118px">
                                 <button id="watchFilter" role="button" 
                                 class="btn 
-                                {% if not user.is_buyer %}
+                                {% if not user.is_authenticated %}
                                 " disabled
                                 {% else %}
                                 btn-primary"

@@ -63,10 +63,13 @@ def index(request):
     return render(request, "home.html", {"newest": newest, "popular": popular, "areas": areas, "types": types, "prices": prices, "filters": filters})
 
 def getPropertiesByWatch(request):
-    filter = Filter.objects.get(user_id=request.user, monitor=True)
-    postal = filter.area.split(" ")[0]
-    type = filter.re_type
-    desc = filter.desc
+    try:
+        filter = Filter.objects.get(user_id=request.user, monitor=True)
+        postal = filter.area.split(" ")[0]
+        type = filter.re_type
+        desc = filter.desc
+    except Exception:
+        return redirect("search")
     try:
         min, max = filter.price.split("-")
     except Exception:
