@@ -14,7 +14,7 @@ Oliver Másson - oliverm24@ru.is
 
 ## Login for CastleApartments
 
-Buyer - 
+Buyer 
 username : gudmundur
 password : Holtsvegur53
 
