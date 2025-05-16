@@ -1,14 +1,12 @@
 (() => {
 
     const deletePropertyButtons = document.getElementsByName("offer-deleted-button")
-    console.log(deletePropertyButtons)
     let submitButton = document.getElementById("delete-offer-submit-button")
 
     deletePropertyButtons.forEach((element) => {
 
         element.addEventListener("click", () => {
             let k = document.getElementById("delete-offer-modal-body-prompt")
-            console.log(k)
             k.innerHTML = `Ertu viss um að þú viljir eyða þessu tilboði?`
         
             const listener = () => {

@@ -1,7 +1,4 @@
 from django.http import HttpResponse
-import requests
-import random
-import re
 from django.shortcuts import render,redirect
 from django.core.files.storage import default_storage
 from django.db.models import Q
@@ -13,7 +10,7 @@ import base64
 import json
 import datetime
 from .models import Property, Offer, PropertyImages, Extras
-from users.models import Buyer, Seller, Notification, User, Filter
+from users.models import Buyer, Seller, Notification, Filter
 from typing import List
 
 # Create your views here.
@@ -146,7 +143,6 @@ def getRealEstateById(request, id: int):
             try:
                 propertyObj.delete()
             except Exception as e:
-                print(e)
                 return HttpResponse(403)
         else:
             try:
@@ -184,7 +180,6 @@ def getRealEstateById(request, id: int):
                 createImages(images, propertyObj)
                 propertyObj.save()
             except Exception as e:
-                print(e)
                 return HttpResponse(500)
             
         return HttpResponse(status=200)
@@ -488,13 +483,13 @@ def fixFilters(filters: List[Filter]):
             pass
     return filters
 
+"""
 def tester(request):
     offer = Offer.objects.get(id=79)
     offer.offer_expiry = datetime.date(2025,5,12)
     offer.save()
         
     return redirect('profile')
-
 
 def databaseFiller(request):
     properties = Property.objects.filter(id__gt=58)
@@ -588,6 +583,5 @@ def databaseFiller(request):
                 pass
     return redirect("profile")
         
-
-
+"""
 

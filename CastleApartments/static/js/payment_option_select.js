@@ -129,8 +129,6 @@
             let image = document.createElement("img")
             image.src = element.getAttribute("data-image")
             image.setAttribute("height", "250rem")
-            console.log(element.getAttribute("data-image"))
-            console.log(image)
             imageDiv.appendChild(image)
             let promptDiv = document.querySelector('[id="contingency-modal-body-message"]')
             let contingencyMessage = element.getAttribute("data-offer-message")
@@ -185,9 +183,7 @@
         informationFields.forEach((field) => {
             try {
                 document.getElementById(`payment-form-${option}-${field.name}`).innerHTML = tempForm[field.name].value
-            } catch (err) {
-                console.log(err)
-            }
+            } catch (err) { }
         })
     
     }
