@@ -18,7 +18,6 @@ def register(request):
 
     if request.method == 'POST':
         role = request.POST.get('role')
-        print(request.POST.get("role"))
         form = RegistrationForm(request.POST, request.FILES)
         seller_form = SellerForm(request.POST, request.FILES) if role == 'seller' else SellerForm()
 
@@ -47,7 +46,6 @@ def register(request):
                     seller.city=seller_form.cleaned_data['city']
                     seller.postal_code=seller_form.cleaned_data['postal_code']
                     seller.logo = seller_form.cleaned_data['logo']
-                    print(seller.logo)
                     seller.bio=seller_form.cleaned_data['bio']
                     seller.save()
                     seller.logo = f"/media/{seller.logo}"
@@ -77,7 +75,6 @@ def register(request):
 @require_POST
 @fetchNotifications
 def saveFilter(request):
-    print(request.POST)
     search = Filter()
     search.area = request.POST["area"]
     search.monitor = request.POST["monitor"]

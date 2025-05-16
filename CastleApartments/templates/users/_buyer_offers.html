@@ -1,7 +1,6 @@
 {% load static %}
 {% block scripts %}
 <script defer src="{% static 'js/payment_option_select.js' %}"></script>
-<script defer src="{% static 'js/buyer_offers.js' %}"></script>
 {% endblock %}
 <div class="d-flex justify-content-center align-items-center">
 <form id="temp-input-form">
@@ -10,7 +9,6 @@
 </form>
 {% include "payments/_information_overview_modal.html" %}
 {% include "payments/_confirmation_modal.html" %}
-<!-- {% include "_do_item_modal.html" with item="offer" title="Eyða tilboði" action="delete" %}-->
 {% include "payments/_contingency_modal.html" %}
 <table class="table table-bordered table-striped table-hover justify-content-center mt-1">
     <thead>
@@ -79,21 +77,7 @@
                 data-id="{{ offer.id }}">Skoða</button>
                 {% endif %}
 
-                <!--button name="offer-deleted-button" class="w-75 btn btn-danger bigger-btn" 
-                {% if offer.offer_status != 'REJECTED' and not offer.expired %}style="display:none;"{% endif %}
-                data-bs-toggle="modal" data-bs-target="#delete-offer-modal"
-                data-button-status="REJECTED" 
-                data-offer-status="{{ offer.offer_status }}" 
-                data-offer-message="{{ offer.offer_contingency_message }}"
-                data-id="{{ offer.id }}"
-                data-street-name="{{ offer.property.street_name }}"
-                data-offer-amount="{{ offer.offer_amount }}"
-                data-zip="{{ offer.property.postal_code }}"
-                data-city="{{ offer.property.city }}"
-                data-type="{{ offer.property.property_type }}"
-                data-listing-price="{{ offer.property.listing_price }}"
-                data-id="{{ offer.id }}">Eyða</button>
-            </td-->
+            </td>
 
             <td class="align-middle text-center" scope="row"><h4><b>{%if offer.expired %}EXPIRED{% else %}{{ offer.offer_status }}{% endif %}</b></h4></td>
 

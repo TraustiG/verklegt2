@@ -10,7 +10,5 @@ urlpatterns  = [
     path("real-estates/<int:id>/offers/", views.createOffer, name="create-offer"),
     path("offers/<int:id>", views.offerHandler, name="offer-handler"),
     path("search/", views.search, name="search"),
-    path("fill-database/", views.databaseFiller, name="fill-database"),
-    path("test/", views.tester, name="tester"),
     path("watch/", views.getPropertiesByWatch, name="watch")
 ]

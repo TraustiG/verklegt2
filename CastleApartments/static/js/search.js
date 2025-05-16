@@ -69,7 +69,6 @@
             const isNumeric = (option < 3)
         
             const selector = (option, element) => {
-                console.log(option, element)
                 switch(option) {
                     case 0:
                         return element.id
@@ -158,9 +157,8 @@
         let desc = element.getAttribute("data-desc")
         let name = element.getAttribute("data-name")
         let dropdown = element.getAttribute("data-monitor")
-        console.log(dropdown)
         dropdown = (dropdown === "True")
-        console.log(dropdown)
+        
         if (price) {
             document.getElementById("search-price-value-indicator").innerHTML = price
         } else {
@@ -193,7 +191,6 @@
             formSubmitter("WATCH", id)
             // setTimeout(() => restartButtons(), 10)
             button.removeEventListener("click", listener)
-            console.log("done")
         }
         button.addEventListener("click", listener)
     })
