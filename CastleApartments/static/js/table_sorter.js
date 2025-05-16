@@ -29,14 +29,12 @@ const sortTable = (table, n, sortType) => {
                 y = new Date(Date.parse(y))
             } else if (sortType === "numeric") {
             
-                if (counter===1) {console.log(x.replace(/.*?>([\d\.]*).*/g, "$1").replace(/\./g, ""))}
                 x = parseInt(x.replace(/.*?>([\d\.]*).*/g, "$1").replace(/\./g, ""))
                 y = parseInt(y.replace(/.*?>([\d\.]*).*/g, "$1").replace(/\./g, ""))
             } else {
                 x = x.toLowerCase()
                 y = y.toLowerCase()
             }
-            if (counter===1) {console.log(x, y)}
             counter = 2
             if (dir == "asc") {
                 if (x > y) {

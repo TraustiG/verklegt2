@@ -12,7 +12,7 @@
         {% for prop, info in properties.items %}
         {% if prop.status != "PROCESSED" %}
             {% for offer in info.offers %}
-            <tr id="offer-id-{{ offer.id }}-row" name="offer-table-row" class="{{ prop.street_name }} - {{ prop.postal_code }} {{ prop.city }}" style="display: none;">
+            <tr id="property-{{ prop.id }}offer-{{ offer.id }}-row" name="offer-table-row" class="{{ prop.street_name }} - {{ prop.postal_code }} {{ prop.city }}" style="display: none;">
                 <th class="px-3" scope="col"><h6>{{ offer.buyer.user.full_name }}</h6></th>
                 <th class="text-center" scope="col"><h6>{{ offer.offer_date }}</h6></th>
                 <th class="text-end px-5" scope="col"><h6>{{ offer.offer_amount }} kr.</h6></th>
@@ -20,6 +20,7 @@
                 <th class="d-flex justify-content-evenly align-items-center gap-1" scope="col">
                     <button name="accept-offer-button" type="button" class="btn btn-success offer-row-button" data-bs-toggle="modal" data-bs-target="#accept-offer-modal"
                     data-id="{{ offer.id }}"
+                    data-property-id="{{ prop.id }}"
                     data-buyer="{{ offer.buyer.user.full_name }}"
                     data-street="{{ prop.street_name }}"
                     data-city="{{ prop.city }}"
@@ -41,6 +42,7 @@
                     {% endif %}
                     {% endif %}
                     <button name="contingent-offer-button" class="btn btn-primary offer-row-button" type="button" data-bs-toggle="modal" data-bs-target="#contingent-offer-modal"
+                    data-property-id="{{ prop.id }}"
                     data-id="{{ offer.id }}"
                     {% if offer.expired %}
                     disabled></button>
@@ -53,11 +55,12 @@
                     {% endif %}
                     <button name="reject-offer-button" class="btn btn-danger offer-row-button" type="button" data-bs-toggle="modal" data-bs-target="#reject-offer-modal"
                     data-id="{{ offer.id }}"
+                    data-property-id="{{ prop.id }}"
                     data-offer-amount="{{ offer.offer_amount }}"
-                    {% if offer.offer_status != 'OPEN' and not offer.expired %}
+                    {% if offer.offer_status != 'OPEN' %}
                     disabled></button>
                     {% else %}
-                    >{% if offer.expired %}Eyða{% else %}Hafna{% endif %}</button>
+                    >Hafna</button>
                     {% endif %}
                 </th>
             </tr>

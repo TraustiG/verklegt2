@@ -23,15 +23,15 @@
     const visibleRows = (element) => {
         if (activeRow) {
             activeRow.classList.toggle("table-active")
-            try {
-                notifications = element.getElementsByClassName("notification-pill")
-                notifications.forEach((notification) => {
-                    notification.remove()
-                })
-            } catch (err) {}
         } else {
             deletePropertySoloButton.style.display = ""
             editPropertySoloButton.style.display = ""
+        }
+        let notifications = [...element.getElementsByClassName("notification-pill")]
+        if (notifications) {
+            notifications.forEach((notification) => {
+                notification.remove()
+            })
         }
 
         let status = element.getAttribute("data-status")
@@ -137,8 +137,10 @@
     const editPropertyOnSubmit = (id, rowId) => {
         let editForm = $("#create-new-property")
 
+        editForm.unbind()
         $("#create-new-property").submit( function (e) {
             e.preventDefault()
+            e.stopPropagation()
 
             let rowElement = document.getElementById(rowId)
             changeRow(rowElement, editForm)
@@ -161,7 +163,6 @@
                     data
                 ,
             })
-            editForm.unbind()
         })
     };
 
@@ -399,8 +400,9 @@
     const acceptSubmitButton = document.getElementById("accept-offer-submit-button")
     
     acceptOfferButtons.forEach((element) => {
-        
-        const listener = () => {
+
+        element.addEventListener("click", () => {
+
             div = document.getElementById("accept-offer-modal-body-prompt")
             let price = element.getAttribute("data-offer-amount")
             let street = element.getAttribute("data-street")
@@ -432,19 +434,18 @@
             div.appendChild(inner)
             div.appendChild(breaker)
             div.appendChild(bottom)
-            id = element.getAttribute("data-id")
-            rowId = `offer-id-${id}-row`
+            let id = element.getAttribute("data-id")
             accepterTextDiv(element)
 
+            const listener = () => {
 
-            acceptSubmitButton.addEventListener("click", () => {
                 acceptOfferRow(element)
                 acceptOfferOnSubmit(id)
-                })
-            element.removeEventListener("click", listener)
-            }
+                acceptSubmitButton.removeEventListener("click", listener)
+                }
+            acceptSubmitButton.addEventListener("click", listener)
+        })
                 
-        element.addEventListener("click", listener)
     });
 
 
@@ -454,6 +455,7 @@
         editForm.submit( (e) => {
             
             e.preventDefault()
+            e.stopPropagation()
             
             $.ajax({
                 type: "POST",
@@ -464,7 +466,6 @@
                 },
             })
         })
-        editForm.unbind()
     };
 
 // Reject offer
@@ -477,8 +478,9 @@
             let price = element.getAttribute("data-offer-amount")
             document.getElementById("reject-offer-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir hafna þessu einstaka tækifæri til að græða ${price} kr.?`
     
-            id = element.getAttribute("data-id")
-            rowId = `offer-id-${id}-row`
+            let id = element.getAttribute("data-id")
+            let propertyId = element.getAttribute("data-property-id")
+            let rowId = `property-${propertyId}offer-${id}-row`
     
             rejectSubmitButton.addEventListener("click", () => {
                 rejectOfferOnSubmit(id, rowId)
@@ -517,9 +519,9 @@
     deleteOfferButtons.forEach((element) => {
         const listener = () => {
             document.getElementById("delete-offer-modal-body-prompt").innerHTML = `Þangað til næst! ;`
-    
-            id = element.getAttribute("data-id")
-            rowId = `offer-id-${id}-row`
+            let id = element.getAttribute("data-id")
+            let propertyId = element.getAttribute("data-property-id")
+            let rowId = `property-${propertyId}offer-${id}-row`
 
             deleteSubmitButton.addEventListener("click", () => {
                 deleteOfferOnSubmit(id, rowId)
@@ -643,15 +645,17 @@
     };
 
     const acceptOfferRow = (element) => {
+        let propID = element.getAttribute("data-property-id")
         address = document.getElementById("address-table-caller").innerHTML
-        propRow = document.getElementById(address)
-        allRows = document.getElementsByClassName(address)
-        propRow.getElementsByClassName("status-cell")[0].innerHTML = "<h4><b>SOLD</b></h4></td>"
-        let propButtons = propRow.getElementsByTagName("button")
-        Array.from(propButtons).forEach((button) => {
+        let propRow = document.getElementById(propID)
+        allRows = document.querySelectorAll(`tr[id^="property-${propID}"]`)
+        propRow.getElementsByClassName("status-cell")[0].innerHTML = "<h6><b>SOLD</b></h6></td>"
+        let propButtons = [...document.querySelectorAll('button[id$="property-single-button"]')]
+        propButtons.forEach((button) => {
             button.innerHTML = ""
             button.setAttribute("disabled", true)
         })
+
         Array.from(allRows).forEach((row) => disableOfferRow(element, row))
     }
 
