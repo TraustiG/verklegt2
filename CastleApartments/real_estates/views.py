@@ -155,10 +155,18 @@ def getRealEstateById(request, id: int):
                     if extra:
                         extras.append(extra)
                 old = Extras.objects.filter(property_id=propertyObj.id)
-                old = [x.description for x in old]
+                old_descriptions = [x.description for x in old]
+
+                for old_extra in old:
+                    if old_extra.description not in extras:
+                        old_extra.delete()
+
+
                 for extra in extras:
-                    if extra not in old:
+                    if extra not in old_descriptions:
                         Extras.objects.create(property_id=propertyObj.id, description=extra)
+
+
                 propertyObj.street_name = request.POST.get("streetname")
                 propertyObj.city = request.POST.get("city_input")
                 propertyObj.postal_code = request.POST.get("zip")
