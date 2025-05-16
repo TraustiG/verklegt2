@@ -12,6 +12,12 @@ Hjálmur Ragnarsson - hjalmur24@ru.is
 
 Oliver Másson - oliverm24@ru.is
 
+## Login for CastleApartments
+
+Buyer - Username : gudmundur , Password : Holtsvegur53
+
+Seller - Username : laddi , Password : Holtsvegur53
+
 ## Extra Requirements
 
 1. Notendur þurfa að geta búið til aðgang
