@@ -1,7 +1,5 @@
 (() => {
 
-    console.log("profile.js");
-
     document.addEventListener("DOMContentLoaded", () => {
         
 
