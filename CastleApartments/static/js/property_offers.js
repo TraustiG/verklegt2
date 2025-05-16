@@ -434,8 +434,7 @@
             div.appendChild(inner)
             div.appendChild(breaker)
             div.appendChild(bottom)
-            id = element.getAttribute("data-id")
-            rowId = `offer-id-${id}-row`
+            let id = element.getAttribute("data-id")
             accepterTextDiv(element)
 
             const listener = () => {
@@ -479,8 +478,9 @@
             let price = element.getAttribute("data-offer-amount")
             document.getElementById("reject-offer-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir hafna þessu einstaka tækifæri til að græða ${price} kr.?`
     
-            id = element.getAttribute("data-id")
-            rowId = `offer-id-${id}-row`
+            let id = element.getAttribute("data-id")
+            let propertyId = element.getAttribute("data-property-id")
+            let rowId = `property-${propertyId}offer-${id}-row`
     
             rejectSubmitButton.addEventListener("click", () => {
                 rejectOfferOnSubmit(id, rowId)
@@ -519,9 +519,9 @@
     deleteOfferButtons.forEach((element) => {
         const listener = () => {
             document.getElementById("delete-offer-modal-body-prompt").innerHTML = `Þangað til næst! ;`
-    
-            id = element.getAttribute("data-id")
-            rowId = `offer-id-${id}-row`
+            let id = element.getAttribute("data-id")
+            let propertyId = element.getAttribute("data-property-id")
+            let rowId = `property-${propertyId}offer-${id}-row`
 
             deleteSubmitButton.addEventListener("click", () => {
                 deleteOfferOnSubmit(id, rowId)
