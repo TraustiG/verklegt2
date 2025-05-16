@@ -31,3 +31,5 @@ Oliver Másson - oliverm24@ru.is
 7. Seljandi þarf að geta breytt sínum eignum
 8. Innskráðir notendur þurfa að geta vaktað síu
 9. Innskráðir notendur þurfa að geta vistað síu
+10. Kaupandi á að fá tilkynningu þegar staða breytist á tilboði sínu
+11. Seljandi á að fá tilkynningu þegar tilboð berst í sína fasteign
