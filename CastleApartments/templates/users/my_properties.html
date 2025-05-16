@@ -7,7 +7,7 @@
 {% endblock %}
 {% block content %}
 
-<div class="d-flex align-items-center overflow-hidden" style="min-height:50vh">
+<div class="d-flex overflow-hidden" style="min-height:50vh">
     {% include 'real_estates/_property_modal.html' %}
     {% include "_do_item_modal.html" with item="property" title="Eyða eign" action="delete" %}
     {% include "_do_item_modal.html" with item="offer" title="Samþykkja tilboð" action="accept" %}
@@ -15,23 +15,47 @@
     {% include "_do_item_modal.html" with item="offer" title="Hafna tilboði" action="reject" %}
     {% include "_do_item_modal.html" with item="offer" title="Setja skilyrði" action="contingent" %}
     {% include 'real_estates/_image_modal.html' %}
-    {% if properties|length == 0 %}
-    <button id="create-property-button" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
-        Skrá eign
-    </button>
-    <div class="py-5">
-        <h1 class="text-center subtext">Engar fasteignir</h1>
+    {% if properties|length != 0 %}
+    <div class="col-6">
+        {% include "users/_seller_properties_table.html" %}
+    </div>
+    <div class="col-6 ">
+        <div class="row overflow-hidden">
+            <div class="col-4 d-flex align-items-center overflow-hidden">
+                <button id="create-property-button" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+                    Skrá eign
+                </button>
+            </div>
+            <div id="properties-seller-image" class="d-flex col-8 position-relative justify-content-center overflow-hidden">
+                <a class="justify-content-center h-100 align-self-center" href="">
+                    <img id="chosen-row-property-image" height="100%" src=""/>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="bg-mid position-relative title-bar properties-title-bar" style="height:58px;display:flex;gap:1rem;padding-left:1rem;">
+                    <button id="edit-property-single-button" type="button" class="btn btn-primary btn-small" 
+                        style="height:3rem; width:5rem;display:none;" data-bs-toggle="modal" data-bs-target="#property-modal">Breyta</button>
+                    <button id="delete-property-single-button" type="button" class="btn btn-danger btn-small" 
+                        style="height:3rem; width:5rem;display:none;" data-bs-toggle="modal" data-bs-target="#delete-property-modal">Eyða</button>
+                    <h3 class="text-truncate" id="address-table-caller"></h3>
+                </div>
+                {% include "users/_seller_offers_table.html" %}
+            </div>
+        </div>
     </div>
     {% else %}
-    <a href="">
-        <img id="chosen-row-property-image" src="" width="25rem"/>
-    </a>
-    <button id="create-property-button" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
-        Skrá eign
-    </button>
-    {% include "users/_seller_properties_table.html" %}
-    {% endif %}
+    <div class="col-12 d-block align-self-center">
+        <div class="row d-flex justify-content-center my-5">
+            <button id="create-property-button" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
+                Skrá eign
+            </button>
+        </div>
+        <div class="row">
+            {% include '_title_bar.html' with title='Engar fasteignir.' %}
+        </div>
+        {% endif %}
+    </div>
 </div>
-{% include "_title_bar.html" with title="" id="address-table-caller" %}
-{% include "users/_seller_offers_table.html" %}
 {% endblock %}

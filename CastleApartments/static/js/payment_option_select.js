@@ -7,7 +7,6 @@
     
     const entryContinueButton = document.querySelector("#entry-payment-modal-continue-button")
     const optionContinueButton = document.querySelector("#option-payment-modal-continue-button")
-    const contingentContinueButton = document.getElementById("contingency-payment-modal-continue-button")
     
     let paymentOptionFields = new Set([])
     const paymentContactFields = document.querySelectorAll('[id^="payment-contact"]')
@@ -48,6 +47,7 @@
                 data: data,
             })
         })
+        form.unbind()
     }
     
 
@@ -138,11 +138,10 @@
             console.log(element.getAttribute("data-image"))
             console.log(image)
             imageDiv.appendChild(image)
+            let promptDiv = document.querySelector('[id="contingency-modal-body-message"]')
+            let contingencyMessage = element.getAttribute("data-offer-message")
 
-            let contingencyMessage = document.querySelector('[id="contingency-modal-body-message"]')
-            if (contingencyMessage) {
-                contingencyMessage.innerHTML = element.getAttribute("data-offer-message")
-            }
+            promptDiv.innerHTML = contingencyMessage ? contingencyMessage : ""
             
             input.value = element.getAttribute("data-id")
             input.setAttribute("value", element.getAttribute("data-id"))

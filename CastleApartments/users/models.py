@@ -11,7 +11,7 @@ class User(AbstractUser):
     def __str__(self):
         names = self.full_name.split()
         inits = "".join([x[0] for x in names])
-        return inits
+        return inits[:2]
 
 class Buyer(models.Model):
     

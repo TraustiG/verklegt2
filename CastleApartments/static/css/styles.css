@@ -17,6 +17,18 @@ dt.buyer-info {
     right: 25%;
 }
 
+
+#properties-seller-image {
+    height: 25rem;
+    border-left: 2px solid var(--bs-table-bg-state);
+    background-color: var(--bs-table-bg-state);
+}
+
+
+.address-table-caller {
+    padding-left: 1rem;
+}
+
 .saved-filter {
     width: 100%;
 }
@@ -43,7 +55,7 @@ dt.buyer-info {
 
 .offer-row-button {
     height: 3rem;
-    width: 7rem;
+    width: 6rem;
 }
 
 #offer-table {
@@ -445,6 +457,7 @@ html[data-theme="dark"] .bg-high {
 }
 
 .btn-primary:hover,
+.btn-success:hover,
 .btn-danger:hover,
 .btn-secondary:hover {
     box-shadow: 0 8px 14px 5px rgba(0,0,0,0.44);

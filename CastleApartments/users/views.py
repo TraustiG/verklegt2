@@ -77,10 +77,11 @@ def register(request):
 @require_POST
 @fetchNotifications
 def saveFilter(request):
+    print(request.POST)
     search = Filter()
     search.area = request.POST["area"]
     search.monitor = request.POST["monitor"]
-    if search.monitor == "true":
+    if search.monitor == "True":
         old = Filter.objects.get(user=request.user, monitor=True)
         old.monitor = False
         old.save()
@@ -101,7 +102,6 @@ def saveFilter(request):
 
     return redirect('search')
 
-@require_POST
 @fetchNotifications
 def editFilter(request, id: int):
     filter = Filter.objects.get(id=id)

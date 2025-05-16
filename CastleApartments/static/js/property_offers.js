@@ -4,13 +4,21 @@
 (() => {
     const offerTableRows = document.getElementsByName("offer-table-row")
     const propertyTableRows = document.getElementsByName("property-table-row")
+    const deletePropertySoloButton = document.querySelector('[id="delete-property-single-button"]')
+    const editPropertySoloButton = document.querySelector('[id="edit-property-single-button"]')
+    const createPropertyButton = document.getElementById("create-property-button")
+    const deletePropertyButton = document.getElementById("delete-property-submit-button")
+    const propertySubmitButton = document.getElementById("create-property-modal-submit");
+    const extrasField = [...document.querySelectorAll('[id^="extra-option-"]')]
+    const imageElement = document.getElementById("chosen-row-property-image")
+    const addressLine = document.getElementById("address-table-caller")
     let activeRow;
     
     propertyTableRows.forEach((element) => {
         element.addEventListener("click", () => {
             visibleRows(element)
         })
-    })
+    });
     
     const visibleRows = (element) => {
         if (activeRow) {
@@ -21,21 +29,47 @@
                     notification.remove()
                 })
             } catch (err) {}
+        } else {
+            deletePropertySoloButton.style.display = ""
+            editPropertySoloButton.style.display = ""
         }
+
+        let status = element.getAttribute("data-status")
+        if (["PROCESSED", "SOLD"].includes(status)) {
+            editPropertySoloButton.innerHTML = ""
+            editPropertySoloButton.disabled = true
+            if (status === "SOLD") {
+                deletePropertySoloButton.innerHTML = ""
+                deletePropertySoloButton.disabled = true
+            }
+        } else {
+            editPropertySoloButton.innerHTML = "Breyta"
+            editPropertySoloButton.disabled = false
+            deletePropertySoloButton.innerHTML = "Eyða"
+            deletePropertySoloButton.disabled = false
+        }
+            
+
         activeRow = element
+        addressLine.innerHTML =  `${element.getAttribute("data-street")} - ${element.getAttribute("data-zip")} ${element.getAttribute("data-city")}`
         activeRow.classList.toggle("table-active")
-        let imageElement = document.getElementById("chosen-row-property-image")
         imageElement.src = element.getAttribute("data-image")
         imageElement.parentElement.setAttribute("href", `/real-estates/${element.getAttribute("data-id")}`)
         document.getElementById("offer-table").style.display = ""
         offerTableRows.forEach((el) => {
-            document.getElementById("address-table-caller").innerHTML = element.id
-            if (el.className === element.id) {
+            if (el.className === element.getAttribute("data-address")) {
                 el.style.display = ""
             } else {
             el.style.display = "none"
             }
         })
+    }
+
+    const clearView = () => {
+        deletePropertySoloButton.style.display = "none"
+        editPropertySoloButton.style.display = "none"
+        addressLine.innerHTML = ""
+        imageElement.src = ""
     }
     
     window.addEventListener("keydown", (event) => {
@@ -54,9 +88,8 @@
             }
             visibleRows(newRow)
         }
-    })
-    
-    
+    });
+
     const firstSibling = () => {
         return document.getElementById("seller-property-table-body").firstElementChild
     }
@@ -64,173 +97,25 @@
     const lastSibling = () => {
         return document.getElementById("seller-property-table-body").lastElementChild
     }
-
-})();
-
-
-//resets the edit property modal when its closed
-
-
-let form = Array.from(document.forms).filter((f) => f.id === "create-new-property")[0]
-const submittedImageRow = document.getElementById("added-images-row-submit")
-const imageRow = document.getElementById("new-images-row")
-const imgDesc = document.getElementById("new-image-description") 
-let imageObjs = []
-let imageElements = []
-const imgInput = document.getElementById("new-image-file-input")
-const submitButtons = document.getElementsByName("add-all-images-button") // classname ("image-modal-submit-btn")
-submitButtons.forEach((el) => {
-    el.addEventListener("click", () => {
-        if (el.classList.contains("image-modal-submit-btn")) {
-            let images = form.querySelector('input[name="hidden-images-list"]')
-            if (images.getAttribute("value")) {
-                let oldImages = JSON.parse(images.getAttribute("value"))
-                imageObjs = oldImages.concat(imageObjs)
-            }
-            imageElements.forEach((imgEl) => {
-                submittedImageRow.appendChild(imgEl)
-            })
-            images.setAttribute("value", JSON.stringify(imageObjs))
-        }
     
-        imageObjs = []
-        imageRow.innerHTML = ""
-        imgDesc.value = ""
-        imgInput.value = ""
-
-    })
-});
-
-const imgAdderButton = document.getElementById("image-adder-button")
-imgAdderButton.addEventListener("click", () => {
-    const file = imgInput.files[0]
-    if (!file) {
-        imgInput.setAttribute("isvalid", "true")
-    } else {
-        imgInput.setAttribute("isvalid", "false")
-    }
-    if (!imgDesc.value) {
-        imgDesc.setAttribute("isvalid", "true")
-    } else {
-        imgDesc.setAttribute("isvalid", "false")
-    }
-    if (file && imgDesc.value) {
-        let desc = imgDesc.value
-        let imgElement = newImageElement(file, desc)
-        imageRow.appendChild(imgElement)
-        imgDesc.value = ""
-        imgInput.value = ""
-
-    }
-});
-
-/*
-reyna eyða myndum ??
-
-const xSvg = "<svg fill='#e10000' height='64px' width='64px' version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 415.188 415.188' xml:space='preserve' stroke='#e10000'><g id='SVGRepo_bgCarrier' stroke-width='0'></g><g id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'></g><g id='SVGRepo_iconCarrier'> <path d='M412.861,78.976c3.404-6.636,2.831-14.159-0.15-20.404c0.84-7.106-1.02-14.321-7.746-19.855 c-6.262-5.151-12.523-10.305-18.781-15.457c-11.005-9.055-28.237-11.913-38.941,0c-48.619,54.103-99.461,105.856-152.167,155.725 c-39.185-36.605-78.846-72.713-118.223-108.868c-13.82-12.693-33.824-8.71-42.519,6.411c-12.665,6.286-22.931,14.481-31.42,28.468 c-4.042,6.664-3.727,15.076,0,21.764c25.421,45.578,74.557,85.651,114.957,122.529c-5.406,4.839-10.772,9.724-16.287,14.461 c-54.43,46.742-91.144,76.399-23.029,124.325c0.919,0.647,1.856,0.504,2.789,0.882c1.305,0.602,2.557,1.026,4.004,1.264 c0.45,0.017,0.87,0.093,1.313,0.058c1.402,0.114,2.774,0.471,4.195,0.192c36.621-7.18,70.677-35.878,101.576-67.48 c30.1,29.669,62.151,58.013,97.395,74.831c8.391,4.005,18.395,1.671,24.855-3.931c10.832,0.818,20.708-5.913,25.665-15.586 c0.734-0.454,1.207-0.713,2.002-1.21c15.748-9.838,17.187-29.431,5.534-42.936c-26.313-30.492-54.284-59.478-82.798-87.95 C316.426,196.043,380.533,141.939,412.861,78.976z'></path> </g></svg>"
-const createRedCross = () => {
-let div = document.createElement("div")
-div.style.position = "absolute"
-let x = document.createElement("span")
-x.innerHTML = xSvg
-x.style.visibility = "hidden"
-x.style.position = "absolute"
-div.appendChild(x)
-return div
-}
-*/
-const newImageElement = (file, desc) => {
-
-    let div = document.createElement("div")
-    div.classList.add("align-self-end")
-    div.classList.add("col-2")
-    div.classList.add("d-flex")
-    div.classList.add("justify-content-center")
-
-    let row = document.createElement("div")
-    row.classList.add("row")
-    row.classList.add("image-thumbnail")
-
-    let img = document.createElement("img")
-    let reader = new FileReader()
-    reader.onload = () => {
-        img.src = reader.result
-        imageObjs.push({url: reader.result, desc: desc})
-    }
-    reader.readAsDataURL(file)
-    img.style.position = "relative"
-    
-    let name = document.createElement("label")
-    name.classList.add("text-center")
-    name.classList.add("text-truncate")
-    name.innerHTML = desc
-
-    row.appendChild(img)
-    row.appendChild(name)
-    div.appendChild(row)
-    imageElements.push(div)
-
-    return div
-};
-
-
-const createPropertyButton = document.getElementById("create-property-button")
-const editPropertyButtons = document.getElementsByName("editProperty")
-const propertySubmitButton = document.getElementById("create-property-modal-submit");
-const extrasField = [...document.querySelectorAll('[id^="extra-option-"]')]
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.querySelector('[id="property-modal"]');
-    modal.addEventListener("hidden.bs.modal", () => {
-        clearFormImages();
-    });
-});
-
-createPropertyButton.addEventListener("click", () => {
-    propertySubmitButton.disabled = true
-    document.getElementById("create-property-modal").innerHTML = "Skrá eign"
-    form.action = "/real-estates/"
-    setFormValue("streetname", "")
-    setFormValue("city_input", "")
-    setFormValue("zip", "")
-    setFormValue("price", "")
-    setFormValue("type", "")
-    setFormValue("bedrooms", "")
-    setFormValue("bathrooms", "")
-    setFormValue("sqm", "")
-    setFormValue("desc", "")
-    extrasField.forEach((field) => {
-        field.removeAttribute("checked")
-    })
-    clearFormImages()
-});
-
-const clearFormImages = () => {
-    let images = form.querySelector('input[name="hidden-images-list"]')
-    images.setAttribute("value", "")
-    submittedImageRow.innerHTML = ""
-};
-
-
-Array.from(editPropertyButtons).forEach((element) => {
-    element.addEventListener("click", () => {
+    editPropertySoloButton.addEventListener("click", () => {
 
         propertySubmitButton.disabled = false
         document.getElementById("create-property-modal").innerHTML = "Breyta eign"
-        setFormValue("streetname", element.getAttribute("data-street"))
-        setFormValue("city_input", element.getAttribute("data-city"))
-        setFormValue("zip", element.getAttribute("data-zip"))
-        setFormValue("price", element.getAttribute("data-price"))
-        setFormValue("type", element.getAttribute("data-type"))
-        setFormValue("bedrooms", element.getAttribute("data-bedrooms"))
-        setFormValue("bathrooms", element.getAttribute("data-bathrooms"))
-        setFormValue("sqm", element.getAttribute("data-sqm"))
-        setFormValue("desc", element.getAttribute("data-desc"))
-        form["desc"].innerHTML = element.getAttribute("data-desc")
-        form["desc"].value = element.getAttribute("data-desc")
-        let extras = element.getAttribute("data-extras").split(",")
+
+        const activeRow = document.querySelector('tr[class="table-active"]')
+        setFormValue("streetname", activeRow.getAttribute("data-street"))
+        setFormValue("city_input", activeRow.getAttribute("data-city"))
+        setFormValue("zip", activeRow.getAttribute("data-zip"))
+        setFormValue("price", activeRow.getAttribute("data-price"))
+        setFormValue("type", activeRow.getAttribute("data-type"))
+        setFormValue("bedrooms", activeRow.getAttribute("data-bedrooms"))
+        setFormValue("bathrooms", activeRow.getAttribute("data-bathrooms"))
+        setFormValue("sqm", activeRow.getAttribute("data-sqm"))
+        setFormValue("desc", activeRow.getAttribute("data-desc"))
+        form["desc"].innerHTML = activeRow.getAttribute("data-desc")
+        form["desc"].value = activeRow.getAttribute("data-desc")
+        let extras = activeRow.getAttribute("data-extras").split(",")
         extrasField.forEach((field) => {
             if (extras.includes(field.value)) {
                 field.checked = true
@@ -241,116 +126,104 @@ Array.from(editPropertyButtons).forEach((element) => {
 
         const listener = () => {
         
-            let street = element.getAttribute("data-street")
-            let zip = element.getAttribute("data-zip")
-            let city = element.getAttribute("data-city")
-            let rowId = `${street} - ${zip} ${city}`
             clearFormImages()
-            editPropertyOnSubmit(element.getAttribute("data-id"), rowId)
+            editPropertyOnSubmit(activeRow.getAttribute("data-id"), activeRow.id)
             propertySubmitButton.removeEventListener("click", listener)
         }
         propertySubmitButton.addEventListener("click", listener)
-    })
-});
+    });
 
 
-const editPropertyOnSubmit = (id, rowId) => {
-    let editForm = $("#create-new-property")
-    $("#create-new-property").submit( function (e) {
-        e.preventDefault()
+    const editPropertyOnSubmit = (id, rowId) => {
+        let editForm = $("#create-new-property")
 
-        let rowElement = document.getElementById(rowId)
-        changeRow(rowElement, editForm)
-        document.getElementById("offer-table").style.display = "none"
-        document.getElementById("address-table-caller").innerHTML = ""
-        })
+        $("#create-new-property").submit( function (e) {
+            e.preventDefault()
 
-        newExtras = extrasField.map((field) => {
-            console.log(field.value)
+            let rowElement = document.getElementById(rowId)
+            changeRow(rowElement, editForm)
+            document.getElementById("offer-table").style.display = "none"
+            addressLine.innerHTML = ""
+            newExtras = extrasField.map((field) => {
                 if (field.checked) {
-            console.log(field.value)
                     return field.value
                 }
             })
-        console.log(newExtras)
-        let data = editForm.serializeArray()
-        data.push({name: "action", value: "PATCH"})
-        data.push({name: "extras", value: newExtras})
-
-        $.ajax({
-            type: "POST",
-            url: `/real-estates/${id}`,
-            data: 
-                data
-            ,
-
+                
+            let data = editForm.serializeArray()
+            data.push({name: "action", value: "PATCH"})
+            data.push({name: "extras", value: newExtras})
+    
+            $.ajax({
+                type: "POST",
+                url: `/real-estates/${id}`,
+                data: 
+                    data
+                ,
+            })
+            editForm.unbind()
         })
-};
+    };
 
-const changeRow = (element, information) => {
-    console.log("changing")
-    
-    let aCell = element.querySelector('th[name="address-cell"]')
-    let pCell = element.querySelector('td[name="price-cell"]')
-    information = information[0]
-    let editButton = element.querySelector('button[name="editProperty"]')
-    
-    let street = information.querySelector('input[id="property-input-streetname"]').value
-    let city = information.querySelector('input[id="property-input-city-input"]').value
-    let price = information.querySelector('input[id="property-input-price"]').value
-    let zip = information.querySelector('input[id="property-input-zip"]').value
-    let bedrooms = information.querySelector('input[id="property-input-bedrooms"]').value
-    let bathrooms = information.querySelector('input[id="property-input-bathrooms"]').value
-    let sqm = information.querySelector('input[id="property-input-sqm"]').value
-    let type = information.querySelector('select[id="property-input-type"]').value
-    let desc = information.querySelector('textarea[id="property-input-desc"]').value
-    let address = `${street} - ${zip} ${city}`
+    const changeRow = (element, information) => {
+        
+        information = information[0]
+        let street = information.querySelector('input[id="property-input-streetname"]').value
+        let city = information.querySelector('input[id="property-input-city-input"]').value
+        let zip = information.querySelector('input[id="property-input-zip"]').value
+        
+        let aCell = activeRow.querySelector('th[name="address-cell"]')
+        let pCell = activeRow.querySelector('td[name="price-cell"]')
+        
+        let price = information.querySelector('input[id="property-input-price"]').value
+        let bedrooms = information.querySelector('input[id="property-input-bedrooms"]').value
+        let bathrooms = information.querySelector('input[id="property-input-bathrooms"]').value
+        let sqm = information.querySelector('input[id="property-input-sqm"]').value
+        let type = information.querySelector('select[id="property-input-type"]').value
+        let desc = information.querySelector('textarea[id="property-input-desc"]').value
+        activeRow.setAttribute("data-street", street)
+        activeRow.setAttribute("data-price", price)
+        activeRow.setAttribute("data-city", city)
+        activeRow.setAttribute("data-zip", zip)
+        activeRow.setAttribute("data-desc", desc)
+        activeRow.setAttribute("data-bedrooms", bedrooms)
+        activeRow.setAttribute("data-bathrooms", bathrooms)
+        activeRow.setAttribute("data-sqm", sqm)
+        activeRow.setAttribute("data-type", type)
+        
+        aCell.innerHTML = `<h5 class="mx-5">${street}</h5><h5>${zip} ${city}</h5>`
+        pCell.innerHTML = `<h5>${parseInt(price).toLocaleString().replace(/,/g,".")} kr.</h5>`
+    };
 
-    editButton.setAttribute("data-street", street)
-    editButton.setAttribute("data-price", price)
-    editButton.setAttribute("data-city", city)
-    editButton.setAttribute("data-zip", zip)
-    editButton.setAttribute("data-desc", desc)
-    editButton.setAttribute("data-bedrooms", bedrooms)
-    editButton.setAttribute("data-bathrooms", bathrooms)
-    editButton.setAttribute("data-sqm", sqm)
-    editButton.setAttribute("data-type", type)
+    const setFormValue = (formfield, val) => {
+            form[formfield].setAttribute("value", val)
+            form[formfield].value = val
+    };
     
-    
-    aCell.innerHTML = `<h4 class="mx-5">${address}</h4>`
-    pCell.innerHTML = `<h4>${parseInt(price).toLocaleString().replace(/,/g,".")} kr.</h4>`
-};
-
-const setFormValue = (formfield, val) => {
-        form[formfield].setAttribute("value", val)
-        form[formfield].value = val
-};
-
-(() => {
-    const deletePropertyButtons = document.getElementsByName("deleteProperty")
-    
-    deletePropertyButtons.forEach((element) => {
+    deletePropertySoloButton.addEventListener("click", (e) => {
+        
+        let deletePrompt = document.querySelector('[id="delete-property-modal-body-prompt"]')
+        deletePrompt.innerHTML = `Ertu viss um að þú viljir eyða ${activeRow.getAttribute("data-street")}?`
         
         const listener = () => {
-            document.getElementById("delete-property-modal-body-prompt").innerHTML = `Ertu viss um að þú viljir eyða ${element.getAttribute("data-street")}?`
-            let street = element.getAttribute("data-street")
-            let zip = element.getAttribute("data-zip")
-            let city = element.getAttribute("data-city")
-            let rowId = `${street} - ${zip} ${city}`
-    
-            deletePropertyOnSubmit(element.getAttribute("data-id"), rowId)
-            element.removeEventListener("click", listener)
+            clearView()
+            let id = activeRow.getAttribute("data-id")
+            deletePropertyOnSubmit(id, activeRow.id)
+            deletePropertyButton.removeEventListener("click", listener)
         }
-        element.addEventListener("click", listener)
-    })
+        deletePropertyButton.addEventListener("click", listener)
+    });
+
     
     const deletePropertyOnSubmit = (id, rowId) => {
-        $("#delete-property-form").submit( function (e) {
+        const editForm = $("#delete-property-form")
+
+        editForm.submit( function (e) {
             e.preventDefault()
+            e.stopPropagation()
     
             let rowElement = document.getElementById(rowId)
             rowElement.remove()
-    
             $.ajax({
                 type: "POST",
                 url: `/real-estates/${id}`,
@@ -358,14 +231,135 @@ const setFormValue = (formfield, val) => {
                     action: "DELETE",
                     csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
                 },
-    
             })
+            editForm.unbind()
         })
     }
+
+    createPropertyButton.addEventListener("click", () => {
+        propertySubmitButton.disabled = true
+        document.getElementById("create-property-modal").innerHTML = "Skrá eign"
+        form.action = "/real-estates/"
+        setFormValue("streetname", "")
+        setFormValue("city_input", "")
+        setFormValue("zip", "")
+        setFormValue("price", "")
+        setFormValue("type", "")
+        setFormValue("bedrooms", "")
+        setFormValue("bathrooms", "")
+        setFormValue("sqm", "")
+        setFormValue("desc", "")
+        extrasField.forEach((field) => {
+            field.checked = false
+        })
+        clearFormImages()
+    });
+
+    const clearFormImages = () => {
+        let images = form.querySelector('input[name="hidden-images-list"]')
+        images.setAttribute("value", "")
+        submittedImageRow.innerHTML = ""
+    };
+
+
+
+    let form = Array.from(document.forms).filter((f) => f.id === "create-new-property")[0]
+    const submittedImageRow = document.getElementById("added-images-row-submit")
+    const imageRow = document.getElementById("new-images-row")
+    const imgDesc = document.getElementById("new-image-description") 
+    let imageObjs = []
+    let imageElements = []
+    const imgInput = document.getElementById("new-image-file-input")
+    const submitButtons = document.getElementsByName("add-all-images-button") // classname ("image-modal-submit-btn")
+    submitButtons.forEach((el) => {
+        el.addEventListener("click", () => {
+            if (el.classList.contains("image-modal-submit-btn")) {
+                let images = form.querySelector('input[name="hidden-images-list"]')
+                if (images.getAttribute("value")) {
+                    let oldImages = JSON.parse(images.getAttribute("value"))
+                    imageObjs = oldImages.concat(imageObjs)
+                }
+                imageElements.forEach((imgEl) => {
+                    submittedImageRow.appendChild(imgEl)
+                })
+                images.setAttribute("value", JSON.stringify(imageObjs))
+            }
+        
+            imageObjs = []
+            imageRow.innerHTML = ""
+            imgDesc.value = ""
+            imgInput.value = ""
+
+        })
+    });
+
+    const imgAdderButton = document.getElementById("image-adder-button")
+    imgAdderButton.addEventListener("click", () => {
+        const file = imgInput.files[0]
+        if (!file) {
+            imgInput.setAttribute("isvalid", "true")
+        } else {
+            imgInput.setAttribute("isvalid", "false")
+        }
+        if (!imgDesc.value) {
+            imgDesc.setAttribute("isvalid", "true")
+        } else {
+            imgDesc.setAttribute("isvalid", "false")
+        }
+        if (file && imgDesc.value) {
+            let desc = imgDesc.value
+            let imgElement = newImageElement(file, desc)
+            imageRow.appendChild(imgElement)
+            imgDesc.value = ""
+            imgInput.value = ""
+
+        }
+    });
+
+    const newImageElement = (file, desc) => {
+
+        let div = document.createElement("div")
+        div.classList.add("align-self-end")
+        div.classList.add("col-2")
+        div.classList.add("d-flex")
+        div.classList.add("justify-content-center")
+
+        let row = document.createElement("div")
+        row.classList.add("row")
+        row.classList.add("image-thumbnail")
+
+        let img = document.createElement("img")
+        let reader = new FileReader()
+        reader.onload = () => {
+            img.src = reader.result
+            imageObjs.push({url: reader.result, desc: desc})
+        }
+        reader.readAsDataURL(file)
+        img.style.position = "relative"
+        
+        let name = document.createElement("label")
+        name.classList.add("text-center")
+        name.classList.add("text-truncate")
+        name.innerHTML = desc
+
+        row.appendChild(img)
+        row.appendChild(name)
+        div.appendChild(row)
+        imageElements.push(div)
+
+        return div
+};
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.querySelector('[id="property-modal"]');
+        modal.addEventListener("hidden.bs.modal", () => {
+            clearFormImages();
+        });
+    });
 })();
 
 
-// Accept offer 
+// Offer buttons
 (() => {
     const accepterTextDiv = (element) => {
         div = document.getElementById("accept-offer-modal-body-prompt")
@@ -399,10 +393,10 @@ const setFormValue = (formfield, val) => {
         div.appendChild(inner)
         div.appendChild(breaker)
         div.appendChild(bottom)
-    }
+    };
     
     const acceptOfferButtons = document.getElementsByName("accept-offer-button")
-    let acceptSubmitButton = document.getElementById("accept-offer-submit-button")
+    const acceptSubmitButton = document.getElementById("accept-offer-submit-button")
     
     acceptOfferButtons.forEach((element) => {
         
@@ -451,11 +445,12 @@ const setFormValue = (formfield, val) => {
             }
                 
         element.addEventListener("click", listener)
-    })
+    });
 
 
     const acceptOfferOnSubmit = (id) => {
-        $("#accept-offer-form").submit( (e) => {
+        const editForm = ("#accept-offer-form")
+        editForm.submit( (e) => {
             
             e.preventDefault()
             
@@ -468,7 +463,8 @@ const setFormValue = (formfield, val) => {
                 },
             })
         })
-    }
+        editForm.unbind()
+    };
 
 // Reject offer
     const rejectOfferButtons = document.getElementsByName("reject-offer-button")
@@ -489,12 +485,12 @@ const setFormValue = (formfield, val) => {
             })
         }
         element.addEventListener("click", listener)
-    })
+    });
 
 
     const rejectOfferOnSubmit = (id, rowId) => {
-        $("#reject-offer-form").submit( (e) => {
-            console.log("rejecting offer")
+        const editForm = ("#reject-offer-form")
+        editForm.submit( (e) => {
             e.preventDefault()
             let rowElement = document.getElementById(rowId)
             rowElement.remove()
@@ -507,34 +503,34 @@ const setFormValue = (formfield, val) => {
                 },
             })
         })
-    }
+        editForm.unbind()
+    };
 
 
 // Delete offer
 
     const deleteOfferButtons = document.getElementsByName("delete-offer-button")
-    let deleteSubmitButton = document.getElementById("delete-offer-submit-button")
+    const deleteSubmitButton = document.getElementById("delete-offer-submit-button")
 
     deleteOfferButtons.forEach((element) => {
         const listener = () => {
             document.getElementById("delete-offer-modal-body-prompt").innerHTML = `Þangað til næst! ;`
-            
-            //document.getElementById("delete-offer-form").setAttribute("action", `/offers/${id}`);
-
-                id = element.getAttribute("data-id")
-                rowId = `offer-id-${id}-row`
     
-                deleteSubmitButton.addEventListener("click", () => {
-                    deleteOfferOnSubmit(id, rowId)
-                })
-                element.removeEventListener("click", listener)
+            id = element.getAttribute("data-id")
+            rowId = `offer-id-${id}-row`
+
+            deleteSubmitButton.addEventListener("click", () => {
+                deleteOfferOnSubmit(id, rowId)
+            })
+            element.removeEventListener("click", listener)
         }
-            element.addEventListener("click", listener)
-    })
+        element.addEventListener("click", listener)
+    });
 
 
     const deleteOfferOnSubmit = (id, rowId) => {
-      $("#delete-offer-form").submit( (e) => {
+        const editForm = ("#delete-offer-form")
+        editForm.submit( (e) => {
             
             e.preventDefault()
             let rowElement = document.getElementById(rowId)
@@ -547,8 +543,9 @@ const setFormValue = (formfield, val) => {
                     csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
                 },
             })
-       })
-    }
+        })
+        editForm.unbind()
+    };
 
 
 // Contingent offer
@@ -582,10 +579,11 @@ const setFormValue = (formfield, val) => {
         element.removeEventListener("click", listener)
         }    
     element.addEventListener("click", listener)
-    })
+    });
 
     const contingentOfferOnSubmit = (id, textarea) => {
-        $("#contingent-offer-form").submit( (e) => {
+        const editForm = ("#contingent-offer-form")
+        editForm.submit( (e) => {
             
             e.preventDefault()
             e.stopPropagation()
@@ -600,9 +598,9 @@ const setFormValue = (formfield, val) => {
                 },
             })
         })
-        //$("#contingent-offer-form")[0].reset()
+        editForm.unbind()
 
-    }
+    };
 
     const propertyFields = document.querySelectorAll('[id^="property-input"]');
     const propertySubmitButton = document.getElementById("create-property-modal-submit");
@@ -620,14 +618,13 @@ const setFormValue = (formfield, val) => {
                 element.setAttribute("isvalid", "true");
                 element.parentElement.querySelector(".invalid-text").style.display = "block"; 
             } else {
-                element.removeAttribute("isvalid");
-                element.parentElement.querySelector(".invalid-text").style.display = "none"; 
+                try {
+                    element.removeAttribute("isvalid");
+                    element.parentElement.querySelector(".invalid-text").style.display = "none"; 
+                } catch (e) {}
             }
         });
-    
-    
-        
-        });
+    });
     
     const disableOfferRow = (element, row) => {
         let buttons = row.getElementsByTagName("button")
@@ -637,12 +634,11 @@ const setFormValue = (formfield, val) => {
                 button.innerHTML = ""
             }
         })
-    }
+    };
 
     const acceptOfferRow = (element) => {
         address = document.getElementById("address-table-caller").innerHTML
         propRow = document.getElementById(address)
-        console.log(propRow)
         allRows = document.getElementsByClassName(address)
         propRow.getElementsByClassName("status-cell")[0].innerHTML = "<h4><b>SOLD</b></h4></td>"
         let propButtons = propRow.getElementsByTagName("button")
