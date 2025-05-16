@@ -15,7 +15,7 @@
     {% include "_do_item_modal.html" with item="offer" title="Hafna tilboði" action="reject" %}
     {% include "_do_item_modal.html" with item="offer" title="Setja skilyrði" action="contingent" %}
     {% include 'real_estates/_image_modal.html' %}
-    {% if properties|length != 0 %}
+
     <div class="col-6">
         {% include "users/_seller_properties_table.html" %}
     </div>
@@ -45,17 +45,6 @@
             </div>
         </div>
     </div>
-    {% else %}
-    <div class="col-12 d-block align-self-center">
-        <div class="row d-flex justify-content-center my-5">
-            <button id="create-property-button" type="button" class="btn btn-primary btn-big mx-5" style="height:6rem; width:16rem" data-bs-toggle="modal" data-bs-target="#property-modal">
-                Skrá eign
-            </button>
-        </div>
-        <div class="row">
-            {% include '_title_bar.html' with title='Engar fasteignir.' %}
-        </div>
-        {% endif %}
-    </div>
+    
 </div>
 {% endblock %}
