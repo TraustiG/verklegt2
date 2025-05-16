@@ -12,13 +12,6 @@ Hjálmur Ragnarsson - hjalmur24@ru.is
 
 Oliver Másson - oliverm24@ru.is
 
-
-## How to run the program
-
-1. blabla
-2. blablabla
-
-
 ## Extra Requirements
 
 1. Notendur þurfa að geta búið til aðgang
