@@ -36,6 +36,7 @@
 
     const formSubmitter = (id) => {
         let form = $("#offer-payment-form")
+        form.unbind()
         form.submit( (e) => {
             
             e.preventDefault()
@@ -47,7 +48,6 @@
                 data: data,
             })
         })
-        form.unbind()
     }
     
 
